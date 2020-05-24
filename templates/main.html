@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    
+    <link type="text/css" rel="stylesheet" href="static/css/main.css" />
+</head>
+
+<body>
+    <div id="nav-bar">
+        <a href="/">
+            <div id="button-home" class="nav-button {% if request.endpoint == 'index' %}button-main{% endif %}">Home</div>
+        </a>
+        <a href="/climbing-spots">
+            <div id="button-spots" class="nav-button {% if request.endpoint == 'climbing_spots' %}button-main{% endif %}">Climbing Spots</div>
+        </a>
+        <a href="/climbers">
+            <div id="button-climbers" class="nav-button {% if request.endpoint == 'climbers' %}button-main{% endif %}">Climbers</div>
+        </a>
+
+    </div>
+    
+    {% block content %}{% endblock %}
+    
+</body>
+
+</html>

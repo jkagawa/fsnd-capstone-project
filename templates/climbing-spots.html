@@ -1,0 +1,14 @@
+{% extends 'main.html' %}
+{% block title %}Climbing Spots{% endblock %}
+{% block content %}
+
+<div class="content-body">
+    {% for spot in spots['spot'] %}
+    <div class="card-spot">
+        <div class="card-title">{{ spot.name }}</div>
+        <div class="card-body">{{ spot.location }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

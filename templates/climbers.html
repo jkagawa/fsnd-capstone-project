@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+{% block title %}Climbers{% endblock %}
+{% block content %}
+
+<div class="content-body">
+    {% for climber in climbers['climber'] %}
+    <div class="card-climber">
+        <div class="card-title">{{ climber.name }}</div>
+        <div class="card-info">{{ climber.state }}</div>
+        <div class="card-body">
+            <div class="card-body-title">Visited climbing spots:</div>
+            {% for visited_spots in climber.visited_spots %}
+                <div class="card-body">{{ visited_spots }}</div>
+            {% endfor %}
+            
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
