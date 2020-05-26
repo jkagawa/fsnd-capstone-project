@@ -7,6 +7,8 @@
     
     {% for spot in spots['spot'] %}
     <div class="card-spot">
+        <button type="submit" class="button-remove" data-id="{{ spot.id }}" onclick="removeSpot(this)"><b>Remove</b></button>
+        <button type="submit" class="button-edit" data-id="{{ spot.id }}" onclick="openEdit(this)"><b>Edit</b></button>
         <div class="card-title">{{ spot.name }}</div>
         <div class="card-body">{{ spot.location }}</div>
     </div>
@@ -14,29 +16,116 @@
 </div>
 
 <div class="form-div" id="AddForm">
-    <form action="/action_page.php" class="form-area">
+    <form class="form-area">
         <button type="submit" class="button-cancel" onclick="closeForm()"><b>╳</b></button>
         <div class="form-title">Add A New Climbing Spot</div>
         <div>
             <span class="form-label">Name</span>
-            <input type="text" name="name" required>
+            <input type="text" id="climbing-spot-name" required>
         </div>
         <div>
             <span class="form-label">Location</span>
-            <input type="text" name="location" required>
+            <input type="text" id="climbing-spot-location" required>
         </div>
-    <button type="submit" class="button-submit">Submit</button>
+    <button type="submit" class="button-submit" id="submit-climbing-spot">Submit</button>
+  </form>
+</div>
+
+<div class="form-div" id="EditForm">
+    <form class="form-area">
+        <button type="submit" class="button-cancel" onclick="closeEdit()"><b>╳</b></button>
+        <div class="form-title">Edit Climbing Spot</div>
+        <div>
+            <span class="form-label">Name</span>
+            <input type="text" id="new-climbing-spot-name" required>
+        </div>
+        <div>
+            <span class="form-label">Location</span>
+            <input type="text" id="new-climbing-spot-location" required>
+        </div>
+    <button type="submit" class="button-submit" id="edit-climbing-spot" data-id="">Change</button>
   </form>
 </div>
 
 <script>
 function openForm() {
-  document.getElementById("AddForm").style.display = "block";
+    document.getElementById("AddForm").style.display = "block";
 }
-
 function closeForm() {
-  document.getElementById("AddForm").style.display = "none";
+    document.getElementById("AddForm").style.display = "none";
 }
+function openEdit(e) {
+    document.getElementById("EditForm").style.display = "block";
+    const spot_id = e.dataset.id;
+    var doc = document.getElementById("edit-climbing-spot");
+    doc.setAttribute('data-id' , spot_id);
+//    var children = e.parentNode.childNodes;
+//    for (var i=0; i < children.length; i++) {
+//        if (children[i].className = "card-title") {
+//            var name = children[i].value;
+//        }
+//        else if (children[i].className = "card-body") {
+//            var location = children[i].value;
+//        }
+//    }
+//    doc = document.getElementById("new-climbing-spot-name");
+//    doc.setAttribute('value' , name);
+//    doc = document.getElementById("new-climbing-spot-location");
+//    doc.setAttribute('value' , location);
+    
+}
+function closeEdit() {
+    document.getElementById("EditForm").style.display = "none";
+}
+function removeSpot(e) {
+    const spot_id = e.dataset.id;
+    fetch('/climbing-spots/' + spot_id, {
+        method: 'DELETE'
+    })
+    .then(function() {
+        const item = e.parentElement;
+        item.remove();
+    });
+}
+document.getElementById('submit-climbing-spot').onclick = function(e) {
+    e.preventDefault();
+    const name = document.getElementById('climbing-spot-name').value;
+    const location = document.getElementById('climbing-spot-location').value;
+    fetch('/climbing-spots', {
+        method: 'POST',
+        body: JSON.stringify({
+            'name': name,
+            'location': location
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(function() {
+        closeForm()
+        window.location.reload();
+    });
+};
+document.getElementById('edit-climbing-spot').onclick = function(e) {
+    e.preventDefault();
+    const spot_id = e.dataset.id;
+    const name = document.getElementById('new-climbing-spot-name').value;
+    const location = document.getElementById('new-climbing-spot-location').value;
+    fetch('/climbing-spots/' + spot_id, {
+        method: 'PATCH',
+        body: JSON.stringify({
+            'name': name,
+            'location': location
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(function() {
+        closeEdit()
+        window.location.reload();
+    });
+};
 </script>
 
 {% endblock %}

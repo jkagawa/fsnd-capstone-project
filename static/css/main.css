@@ -61,6 +61,7 @@ a {
     display: inline-block;
     font-weight: bold;
     padding: 5px;
+    clear: right;
 }
 
 .card-info {
@@ -127,16 +128,26 @@ a {
     display: block;
 }
 
-.button-cancel {
+.button-cancel, .button-remove, .button-edit {
     background: red;
     color: #FFFFFF;
     padding: 2px 6px;
     border: none;
     cursor: pointer;
     float: right;
+    clear: right;
 }
 
-.button-add:focus, .form-area input[type=text]:focus, .button-submit, .button-cancel {
+.button-cancel, .button-remove {
+    background: red;
+}
+
+.button-edit {
+    background: #00cc00;
+    margin-top: 5px;
+}
+
+.button-add:focus, .form-area input[type=text]:focus, .button-submit, .button-cancel, .button-remove, .button-edit {
     outline: none;
 }
 
