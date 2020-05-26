@@ -43,6 +43,7 @@ a {
     height: 100px;
     margin: 10px auto;
     vertical-align: top;
+    clear: right;
 }
 
 .card-climber {
@@ -87,3 +88,80 @@ a {
         min-width: 0px;
     }
 }
+
+.form-title {
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 16px;
+    clear: right;
+}
+
+.form-label {
+    min-width: 70px;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.button-add {
+    background: #00cc00;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100px;
+    max-width: 100%;
+    margin-bottom: 20px;
+    float: right;
+}
+
+.button-submit {
+    background: #00cc00;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100px;
+    max-width: 100%;
+    margin: 15px auto;
+    display: block;
+}
+
+.button-cancel {
+    background: red;
+    color: #FFFFFF;
+    padding: 2px 6px;
+    border: none;
+    cursor: pointer;
+    float: right;
+}
+
+.button-add:focus, .form-area input[type=text]:focus, .button-submit, .button-cancel {
+    outline: none;
+}
+
+.form-div {
+    display: none;
+    position: fixed;
+    top: 85px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    max-width: 90%;
+    padding: 15px;
+    background: #FFFFFF;
+    box-shadow: 5px 10px 8px #888888;
+    border-radius: 10px;
+}
+
+.form-area input[type=text] {
+    width: 70%;
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    background: #f1f1f1;
+    font-size: 16px;
+}
+
+
+

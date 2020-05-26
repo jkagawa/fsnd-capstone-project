@@ -3,6 +3,8 @@
 {% block content %}
 
 <div class="content-body">
+    <button class="button-add" onclick="openForm()">Add</button>
+    
     {% for spot in spots['spot'] %}
     <div class="card-spot">
         <div class="card-title">{{ spot.name }}</div>
@@ -10,5 +12,31 @@
     </div>
     {% endfor %}
 </div>
+
+<div class="form-div" id="AddForm">
+    <form action="/action_page.php" class="form-area">
+        <button type="submit" class="button-cancel" onclick="closeForm()"><b>╳</b></button>
+        <div class="form-title">Add A New Climbing Spot</div>
+        <div>
+            <span class="form-label">Name</span>
+            <input type="text" name="name" required>
+        </div>
+        <div>
+            <span class="form-label">Location</span>
+            <input type="text" name="location" required>
+        </div>
+    <button type="submit" class="button-submit">Submit</button>
+  </form>
+</div>
+
+<script>
+function openForm() {
+  document.getElementById("AddForm").style.display = "block";
+}
+
+function closeForm() {
+  document.getElementById("AddForm").style.display = "none";
+}
+</script>
 
 {% endblock %}
