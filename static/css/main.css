@@ -55,13 +55,17 @@ a {
     margin: 10px auto;
     vertical-align: top;
     overflow: auto;
+    clear: right;
 }
 
 .card-title {
-    display: inline-block;
     font-weight: bold;
     padding: 5px;
     clear: right;
+}
+
+.card-title-climber {
+    display: inline-block;
 }
 
 .card-info {

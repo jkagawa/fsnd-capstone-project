@@ -3,8 +3,12 @@
 {% block content %}
 
 <div class="content-body">
+    <button class="button-add" onclick="openForm()">Add</button>
+    
     {% for climber in climbers['climber'] %}
     <div class="card-climber">
+        <button type="submit" class="button-remove" data-id="{{ climber.id }}" onclick="removeSpot(this)"><b>Remove</b></button>
+        <button type="submit" class="button-edit" data-id="{{ climber.id }}" data-name="{{ climber.name }}" data-state="{{ climber.state }}" onclick="openEdit(this)"><b>Edit</b></button>
         <div class="card-title">{{ climber.name }}</div>
         <div class="card-info">{{ climber.state }}</div>
         <div class="card-body">
@@ -17,5 +21,127 @@
     </div>
     {% endfor %}
 </div>
+
+<div class="form-div" id="AddForm">
+    <form class="form-area">
+        <button type="submit" class="button-cancel" onclick="closeForm()"><b>╳</b></button>
+        <div class="form-title">Add A New Climber</div>
+        <div>
+            <span class="form-label">Name</span>
+            <input type="text" id="climber-name" required>
+        </div>
+        <div>
+            <span class="form-label">State</span>
+            <input type="text" id="climber-state" required>
+        </div>
+    <button type="submit" class="button-submit" id="submit-climber">Submit</button>
+  </form>
+</div>
+
+<div class="form-div" id="EditForm">
+    <form class="form-area">
+        <button type="submit" class="button-cancel" onclick="closeEdit()"><b>╳</b></button>
+        <div class="form-title">Edit Climber</div>
+        <div>
+            <span class="form-label">Name</span>
+            <input type="text" id="new-climber-name" value="" required>
+        </div>
+        <div>
+            <span class="form-label">State</span>
+            <input type="text" id="new-climber-state" value="" required>
+        </div>
+    <button type="submit" class="button-submit" id="edit-climber" data-id="">Change</button>
+  </form>
+</div>
+
+<script>
+function openForm() {
+    document.getElementById("AddForm").style.display = "block";
+}
+function closeForm() {
+    document.getElementById("AddForm").style.display = "none";
+}
+function openEdit(e) {
+    document.getElementById("EditForm").style.display = "block";
+    const climber_id = e.getAttribute("data-id");
+    const name = e.getAttribute("data-name");
+    const state = e.getAttribute("data-state");
+    var elementID = document.getElementById("edit-climber");
+    elementID.setAttribute('data-id', climber_id);
+    var elementName = document.getElementById("new-climber-name");
+    elementName.setAttribute('value', name);
+    var elementState = document.getElementById("new-climber-state");
+    elementState.setAttribute('value', state);
+}
+function closeEdit() {
+    document.getElementById("EditForm").style.display = "none";
+}
+function removeSpot(e) {
+    var result = confirm("Are you sure you want to remove this?");
+    if (result) {
+        var climber_id = e.getAttribute("data-id");
+        fetch('/climbers/' + climber_id, {
+            method: 'DELETE'
+        })
+        .then(function() {
+            const item = e.parentElement;
+            item.remove();
+        });
+    }
+}
+document.getElementById('submit-climber').onclick = function(e) {
+    e.preventDefault();
+    const name = document.getElementById('climber-name').value;
+    const state = document.getElementById('climber-state').value;
+    const visited_spots = [1]
+    if (name == "" || state == "") {
+        alert("Name and State must be filled out");
+    }
+    else {
+        fetch('/climbers', {
+            method: 'POST',
+            body: JSON.stringify({
+                'name': name,
+                'state': state,
+                'visited_spots': visited_spots
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(function() {
+            closeForm()
+            window.location.reload();
+        });
+    }
+};
+document.getElementById('edit-climber').onclick = function(e) {
+    e.preventDefault();
+    var climber_id = e.target.getAttribute("data-id");
+    const name = document.getElementById('new-climber-name').value;
+    const state = document.getElementById('new-climber-state').value;
+    const visited_spots = [1]
+    if (name == "" || state == "") {
+        alert("Name and State must be filled out");
+    }
+    else {
+        fetch('/climbers/' + climber_id, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                'name': name,
+                'state': state,
+                'visited_spots': visited_spots
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(function() {
+            closeEdit()
+            window.location.reload();
+        });
+    }
+};
+</script>
 
 {% endblock %}
