@@ -94,7 +94,8 @@ def add_climbing_spots(payload):
 
 @app.route('/climbing-spots/<int:climbingspot_id>', methods=['PATCH'])
 @app.route('/api/climbing-spots/<int:climbingspot_id>', methods=['PATCH'])
-def edit_climbingspots(climbingspot_id):
+@requires_auth('patch:climbing-spot')
+def edit_climbingspots(payload, climbingspot_id):
     error = False
     try:
         name = request.json['name']
@@ -127,7 +128,8 @@ def edit_climbingspots(climbingspot_id):
 
 @app.route('/climbing-spots/<int:climbingspot_id>', methods=['DELETE'])
 @app.route('/api/climbing-spots/<int:climbingspot_id>', methods=['DELETE'])
-def remove_climbingspots(climbingspot_id):
+@requires_auth('delete:climbing-spot')
+def remove_climbingspots(payload, climbingspot_id):
     error = False
     try:
         climbingspot = ClimbingSpot.query.get(climbingspot_id)
@@ -171,7 +173,8 @@ def climbers():
 
 @app.route('/climbers', methods=['POST'])
 @app.route('/api/climbers', methods=['POST'])
-def add_climbers():
+@requires_auth('post:climber')
+def add_climbers(payload):
     error = False
     try:
         name = request.json['name']
@@ -206,7 +209,8 @@ def add_climbers():
 
 @app.route('/climbers/<int:climber_id>', methods=['PATCH'])
 @app.route('/api/climbers/<int:climber_id>', methods=['PATCH'])
-def edit_climbers(climber_id):
+@requires_auth('patch:climber')
+def edit_climbers(payload, climber_id):
     error = False
     try:
         name = request.json['name']
@@ -254,7 +258,8 @@ def edit_climbers(climber_id):
     
 @app.route('/climbers/<int:climber_id>', methods=['DELETE'])
 @app.route('/api/climbers/<int:climber_id>', methods=['DELETE'])
-def remove_climbers(climber_id):
+@requires_auth('delete:climber')
+def remove_climbers(payload, climber_id):
     error = False
     try:
         visited_spots = VisitedSpot.query.filter_by(climber_id=climber_id)

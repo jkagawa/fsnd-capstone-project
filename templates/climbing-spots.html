@@ -3,9 +3,9 @@
 {% block content %}
 
 <div class="content-body">
+    <a href="https://climbing-spot.auth0.com/authorize?audience=climbing&response_type=token&client_id=NAl7V4YO9ort127uVV8OS3q1nmJPZ7or&redirect_uri=http://localhost:5000/climbing-spots"><button class="button-add" id="button-signin" style="float: left; display: none;">Sign In</button></a>
+    <button class="button-add" id="button-signout" style="float: left; display: none;" onclick="signOut()">Sign Out</button>
     <button class="button-add" onclick="openForm()">Add</button>
-    <br><a href="https://climbing-spot.auth0.com/authorize?audience=climbing&response_type=token&client_id=NAl7V4YO9ort127uVV8OS3q1nmJPZ7or&redirect_uri=http://localhost:5000/climbing-spots"><button class="button-add">Sign In</button></a>
-
     
     {% for spot in spots['spot'] %}
     <div class="card-spot">
@@ -67,6 +67,48 @@ else {
 }
 console.log(access_token);
 
+var JSONurl = 'https://climbing-spot.auth0.com/.well-known/jwks.json';
+
+$.getJSON(JSONurl, function(data) {
+    var original_kid = data.keys['0']['kid'];
+    console.log(original_kid);
+    
+    var unverified_kid ='';
+//    if (parseJwt(access_token).hasOwnProperty('kid')) { 
+//        unverified_kid = parseJwt(access_token)['kid'];
+//    }
+//    
+    console.log(unverified_kid);
+    if(original_kid == unverified_kid) {
+        document.getElementById("button-signout").style.display = "block";
+        document.getElementById("button-signin").style.display = "none";
+        console.log('Logged In');
+    }
+    else {
+        document.getElementById("button-signout").style.display = "none";
+        document.getElementById("button-signin").style.display = "block";
+        console.log(unverified_kid);
+        console.log('Logged Out');
+    }
+});
+
+    
+function parseJwt(token) {
+   var base64Url = token.split('.')[0];
+   var base64 = decodeURIComponent(atob(base64Url).split('').map((c)=>{
+       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+   }).join(''));
+
+   return JSON.parse(base64);
+}
+
+
+function signOut() {
+    document.getElementById("button-signout").style.display = "none";
+    document.getElementById("button-signin").style.display = "block";
+    window.localStorage.setItem('access_token', '');
+    console.log('JWT removed from LocalStorage');
+}
 function openForm() {
     document.getElementById("AddForm").style.display = "block";
 }
@@ -93,7 +135,10 @@ function removeSpot(e) {
     if (result) {
         var spot_id = e.getAttribute("data-id");
         fetch('/climbing-spots/' + spot_id, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + access_token
+            }
         })
         .then(function() {
             const item = e.parentElement;
@@ -142,7 +187,8 @@ document.getElementById('edit-climbing-spot').onclick = function(e) {
                 'location': location
             }),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access_token
             }
         })
         .then(function() {

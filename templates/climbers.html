@@ -55,6 +55,23 @@
 </div>
 
 <script>
+var url = window.location.href;
+console.log(url);
+var access_token = ""
+if(url.includes("access_token=")) {
+    access_token = url.match(/\#(?:access_token)\=([\S\s]*?)\&/)[1];
+}
+console.log(access_token);
+if(access_token != "") {
+    window.localStorage.setItem('access_token', access_token);
+    console.log('Stored in LocalStorage');
+}
+else {
+    access_token = window.localStorage.getItem('access_token');
+    console.log('Retrived from LocalStorage');
+}
+console.log(access_token);
+
 function openForm() {
     document.getElementById("AddForm").style.display = "block";
 }
@@ -81,7 +98,10 @@ function removeSpot(e) {
     if (result) {
         var climber_id = e.getAttribute("data-id");
         fetch('/climbers/' + climber_id, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + access_token
+            }
         })
         .then(function() {
             const item = e.parentElement;
@@ -106,7 +126,8 @@ document.getElementById('submit-climber').onclick = function(e) {
                 'visited_spots': visited_spots
             }),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access_token
             }
         })
         .then(function() {
@@ -133,7 +154,8 @@ document.getElementById('edit-climber').onclick = function(e) {
                 'visited_spots': visited_spots
             }),
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access_token
             }
         })
         .then(function() {
