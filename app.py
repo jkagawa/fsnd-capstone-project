@@ -1,12 +1,15 @@
 import os
 from flask import Flask, request, render_template, jsonify, flash, abort
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from models import setup_db, db_create_all, return_db, ClimbingSpot, Climber, VisitedSpot
+from auth import AuthError, requires_auth
 
 app = Flask(__name__)
 app.secret_key = os.urandom(32)
 
 setup_db(app)
+CORS(app)
 db = return_db()
 db_create_all()
 
@@ -60,7 +63,8 @@ def climbing_spots():
 
 @app.route('/climbing-spots', methods=['POST'])
 @app.route('/api/climbing-spots', methods=['POST'])
-def add_climbing_spots():
+@requires_auth('post:climbing-spot')
+def add_climbing_spots(payload):
     error = False
     try:
         name = request.json['name']
