@@ -3,8 +3,8 @@
 {% block content %}
 
 <div class="content-body">
-    <a href="https://climbing-spot.auth0.com/authorize?audience=climbing&response_type=token&client_id=NAl7V4YO9ort127uVV8OS3q1nmJPZ7or&redirect_uri=http://localhost:5000/climbing-spots"><button class="button-add" id="button-signin" style="float: left; display: none;">Sign In</button></a>
-    <button class="button-add" id="button-signout" style="float: left; display: none;" onclick="signOut()">Sign Out</button>
+    <a href="https://climbing-spot.auth0.com/authorize?audience=climbing&response_type=token&client_id=NAl7V4YO9ort127uVV8OS3q1nmJPZ7or&redirect_uri=http://localhost:5000/climbing-spots"><button id="button-signin">Sign In</button></a>
+    <button id="button-signout" onclick="signOut()">Sign Out</button>
     <button class="button-add" onclick="openForm()">Add</button>
     
     {% for spot in spots['spot'] %}
@@ -74,10 +74,11 @@ $.getJSON(JSONurl, function(data) {
     console.log(original_kid);
     
     var unverified_kid ='';
-//    if (parseJwt(access_token).hasOwnProperty('kid')) { 
-//        unverified_kid = parseJwt(access_token)['kid'];
-//    }
-//    
+    console.log(parseJwt(access_token));
+    if (parseJwt(access_token).hasOwnProperty('kid')) { 
+        unverified_kid = parseJwt(access_token)['kid'];
+    }
+    
     console.log(unverified_kid);
     if(original_kid == unverified_kid) {
         document.getElementById("button-signout").style.display = "block";
@@ -94,12 +95,18 @@ $.getJSON(JSONurl, function(data) {
 
     
 function parseJwt(token) {
-   var base64Url = token.split('.')[0];
-   var base64 = decodeURIComponent(atob(base64Url).split('').map((c)=>{
-       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-   }).join(''));
-
-   return JSON.parse(base64);
+    var result = "";
+    if(token.includes(".")) {
+        var base64Url = token.split('.')[0];
+        
+        var base64 = decodeURIComponent(atob(base64Url).split('').map((c)=>{
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        
+        result = JSON.parse(base64)
+    }
+    
+    return result;
 }
 
 

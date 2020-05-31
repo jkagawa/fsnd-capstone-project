@@ -120,6 +120,32 @@ a {
     float: right;
 }
 
+#button-signin {
+    background: #00cc00;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100px;
+    max-width: 100%;
+    margin-bottom: 20px;
+    float: left;
+    display: none;
+}
+
+#button-signout {
+    background: #999999;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100px;
+    max-width: 100%;
+    margin-bottom: 20px;
+    float: left;
+    display: none;
+}
+
 .button-submit {
     background: #00cc00;
     color: white;
@@ -151,7 +177,7 @@ a {
     margin-top: 5px;
 }
 
-.button-add:focus, .form-area input[type=text]:focus, .button-submit, .button-cancel, .button-remove, .button-edit {
+.button-add:focus, .form-area input[type=text]:focus, .button-submit, .button-cancel, .button-remove, .button-edit, #button-signin, #button-signout {
     outline: none;
 }
 
