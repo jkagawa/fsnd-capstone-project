@@ -30,14 +30,24 @@ def get_climbers():
     climber = []
     for climb in Climber.query.order_by('id').all():
         visitedspot = []
-        for visited in VisitedSpot.query.filter_by(climber_id=climb.id).all():
+        visitedspot_id = []
+        all_spots = []
+        all_spots_id = []
+        for visited in VisitedSpot.query.filter_by(climber_id=climb.id).order_by('climbing_spot_id').all():
             climbingspot = ClimbingSpot.query.filter_by(id=visited.climbing_spot_id).one_or_none()
             visitedspot.append(climbingspot.name)
+            visitedspot_id.append(climbingspot.id)
+        for climbingspot in ClimbingSpot.query.order_by('id').all():
+            all_spots.append(climbingspot.name)
+            all_spots_id.append(climbingspot.id)
         climber.append({
             "id" : climb.id,
             "name" : climb.name,
             "state" : climb.state,
-            "visited_spots" : visitedspot
+            "visited_spots" : visitedspot,
+            "all_spots" : all_spots,
+            "all_spots_id" : all_spots_id,
+            "len_all_spots" : len(all_spots)
         })
     climbers = {
         "climber" : climber

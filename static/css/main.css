@@ -43,7 +43,7 @@ a {
     height: 100px;
     margin: 10px auto;
     vertical-align: top;
-    clear: right;
+    clear: both;
 }
 
 .card-climber {
@@ -55,7 +55,7 @@ a {
     margin: 10px auto;
     vertical-align: top;
     overflow: auto;
-    clear: right;
+    clear: both;
 }
 
 .card-title {
@@ -71,6 +71,15 @@ a {
 .card-info {
     display: inline-block;
     background: #0080ff;
+    color: #FFFFFF;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.card-info-none {
+    display: inline-block;
+    background: #999999;
     color: #FFFFFF;
     font-size: 14px;
     padding: 5px 10px;
@@ -118,6 +127,7 @@ a {
     max-width: 100%;
     margin-bottom: 20px;
     float: right;
+    display: none;
 }
 
 #button-signin {
@@ -177,6 +187,10 @@ a {
     margin-top: 5px;
 }
 
+.button-remove, .button-edit {
+    display: none;
+}
+
 .button-add:focus, .form-area input[type=text]:focus, .button-submit, .button-cancel, .button-remove, .button-edit, #button-signin, #button-signout {
     outline: none;
 }
@@ -204,5 +218,11 @@ a {
     font-size: 16px;
 }
 
+.list-spot {
+    list-style-type: none;
+}
 
+.list-spot input {
+    transform: scale(1.5);
+}
 

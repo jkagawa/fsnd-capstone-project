@@ -74,9 +74,9 @@ $.getJSON(JSONurl, function(data) {
     console.log(original_kid);
     
     var unverified_kid ='';
-    console.log(parseJwt(access_token));
-    if (parseJwt(access_token).hasOwnProperty('kid')) { 
-        unverified_kid = parseJwt(access_token)['kid'];
+    console.log(parseJwt(access_token ,1));
+    if (parseJwt(access_token, 0).hasOwnProperty('kid')) { 
+        unverified_kid = parseJwt(access_token, 0)['kid'];
     }
     
     console.log(unverified_kid);
@@ -93,11 +93,49 @@ $.getJSON(JSONurl, function(data) {
     }
 });
 
+var post_climbingspot = false;
+var patch_climbingspot = false;
+var delete_climbingspot = false;
+if (parseJwt(access_token, 1).hasOwnProperty('permissions')) { 
+    var permission_array = parseJwt(access_token, 1)['permissions'];
+    for(var i=0; i<permission_array.length; i++) {
+        if(permission_array[i] == 'post:climbing-spot') {
+            post_climbingspot = true;
+        }
+        else if(permission_array[i] == 'patch:climbing-spot') {
+            patch_climbingspot = true;
+        }
+        else if(permission_array[i] == 'delete:climbing-spot') {
+            delete_climbingspot = true;
+        }
+    }
+}
+if(post_climbingspot) {
+    var ButtonAddArray = document.getElementsByClassName('button-add');
+    for (var i=0; i < ButtonAddArray.length; i++){
+        ButtonAddArray[i].style.display = 'block';
+    }
+    console.log('Can add climbing spot');
+}
+if(patch_climbingspot) {
+    var ButtonAddArray = document.getElementsByClassName('button-edit');
+    for (var i=0; i < ButtonAddArray.length; i++){
+        ButtonAddArray[i].style.display = 'block';
+    }
+    console.log('Can edit climbing spot');
+}
+if(delete_climbingspot) {
+    var ButtonAddArray = document.getElementsByClassName('button-remove');
+    for (var i=0; i < ButtonAddArray.length; i++){
+        ButtonAddArray[i].style.display = 'block';
+    }
+    console.log('Can remove climbing spot');
+}
     
-function parseJwt(token) {
+function parseJwt(token, n) {
     var result = "";
     if(token.includes(".")) {
-        var base64Url = token.split('.')[0];
+        var base64Url = token.split('.')[n];
         
         var base64 = decodeURIComponent(atob(base64Url).split('').map((c)=>{
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
