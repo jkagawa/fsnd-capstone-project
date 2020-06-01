@@ -39,6 +39,16 @@
             <span class="form-label">State</span>
             <input type="text" id="climber-state" required>
         </div>
+        <div>
+            <span class="form-label form-label-spot">Visited Climbing Spots:</span>
+            <ul>
+                {% for i in range(0, climbers['climber'][0].len_all_spots) %}
+                <li class="list-spot"><input type="checkbox" data-id="{{ climbers['climber'][0].all_spots_id[i] }}"/>
+                    <span>{{ climbers['climber'][0].all_spots[i] }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     <button type="submit" class="button-submit" id="submit-climber">Submit</button>
   </form>
 </div>
@@ -56,10 +66,12 @@
             <input type="text" id="new-climber-state" value="" required>
         </div>
         <div>
-            <span class="form-label">Visited Climbing Spots</span>
+            <span class="form-label form-label-spot">Visited Climbing Spots:</span>
             <ul>
                 {% for i in range(0, climbers['climber'][0].len_all_spots) %}
-                <li class="list-spot"><input type="checkbox" data-id="{{ climbers['climber'][0].all_spots_id[i] }}"/>{{ climbers['climber'][0].all_spots[i] }}</li>
+                <li class="list-spot"><input type="checkbox" data-id="{{ climbers['climber'][0].all_spots_id[i] }}"/>
+                    <span>{{ climbers['climber'][0].all_spots[i] }}</span>
+                </li>
                 {% endfor %}
             </ul>
         </div>
@@ -213,7 +225,15 @@ document.getElementById('submit-climber').onclick = function(e) {
     e.preventDefault();
     const name = document.getElementById('climber-name').value;
     const state = document.getElementById('climber-state').value;
-    const visited_spots = [1]
+    
+    var visited_spots = [];
+    var CheckBoxArray = document.querySelectorAll('.list-spot input');
+    for (var i=0; i < CheckBoxArray.length; i++){
+        if (CheckBoxArray[i].checked == true) {
+            visited_spots.push(parseInt(CheckBoxArray[i].getAttribute("data-id")));
+        }
+    }
+
     if (name == "" || state == "") {
         alert("Name and State must be filled out");
     }
@@ -249,7 +269,6 @@ document.getElementById('edit-climber').onclick = function(e) {
             visited_spots.push(parseInt(CheckBoxArray[i].getAttribute("data-id")));
         }
     }
-    console.log(visited_spots);
 
     if (name == "" || state == "") {
         alert("Name and State must be filled out");

@@ -115,6 +115,11 @@ a {
     min-width: 70px;
     display: inline-block;
     font-size: 14px;
+    font-weight: bold;
+}
+
+.form-label-spot {
+    padding-top: 15px;
 }
 
 .button-add {
@@ -224,5 +229,10 @@ a {
 
 .list-spot input {
     transform: scale(1.5);
+}
+
+.list-spot span {
+    padding: 5px 10px;
+    display: inline-block;
 }
 
