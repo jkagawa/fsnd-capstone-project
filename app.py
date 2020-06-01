@@ -63,13 +63,20 @@ def index():
 @app.route('/climbing-spots', methods=['GET'])
 @app.route('/api/climbing-spots', methods=['GET'])
 def climbing_spots():
-    spots = get_climbing_spots()
-    if request.path == '/api/climbing-spots':
-        return jsonify({
-            'success': True,
-            'spots': spots
-        })
-    return render_template('climbing-spots.html', spots=spots)
+    error = False
+    try:
+        spots = get_climbing_spots()
+    except:
+        error = True
+    if error:
+        abort(404)
+    else:
+        if request.path == '/api/climbing-spots':
+            return jsonify({
+                'success': True,
+                'spots': spots
+            }), 200
+        return render_template('climbing-spots.html', spots=spots)
 
 @app.route('/climbing-spots', methods=['POST'])
 @app.route('/api/climbing-spots', methods=['POST'])
@@ -99,7 +106,7 @@ def add_climbing_spots(payload):
             return jsonify({
                 'success': True,
                 'spots': spots
-            })
+            }), 200
         return render_template('climbing-spots.html', spots=spots)
 
 @app.route('/climbing-spots/<int:climbingspot_id>', methods=['PATCH'])
@@ -133,7 +140,7 @@ def edit_climbingspots(payload, climbingspot_id):
                 'id': climbingspot_id,
                 'name' : name,
                 'location' : location
-            })
+            }), 200
         return render_template('climbing-spots.html', spots=spots)
 
 @app.route('/climbing-spots/<int:climbingspot_id>', methods=['DELETE'])
@@ -165,7 +172,7 @@ def remove_climbingspots(payload, climbingspot_id):
                 'id': climbingspot_id,
                 'name' : name,
                 'location' : location
-            })
+            }), 200
         return render_template('climbing-spots.html', spots=spots)
     
 #=================CLIMBER ENDPOINTS=================    
@@ -173,13 +180,20 @@ def remove_climbingspots(payload, climbingspot_id):
 @app.route('/climbers', methods=['GET'])
 @app.route('/api/climbers', methods=['GET'])
 def climbers():
-    climbers = get_climbers()
-    if request.path == '/api/climbers':
-        return jsonify({
-            'success': True,
-            'climbers': climbers
-        })
-    return render_template('climbers.html', climbers=climbers)
+    error = False
+    try:
+        climbers = get_climbers()
+    except:
+        error = True
+    if error:
+        abort(404)
+    else:
+        if request.path == '/api/climbers':
+            return jsonify({
+                'success': True,
+                'climbers': climbers
+            }), 200
+        return render_template('climbers.html', climbers=climbers)
 
 @app.route('/climbers', methods=['POST'])
 @app.route('/api/climbers', methods=['POST'])
@@ -214,7 +228,7 @@ def add_climbers(payload):
             return jsonify({
                 'success': True,
                 'climbers': climbers
-            })
+            }), 200
         return render_template('climbers.html', climbers=climbers)
 
 @app.route('/climbers/<int:climber_id>', methods=['PATCH'])
@@ -263,7 +277,7 @@ def edit_climbers(payload, climber_id):
                 'success': True,
                 'id': climber_id,
                 'name' : name
-            })
+            }), 200
         return render_template('climbers.html', climbers=climbers)    
     
 @app.route('/climbers/<int:climber_id>', methods=['DELETE'])
@@ -299,9 +313,42 @@ def remove_climbers(payload, climber_id):
                 'success': True,
                 'id': climber_id,
                 'name' : name
-            })
+            }), 200
         return render_template('climbers.html', climbers=climbers)    
-    
+
+@app.errorhandler(400)
+def unauthorized(error):
+    return jsonify({
+        "success": False, 
+        "error": 400,
+        "message": "bad request"
+    }), 400    
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return jsonify({
+        "success": False, 
+        "error": 401,
+        "message": "unauthorized"
+    }), 401
+
+@app.errorhandler(403)
+def unprocessable(error):
+    return jsonify({
+        "success": False, 
+        "error": 403,
+        "message": "forbidden"
+    }), 403
+
+@app.errorhandler(404)
+def notfound(error):
+    return jsonify({
+        "success": False, 
+        "error": 404,
+        "message": "resource not found"
+    }), 404
+
+
 #if __name__ == '__main__': 
 #    app.run(host='127.0.0.1', port=81, debug=True)
     
