@@ -86,8 +86,13 @@ def add_climbing_spots(payload):
     try:
         name = request.json['name']
         location = request.json['location']
-
-        climbing_spot = ClimbingSpot(name=name, location=location)
+        spot_id = request.get_json().get('id', None)
+        
+        if (spot_id):
+            climbing_spot = ClimbingSpot(id=spot_id, name=name, location=location)
+        else:
+            climbing_spot = ClimbingSpot(name=name, location=location)
+        
         db.session.add(climbing_spot)
         db.session.commit()
         
@@ -204,8 +209,13 @@ def add_climbers(payload):
         name = request.json['name']
         state = request.json['state']
         visited_spots = request.json['visited_spots']
+        climber_id = request.get_json().get('id', None)
+        
+        if (climber_id):
+            climber = Climber(id=climber_id, name=name, state=state)
+        else:
+            climber = Climber(name=name, state=state)
 
-        climber = Climber(name=name, state=state)
         db.session.add(climber)
         db.session.flush()
         for spot_id in visited_spots:
