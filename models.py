@@ -7,6 +7,7 @@ db = SQLAlchemy()
 #database_name = os.environ['database_name']
 #database_name = "climbing"
 #database_path = "postgres://{}:{}@{}/{}".format('postgres', 'emerald', 'localhost:5432', database_name)
+#database_path = os.environ['DATABASE_URL']
 database_name = "d8b3a9n3e5jv3p"
 database_path = "postgres://{}:{}@{}/{}".format('esvqiibikborvn', '9f493fabfcbd0dbdd41ffd093121def61262c48b3622f1a9dd0889cc5e3270ba', 'ec2-18-214-211-47.compute-1.amazonaws.com:5432', database_name)
 

@@ -6,15 +6,16 @@ from flask_sqlalchemy import SQLAlchemy
 from app import app
 from models import setup_db, db_create_all, return_db, ClimbingSpot, Climber, VisitedSpot, db as models_db
 
-jwt_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkRTQ1RsRlo4alQyR3d1OXJuRHVQTCJ9.eyJpc3MiOiJodHRwczovL2NsaW1iaW5nLXNwb3QuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTE2MzkwOTc2MTY5NzkwMzg0MjMzIiwiYXVkIjpbImNsaW1iaW5nIiwiaHR0cHM6Ly9jbGltYmluZy1zcG90LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1OTExNTMyOTcsImV4cCI6MTU5MTE2MDQ5NywiYXpwIjoiTkFsN1Y0WU85b3J0MTI3dVZWOE9TM3Exbm1KUFo3b3IiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmNsaW1iZXIiLCJkZWxldGU6Y2xpbWJpbmctc3BvdCIsInBhdGNoOmNsaW1iZXIiLCJwYXRjaDpjbGltYmluZy1zcG90IiwicG9zdDpjbGltYmVyIiwicG9zdDpjbGltYmluZy1zcG90Il19.m6dzgtKk6OpfRogs6QzTVzFAtJvX1OmtpVOgLaTFHsR0Q8Y2qjIWjztOREsKUPRJHYo0-35aZz9XaYNPh_qCEu1paWJyPTYfbyf2ZTvETLuXmrOiZ87x9qOvBqzWJMoCEmWSlNybP6mnlSpwvmUo4gTzdq1FsWKvQmRo_fHo8GKoWgC8ME5-kbUQXfWTDeiKmuXEv9dUI2Rm4RJ-D_Nd3MHW3hSFLlZncM_XrxDd0Z5qODeuRzNvOi9ZPN5_vnVpsjwU7wC1ZJ2ENV6iuDxQQOIYKD1kKC1iSxMaBTrSq6kxAMZ93dnT13xWyDuY3_W0aSR5jxwOGjX2C2YtJlTzEw'
+jwt_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkRTQ1RsRlo4alQyR3d1OXJuRHVQTCJ9.eyJpc3MiOiJodHRwczovL2NsaW1iaW5nLXNwb3QuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTE2MzkwOTc2MTY5NzkwMzg0MjMzIiwiYXVkIjpbImNsaW1iaW5nIiwiaHR0cHM6Ly9jbGltYmluZy1zcG90LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1OTEzMjg0NzcsImV4cCI6MTU5MTMzNTY3NywiYXpwIjoiTkFsN1Y0WU85b3J0MTI3dVZWOE9TM3Exbm1KUFo3b3IiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmNsaW1iZXIiLCJkZWxldGU6Y2xpbWJpbmctc3BvdCIsInBhdGNoOmNsaW1iZXIiLCJwYXRjaDpjbGltYmluZy1zcG90IiwicG9zdDpjbGltYmVyIiwicG9zdDpjbGltYmluZy1zcG90Il19.Yn1qxkfK_Exv56w-ygzYTe-DlHH_zHP6lfEBGLLtT0JpJdZY6waAyFQnDLIcut2_hT3FltzfyZlwjkVN1r1HfIutWDziyg0GamJINJwWcZQW0NHBS_bzJ3IF8IwSgJDEs9UFqZip7Qq-cuBfq8oYWu4ODxs7pqYySpDrXuIvRVAnU6EMcSAbb3_QvgEHVeMYpPrp1pitluq3OoF-HGComgyctE4UlNRdgtsf5kAOJchz3bHdv4qggr6vcjH8iMo9nGOn26kqikzpB4-wsWN2qoRIDGZlgFmI6YWPt-Pg6VvGgzIbHVXwTHTsbRbJjfFSXDma3pPC30lFpTPFq02RMw'
 
 class ClimbingTestCase(unittest.TestCase):
 
     def setUp(self):
         self.app = app
         self.client = self.app.test_client
-        self.database_name = "climbing_test"
-        self.database_path = "postgres://{}:{}@{}/{}".format('postgres', 'emerald', 'localhost:5432', self.database_name)
+#        self.database_name = "climbing_test"
+#        self.database_path = "postgres://{}:{}@{}/{}".format('postgres', 'emerald', 'localhost:5432', self.database_name)
+        self.database_path = "postgres://{}:{}@{}/{}".format('kotcnkvlfxfpqd', 'f567da0d15538f491aa4cde4551069a3b7d132533b467eaf8beeef190298d500', 'ec2-184-72-235-159.compute-1.amazonaws.com:5432', 'demuer9gsfup1p')
         self.app.config["SQLALCHEMY_DATABASE_URI"] = self.database_path
         self.app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
         self.app.config['LOGIN_DISABLED'] = True
