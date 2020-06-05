@@ -42,11 +42,13 @@
         <div>
             <span class="form-label form-label-spot">Visited Climbing Spots:</span>
             <ul>
+                {% if climbers['climber'] %}
                 {% for i in range(0, climbers['climber'][0].len_all_spots) %}
                 <li class="list-spot"><input type="checkbox" data-id="{{ climbers['climber'][0].all_spots_id[i] }}"/>
                     <span>{{ climbers['climber'][0].all_spots[i] }}</span>
                 </li>
                 {% endfor %}
+                {% endif %}
             </ul>
         </div>
     <button type="submit" class="button-submit" id="submit-climber">Submit</button>
@@ -68,11 +70,13 @@
         <div>
             <span class="form-label form-label-spot">Visited Climbing Spots:</span>
             <ul>
+                {% if climbers['climber'] %}
                 {% for i in range(0, climbers['climber'][0].len_all_spots) %}
                 <li class="list-spot"><input type="checkbox" data-id="{{ climbers['climber'][0].all_spots_id[i] }}"/>
                     <span>{{ climbers['climber'][0].all_spots[i] }}</span>
                 </li>
                 {% endfor %}
+                {% endif %}
             </ul>
         </div>
     <button type="submit" class="button-submit" id="edit-climber" data-id="">Change</button>

@@ -1,3 +1,4 @@
+import os
 import json
 from flask import request, _request_ctx_stack, abort
 from functools import wraps
@@ -6,8 +7,8 @@ from urllib.request import urlopen
 
 
 AUTH0_DOMAIN = 'climbing-spot.auth0.com'
-ALGORITHMS = ['RS256']
 API_AUDIENCE = 'climbing'
+ALGORITHMS = ['RS256']
 
 class AuthError(Exception):
     def __init__(self, error, status_code):
