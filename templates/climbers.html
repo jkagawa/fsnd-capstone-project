@@ -96,7 +96,9 @@ if(access_token != "") {
     console.log('Stored in LocalStorage');
 }
 else {
-    access_token = window.localStorage.getItem('access_token');
+    if(window.localStorage.getItem('access_token') != null) {
+        access_token = window.localStorage.getItem('access_token');
+    }
     console.log('Retrived from LocalStorage');
 }
 console.log(access_token);

@@ -62,7 +62,9 @@ if(access_token != "") {
     console.log('Stored in LocalStorage');
 }
 else {
-    access_token = window.localStorage.getItem('access_token');
+    if(window.localStorage.getItem('access_token') != null) {
+        access_token = window.localStorage.getItem('access_token');
+    }
     console.log('Retrived from LocalStorage');
 }
 console.log(access_token);
@@ -74,7 +76,7 @@ $.getJSON(JSONurl, function(data) {
     console.log(original_kid);
     
     var unverified_kid ='';
-    console.log(parseJwt(access_token ,1));
+    console.log(parseJwt(access_token, 1));
     if (parseJwt(access_token, 0).hasOwnProperty('kid')) { 
         unverified_kid = parseJwt(access_token, 0)['kid'];
     }
