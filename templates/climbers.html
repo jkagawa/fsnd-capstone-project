@@ -188,6 +188,7 @@ function signOut() {
     document.getElementById("button-signout").style.display = "none";
     document.getElementById("button-signin").style.display = "block";
     window.localStorage.setItem('access_token', '');
+    window.location.href = "https://climbing-spot-app.herokuapp.com/climbers";
     console.log('JWT removed from LocalStorage');
 }
 function openForm() {
