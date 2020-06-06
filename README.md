@@ -3,7 +3,7 @@ Rock Climbing Spot App
 
 ### Introduction
 
-This is an application that enables the disovery of rock climbing locations and rock climbers around the world. You can browse the climbers featured in this application and see which climbing locations they have been to.
+This is an application that enables the discovery of rock climbing locations and rock climbers around the world. You can browse the climbers featured in this application and see which climbing locations they have been to.
 
 This application is powered by an API that conforms to the REST architectural style. The API returns JSON-encoded responses and uses standard HTTP response codes.
 
@@ -15,11 +15,11 @@ Visit the following URL to see the app in action:
 
 This app connects to a Postgres server hosted in Heroku. Anyone can view the climbing locations and climbers. An account login with specific permissions is needed in order to add, edit, and remove climbing locations and climber profiles. These are specified below.
 
-<u>Administrator login</u> (can add, edit, and remove climbing locations and climber profiles):
+Administrator login (can add, edit, and remove climbing locations and climber profiles):
 * email: joshuakagawa@gmail.com
 * password: User1admin
 
-<u>Climber login</u> (can add, edit, and remove climber profiles only):
+Climber login (can add, edit, and remove climber profiles only):
 * email: joshuakagawa_3@yahoo.com
 * password: User2climber
 
@@ -57,13 +57,13 @@ The app connects to a Postgres database hosted in Heroku, so there is no need to
 
 Multiple tests have been created in order to test that the behavior of the endpoints are as expected.
 
-##### Run the test
+##### Run the tests
 Assuming the virtual environment has been initlaized / activated and the dependencies have been installed based on the instructions above, run the following in the project folder:
 
 ```bash
 python test_app.py
 ```
-The test also connects to a Postgres database hosted in Heroku, so there is no need to run the database server locally.
+This test also connects to a Postgres database hosted in Heroku, so there is no need to run the database server locally.
 
 ### API Endpoints
 
@@ -88,7 +88,7 @@ The test also connects to a Postgres database hosted in Heroku, so there is no n
 ##### Add climbing spot (POST Method)
 > /climbing-spots
 
-<u>Request requirements</u>
+Request requirements (id is optional)
 
 > body:  
 > {  
@@ -105,7 +105,7 @@ The test also connects to a Postgres database hosted in Heroku, so there is no n
 ##### Edit climbing spot (PATCH Method)
 > /climbing-spots/[SPOT ID]
 
-<u>Request requirements</u>
+Request requirements
 
 > body:  
 > {  
@@ -121,7 +121,7 @@ The test also connects to a Postgres database hosted in Heroku, so there is no n
 ##### Remove climbing spot (DELETE Method)
 > /climbing-spots/[SPOT ID]
 
-<u>Request requirements</u>
+Request requirements
 
 > headers:  
 > {  
@@ -135,7 +135,7 @@ The test also connects to a Postgres database hosted in Heroku, so there is no n
 ##### Add climber (POST Method)
 > /climbers
 
-<u>Request requirements</u>
+Request requirements (id is optional)
 
 > body:  
 > {  
@@ -153,7 +153,7 @@ The test also connects to a Postgres database hosted in Heroku, so there is no n
 ##### Edit climber (PATCH Method)
 > /climbers/[CLIMBER ID]
 
-<u>Request requirements</u>
+Request requirements
 
 > body:  
 > {  
@@ -170,7 +170,7 @@ The test also connects to a Postgres database hosted in Heroku, so there is no n
 ##### Remove climber (DELETE Method)
 > /climbing-spots/[CLIMBER ID]
 
-<u>Request requirements</u>
+Request requirements
 
 > headers:  
 > {  
