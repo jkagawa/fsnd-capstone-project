@@ -3,12 +3,37 @@ body {
     font-family: hevetica, arial, sans-serif;
     background: #CCCCCC;
     color: #191919;
+    background: url(/static/images/climbing_image1.jpg) no-repeat top center fixed;
+    background-size: auto;
 }
 
 #nav-bar {
     background: #0080ff;
-    padding: 10px 10px 0px;
+    padding: 10px;
     text-align: center;
+}
+
+#nav-bar-dropdown {
+    background: #0080ff;
+    padding: 10px;
+    text-align: center;
+    display: none; 
+    overflow: hidden;
+}
+
+.nav-title {
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+@media (max-width: 640px) {
+    #nav-bar {
+        display: none;
+    }
+    #nav-bar-dropdown {
+        display: block;
+    }
 }
 
 a {
@@ -18,10 +43,11 @@ a {
 .nav-button {
     display: inline-block;
     background: #999999;
-    padding: 5px;
+    padding: 10px 5px;
     margin: 0px 5px;
-    color: #464646;
+    color: #e5e5e5;
     min-width: 150px;
+    border-radius: 7px;
 }
 
 .button-main { 
@@ -35,6 +61,18 @@ a {
     font-size: 18px;
 }
 
+.card {
+    padding: 20px 10px;
+    background: #FFFFFF;
+    width: 1080px;
+    max-width: 95%;
+    height: 100%;
+    margin: 0px auto;
+    vertical-align: top;
+    border-radius: 7px;
+    line-height: 1.0;
+}
+
 .card-spot {
     padding: 10px;
     background: #FFFFFF;
@@ -44,6 +82,7 @@ a {
     margin: 10px auto;
     vertical-align: top;
     clear: both;
+    border-radius: 7px;
 }
 
 .card-climber {
@@ -56,6 +95,7 @@ a {
     vertical-align: top;
     overflow: auto;
     clear: both;
+    border-radius: 7px;
 }
 
 .card-title {
@@ -195,7 +235,8 @@ a {
     display: none;
 }
 
-.button-add:focus, .form-area input[type=text]:focus, .button-submit, .button-cancel, .button-remove, .button-edit, #button-signin, #button-signout {
+.button-add:focus, .form-area input[type=text]:focus, .button-submit, .button-cancel, 
+.button-remove, .button-edit, #button-signin, #button-signout, .dropbtn {
     outline: none;
 }
 
@@ -235,3 +276,39 @@ a {
     display: inline-block;
 }
 
+.dropbtn {
+    background: #4ea7ff;
+    color: #FFFFFF;
+    padding: 5px 10px 1px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    float: right;
+}
+
+.dropdown-content {
+    display: none;
+    position: fixed;
+    background: #999999;
+    right: 10px;
+    min-width: 50%;
+}
+
+.dropdown-content a {
+    color: #FFFFFF;
+    padding: 15px;  
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown:hover .dropdown-content, .dropbtn:focus + .dropdown-content {
+    display: block;
+}
+
+.dropdown-main {
+    background: #CCCCCC;
+    color: #000000 !important;
+}
