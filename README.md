@@ -16,12 +16,12 @@ Visit the following URL to see the app in action:
 This app connects to a Postgres server hosted in Heroku. Anyone can view the climbing locations and climbers. An account login with specific permissions is needed in order to add, edit, and remove climbing locations and climber profiles. These are specified below.
 
 Administrator login (can add, edit, and remove climbing locations and climber profiles):
-* email: joshuakagawa@gmail.com
-* password: User1admin
+* email: &ast;&ast;&ast;&ast;&ast;&ast;&ast;&ast;
+* password: &ast;&ast;&ast;&ast;&ast;&ast;&ast;&ast;
 
 Climber login (can add, edit, and remove climber profiles only):
-* email: joshuakagawa_3@yahoo.com
-* password: User2climber
+* email: &ast;&ast;&ast;&ast;&ast;&ast;&ast;&ast;
+* password: &ast;&ast;&ast;&ast;&ast;&ast;&ast;&ast;
 
 ### Running the climbing app on your local machine
 
