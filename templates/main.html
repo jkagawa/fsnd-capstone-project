@@ -3,9 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>{% block title %}{% endblock %}</title>
-
+    <link rel="icon" type="image/png" href="static/images/favicon.png">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link type="text/css" rel="stylesheet" href="static/css/main.css" />
 </head>
@@ -17,7 +16,8 @@
         </div>
         <div><a href="/" class="{% if request.endpoint == 'index' %}dropdown-main{% endif %}">Home</a></div>
         <div><a href="/climbing-spots" class="{% if request.endpoint == 'climbing_spots' %}dropdown-main{% endif %}">Climbing Spots</a></div>
-        <div><a href="/climbers" class="{% if request.endpoint == 'climbers' %}dropdown-main{% endif %}">Climbers</a></div> 
+        <div><a href="/climbers" class="{% if request.endpoint == 'climbers' %}dropdown-main{% endif %}">Climbers</a></div>
+        <div><a href="/contact" class="{% if request.endpoint == 'contact' %}dropdown-main{% endif %}">Contact</a></div>
     </div>
     <div id="container">
         <header>
@@ -31,6 +31,9 @@
                 <a href="/climbers">
                     <div id="button-climbers" class="nav-button {% if request.endpoint == 'climbers' %}button-main{% endif %}">Climbers</div>
                 </a>
+                <a href="/contact">
+                    <div id="button-climbers" class="nav-button {% if request.endpoint == 'contact' %}button-main{% endif %}">Contact</div>
+                </a>
 
             </div>
             <div id="nav-bar-dropdown">
@@ -38,6 +41,7 @@
                 <div class="nav-title" style="{% if request.endpoint == 'index' %}display: inline-block;{% else %}display: none;{% endif %}">Home</div>
                 <div class="nav-title" style="{% if request.endpoint == 'climbing_spots' %}display: inline-block;{% else %}display: none;{% endif %}">Climbing Spots</div>
                 <div class="nav-title" style="{% if request.endpoint == 'climbers' %}display: inline-block;{% else %}display: none;{% endif %}">Climbers</div>
+                <div class="nav-title" style="{% if request.endpoint == 'contact' %}display: inline-block;{% else %}display: none;{% endif %}">Contact</div>
                 <div class="dropdown">
                   <button class="dropbtn" onclick="toggleMenu()"><img src="static/images/menu-icon.png" width="20px" class="menu_icon img_style"></button>
                 </div>

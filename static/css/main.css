@@ -4,7 +4,7 @@ body {
     background: #CCCCCC;
     color: #191919;
     background: url(/static/images/climbing_image1.jpg) no-repeat top center fixed;
-    background-size: auto;
+    background-size: cover;
 }
 
 #nav-bar {
@@ -32,15 +32,6 @@ body {
     display: inline-block;
     position: relative;
     top: 25%;
-}
-
-@media (max-width: 640px) {
-    #nav-bar {
-        display: none;
-    }
-    #nav-bar-dropdown {
-        display: block;
-    }
 }
 
 a {
@@ -145,12 +136,6 @@ a {
     padding: 5px;
 }
 
-@media (max-width: 640px) {
-    .nav-button {
-        min-width: 0px;
-    }
-}
-
 .form-title {
     text-align: center;
     margin-bottom: 15px;
@@ -208,6 +193,7 @@ a {
     margin-bottom: 20px;
     float: left;
     display: none;
+    border-radius: 7px;
 }
 
 .button-submit {
@@ -438,4 +424,47 @@ header {
     top: 0;
     width: 100%;
     background-color: #F5F3F4;
+}
+
+.contact-form form label {
+    width: 100%;
+    text-align: left;
+    font-size: 18px;
+    display: block;
+}
+
+.contact-form form input[type=text], .contact-form form input[type=email], .contact-form form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    display: block;
+    box-sizing: border-box;
+}
+
+.contact-form form textarea {
+    height: 170px;
+    resize: vertical;
+}
+
+.contact-form form input[type=submit] {
+    background-color: #00cc00;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px; border-radius: 7px;
+}
+
+@media (max-width: 720px) {
+    #nav-bar {
+        display: none;
+    }
+    #nav-bar-dropdown {
+        display: block;
+    }
+    .nav-button {
+        min-width: 0px;
+    }
 }

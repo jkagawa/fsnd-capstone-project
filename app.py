@@ -58,6 +58,10 @@ def get_climbers():
 def index():
     return render_template('home.html')
 
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
 #=================CLIMBING SPOT ENDPOINTS=================
 
 @app.route('/climbing-spots', methods=['GET'])
