@@ -19,7 +19,8 @@ def get_climbing_spots():
         spot.append({
             "id" : climbingspot.id,
             "name" : climbingspot.name,
-            "location" : climbingspot.location
+            "location" : climbingspot.location,
+            "address_state" : climbingspot.address_state,
         })
     spots = {
         "spot" : spot

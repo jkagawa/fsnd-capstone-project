@@ -12,8 +12,12 @@
     <div class="card-spot">
         <button type="submit" class="button-remove" data-id="{{ spot.id }}" onclick="removeSpot(this)"><b>Remove</b></button>
         <button type="submit" class="button-edit" data-id="{{ spot.id }}" data-name="{{ spot.name }}" data-location="{{ spot.location }}" onclick="openEdit(this)"><b>Edit</b></button>
-        <div class="card-title">{{ spot.name }}</div>
-        <div class="card-body">{{ spot.location }}</div>
+        <div class="grid-container">
+            <div class="item1">{{ spot.address_state }}</div>
+            <div class="card-title item2">{{ spot.name }}</div>
+            <div class="card-body item3">{{ spot.location }}</div>
+            <div class="card-body item4"><a href="https://www.google.com/maps/search/?api=1&query={{ spot.name }}, {{ spot.location }}" target="_blank" class="card-body-link">Open in Google Maps</a></div>
+        </div>
     </div>
     {% endfor %}
 </div>
