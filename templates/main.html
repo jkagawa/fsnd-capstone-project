@@ -53,15 +53,15 @@
                 <div class="nav-title" style="{% if request.endpoint == 'climbers' %}display: inline-block;{% else %}display: none;{% endif %}">Climbers</div>
                 <div class="nav-title" style="{% if request.endpoint == 'contact' %}display: inline-block;{% else %}display: none;{% endif %}">Contact</div>
                 <div class="dropdown">
-                  <button class="dropbtn" onclick="toggleMenu()"><img src="static/images/menu-icon.png" width="20px" class="menu_icon img_style"></button>
+                  <button class="dropbtn" onclick="toggleMenu()"><img src="static/images/menu-icon-white.png" width="20px" class="menu_icon img_style"></button>
                 </div>
             </div>
         </header>
-    
+
     {% block content %}{% endblock %}
-        
+
     </div>
-    
+
     <script type="text/javascript">
         function toggleMenu() {
             document.getElementById("main_dropdown").classList.toggle("show");
@@ -74,7 +74,7 @@
             }
         }
     </script>
-    
+
 </body>
 
 </html>
