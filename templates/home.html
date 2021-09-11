@@ -3,17 +3,58 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 
-<div class="content-body">
-    <div>
-        <div style="margin: 150px 0 0;">
-          <img src="static/images/climbing-spot-logo-w200.png" class="img_style" style="width: 200px; max-width: 90%;">
+<div class="content-body" style="display: flex; height: 100vh; margin: 0; padding: 0;">
+    <div style="display: flex; flex: 1 1 100%; flex-wrap: wrap; ">
+      <div class="mydiv" style="display: flex; flex: 1 1 100%; flex-wrap: wrap;">
+        <div style="flex: 0 0 100%; height: 75vh; max-width: 100%; display: flex; align-items: center; justify-content: center;">
+            <img src="static/images/climbing-spot-logo-w200.png" class="img_style" style="width: 200px; max-width: 90%;">
         </div>
-        <div style="background: white; margin: 250px -25px 250px; padding: 55px 20px 55px;">
-          <div style="font-size: 80px; margin: 0 0 20px;">Welcome</div>
-          <div style="font-size: 22px; margin: 0 0 0px;">Check out the rock climbing spots and climbers featured on this site</div>
+        <div style="background: white; flex: 0 0 100%; height: 25vh; max-width: 100%; display: flex; align-items: center; justify-content: center; flex-flow: column;">
+            <div style="font-size: 80px; margin: 0; width: 100%;">Welcome</div>
+            <div style="font-size: 22px; margin: 0; width: 100%;">Check out the rock climbing spots and climbers featured on this site</div>
+        </div>
+      </div>
+      <div class="mydiv" style="display: flex; flex: 1 1 100%;">
+        <div style="display: flex; flex: 1 1 100%; max-width: 100%; flex-wrap: wrap; align-items: end; justify-content: center; height: 50vh;">
+            <div style="padding: 12px 20px; background: white; display: inline-block; border-radius: 20px; margin: 0 0 25px;">Made by <a href="https://jkagawa.com/" style="color: #191919; text-decoration: underline;" target="_blank">Joshua Kagawa</a></div>
+        </div>
+      </div>
+  </div>
 </div>
-<div style="padding: 12px 20px; background: white; display: inline-block; border-radius: 20px; margin: 0 0 25px;">Made by <a href="https://jkagawa.com/" style="color: #191919; text-decoration: underline;" target="_blank">Joshua Kagawa</a></div>
 
-</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+      var divs = $('.mydiv');
+      var dir = 'up';
+      var div = 0;
+  $(document.body).on('DOMMouseScroll mousewheel', function (e) {
+        if (e.originalEvent.detail > 0 || e.originalEvent.wheelDelta < 0) {
+            dir = 'down';
+        } else {
+            dir = 'up';
+        }
+        div = -1;
+        divs.each(function(i){
+            if (div<0 && ($(this).offset().top >= $(window).scrollTop())) {
+                div = i;
+            }
+        });
+        if (dir == 'up' && div > 0) {
+            div--;
+        }
+        if (dir == 'down' && div < divs.length -1) {
+            div++;
+        }
+        $('html,body').stop().animate({
+            scrollTop: divs.eq(div).offset().top
+        }, 1200);
+        return false;
+    });
+    $(window).resize(function () {
+        $('html,body').scrollTop(divs.eq(div).offset().top);
+    });
+});
+</script>
 
 {% endblock %}

@@ -7,7 +7,7 @@
     <a href="https://climbing-spot.auth0.com/authorize?audience=climbing&response_type=token&client_id=NAl7V4YO9ort127uVV8OS3q1nmJPZ7or&redirect_uri=https://climbing-spot-app.herokuapp.com/climbing-spots"><button id="button-signin">Sign In</button></a>
     <button id="button-signout" onclick="signOut()">Sign Out</button>
     <button class="button-add" onclick="openForm()">Add</button>
-    
+
     {% for spot in spots['spot'] %}
     <div class="card-spot">
         <button type="submit" class="button-remove" data-id="{{ spot.id }}" onclick="removeSpot(this)"><b>Remove</b></button>
@@ -23,7 +23,7 @@
 </div>
 
 <div class="form-div" id="AddForm">
-    <form class="form-area">
+    <form class="form-area" autocomplete="off">
         <button type="submit" class="button-cancel" onclick="closeForm()"><b>╳</b></button>
         <div class="form-title">Add A New Climbing Spot</div>
         <div>
@@ -38,7 +38,7 @@
   </form>
 </div>
 
-<div class="form-div" id="EditForm">
+<div class="form-div" id="EditForm" autocomplete="off">
     <form class="form-area">
         <button type="submit" class="button-cancel" onclick="closeEdit()"><b>╳</b></button>
         <div class="form-title">Edit Climbing Spot</div>
@@ -79,13 +79,13 @@ var JSONurl = 'https://climbing-spot.auth0.com/.well-known/jwks.json';
 $.getJSON(JSONurl, function(data) {
     var original_kid = data.keys['0']['kid'];
     console.log(original_kid);
-    
+
     var unverified_kid ='';
     console.log(parseJwt(access_token, 1));
-    if (parseJwt(access_token, 0).hasOwnProperty('kid')) { 
+    if (parseJwt(access_token, 0).hasOwnProperty('kid')) {
         unverified_kid = parseJwt(access_token, 0)['kid'];
     }
-    
+
     console.log(unverified_kid);
     if(original_kid == unverified_kid) {
         document.getElementById("button-signout").style.display = "block";
@@ -103,7 +103,7 @@ $.getJSON(JSONurl, function(data) {
 var post_climbingspot = false;
 var patch_climbingspot = false;
 var delete_climbingspot = false;
-if (parseJwt(access_token, 1).hasOwnProperty('permissions')) { 
+if (parseJwt(access_token, 1).hasOwnProperty('permissions')) {
     var permission_array = parseJwt(access_token, 1)['permissions'];
     for(var i=0; i<permission_array.length; i++) {
         if(permission_array[i] == 'post:climbing-spot') {
@@ -138,19 +138,19 @@ if(delete_climbingspot) {
     }
     console.log('Can remove climbing spot');
 }
-    
+
 function parseJwt(token, n) {
     var result = "";
     if(token.includes(".")) {
         var base64Url = token.split('.')[n];
-        
+
         var base64 = decodeURIComponent(atob(base64Url).split('').map((c)=>{
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
-        
+
         result = JSON.parse(base64)
     }
-    
+
     return result;
 }
 
