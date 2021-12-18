@@ -25,36 +25,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
   $(document).ready(function () {
-      var divs = $('.mydiv');
-      var dir = 'up';
-      var div = 0;
-  $(document.body).on('DOMMouseScroll mousewheel', function (e) {
-        if (e.originalEvent.detail > 0 || e.originalEvent.wheelDelta < 0) {
-            dir = 'down';
-        } else {
-            dir = 'up';
-        }
-        div = -1;
-        divs.each(function(i){
-            if (div<0 && ($(this).offset().top >= $(window).scrollTop())) {
-                div = i;
-            }
-        });
-        if (dir == 'up' && div > 0) {
-            div--;
-        }
-        if (dir == 'down' && div < divs.length -1) {
-            div++;
-        }
-        $('html,body').stop().animate({
-            scrollTop: divs.eq(div).offset().top
-        }, 800);
-        return false;
-    });
-    $(window).resize(function () {
-        $('html,body').scrollTop(divs.eq(div).offset().top);
-    });
-});
+  });
 </script>
 
 {% endblock %}
