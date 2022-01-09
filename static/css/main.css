@@ -1,9 +1,8 @@
 body {
     margin: 0px;
     font-family: hevetica, arial, sans-serif;
-    background: #CCCCCC;
+    /* background: #CCCCCC; */
     color: #191919;
-    background: url(/static/images/climbing_image1.jpg) no-repeat top center fixed;
     background-size: auto;
 }
 
@@ -70,7 +69,6 @@ a {
 
 .card {
     padding: 20px 10px;
-    background: rgba(255, 255, 255);
     width: 1080px;
     max-width: 95%;
     height: 100%;
@@ -90,6 +88,7 @@ a {
     vertical-align: top;
     clear: both;
     border-radius: 7px;
+    border: 1px solid #0080ff;
 }
 
 .card-climber {
@@ -103,6 +102,7 @@ a {
     overflow: auto;
     clear: both;
     border-radius: 7px;
+    border: 1px solid #0080ff;
 }
 
 .card-title {
@@ -174,6 +174,12 @@ a {
     margin-bottom: 20px;
     float: right;
     border-radius: 7px;
+    position: fixed;
+    right: 25px;
+}
+
+.button-add:hover {
+    background: #00e000;
 }
 
 #button-signin {
@@ -188,6 +194,12 @@ a {
     float: left;
     display: none;
     border-radius: 7px;
+    position: fixed;
+    left: 25px;
+}
+
+#button-signin:hover {
+    background: #00e000;
 }
 
 #button-signout {
@@ -202,6 +214,12 @@ a {
     float: left;
     display: none;
     border-radius: 7px;
+    position: fixed;
+    left: 25px;
+}
+
+#button-signout:hover {
+    background: #adadad;
 }
 
 .button-submit {
@@ -215,6 +233,10 @@ a {
     margin: 15px auto;
     display: block;
     border-radius: 7px;
+}
+
+.button-submit:hover {
+    background: #00e000;
 }
 
 .button-cancel, .button-remove, .button-edit {
@@ -451,6 +473,7 @@ header {
     box-sizing: border-box;
     background: #F8F8F8;
     border: none;
+    /* border: 1px solid #0080ff; */
 }
 
 .contact-form form textarea {
@@ -465,6 +488,10 @@ header {
     border: none;
     cursor: pointer;
     font-size: 16px; border-radius: 7px;
+}
+
+.contact-form form input[type=submit]:hover {
+    background: #00e000;
 }
 
 .card-body-link {
@@ -504,6 +531,21 @@ header {
 .item4 {
     grid-area: map;
     align-self: center;
+}
+
+.button-link {
+    padding: 12px 20px;
+    background: white;
+    display: inline-block;
+    border-radius: 20px;
+    margin: 0 0 25px;
+    border: 1px solid #191919;
+    color: #191919;
+}
+.button-link:hover {
+    background: #808080;
+    border: 1px solid #808080;
+    color: white;
 }
 
 @media (max-width: 720px) {
