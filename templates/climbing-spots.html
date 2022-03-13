@@ -4,6 +4,14 @@
 {% block content %}
 
 <div class="content-body">
+    {% with messages = get_flashed_messages() %}
+       {% if messages %}
+          {% for message in messages %}
+             <div class="notif-message" style="background: gray; color: white; width: fit-content; padding: 5px 13px; position: fixed; z-index: 100; left: 50%; transform: translate(-50%, 0); border-radius: 8px;">{{ message }}</div>
+             <script>window.setTimeout("closeNotif();", 3000);</script>
+          {% endfor %}
+       {% endif %}
+    {% endwith %}
     <a href="https://climbing-spot.auth0.com/authorize?audience=climbing&response_type=token&client_id=NAl7V4YO9ort127uVV8OS3q1nmJPZ7or&redirect_uri=https://climbing-spot-app.herokuapp.com/climbing-spots"><button id="button-signin">Sign In</button></a>
     <button id="button-signout" onclick="signOut()">Sign Out</button>
     <button class="button-add" onclick="openForm()">Add</button>
@@ -31,8 +39,12 @@
             <input type="text" id="climbing-spot-name" required>
         </div>
         <div>
-            <span class="form-label">Location</span>
-            <input type="text" id="climbing-spot-location" required>
+            <span class="form-label">City</span>
+            <input type="text" id="climbing-spot-city" required>
+        </div>
+        <div>
+            <span class="form-label">State</span>
+            <input type="text" id="climbing-spot-state" maxlength="2" required>
         </div>
     <button type="submit" class="button-submit" id="submit-climbing-spot">Submit</button>
   </form>
@@ -47,14 +59,25 @@
             <input type="text" id="new-climbing-spot-name" value="" required>
         </div>
         <div>
-            <span class="form-label">Location</span>
-            <input type="text" id="new-climbing-spot-location" value="" required>
+            <span class="form-label">City</span>
+            <input type="text" id="new-climbing-spot-city" value="" required>
+        </div>
+        <div>
+            <span class="form-label">State</span>
+            <input type="text" id="new-climbing-spot-state" value="" maxlength="2" required>
         </div>
     <button type="submit" class="button-submit" id="edit-climbing-spot" data-id="">Change</button>
   </form>
 </div>
 
 <script>
+function closeNotif(){
+  const els = document.querySelectorAll(".notif-message");
+  for (let i = 0; i < els.length; i++) {
+    els[i].style.display=" none";
+  }
+}
+
 var url = window.location.href;
 console.log(url);
 var access_token = ""
@@ -177,7 +200,8 @@ function openEdit(e) {
     elementID.setAttribute('data-id', spot_id);
     var elementName = document.getElementById("new-climbing-spot-name");
     elementName.setAttribute('value', name);
-    var elementLocation = document.getElementById("new-climbing-spot-location");
+    var elementCity = document.getElementById("new-climbing-spot-city");
+    var elementState = document.getElementById("new-climbing-spot-state");
     elementLocation.setAttribute('value', location);
 }
 function closeEdit() {
@@ -202,16 +226,19 @@ function removeSpot(e) {
 document.getElementById('submit-climbing-spot').onclick = function(e) {
     e.preventDefault();
     const name = document.getElementById('climbing-spot-name').value;
-    const location = document.getElementById('climbing-spot-location').value;
-    if (name == "" || location == "") {
-        alert("Name and Location must be filled out");
-    }
-    else {
+    const city = document.getElementById('climbing-spot-city').value;
+    const state = document.getElementById('climbing-spot-state').value;
+    if (name == "" || city == "" || state == "") {
+        alert("Name, City, and State must be filled out");
+    } else if (state.length !== 2) {
+        alert("State must be 2 characters");
+    } else {
         fetch('/climbing-spots', {
             method: 'POST',
             body: JSON.stringify({
                 'name': name,
-                'location': location
+                'city': city,
+                'state': state
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -228,16 +255,19 @@ document.getElementById('edit-climbing-spot').onclick = function(e) {
     e.preventDefault();
     var spot_id = e.target.getAttribute("data-id");
     const name = document.getElementById('new-climbing-spot-name').value;
-    const location = document.getElementById('new-climbing-spot-location').value;
-    if (name == "" || location == "") {
-        alert("Name and Location must be filled out");
-    }
-    else {
+    const city = document.getElementById('new-climbing-spot-city').value;
+    const state = document.getElementById('new-climbing-spot-state').value;
+    if (name == "" || city == "" || state == "") {
+        alert("Name, City, and State must be filled out");
+    } else if (state.length !== 2) {
+        alert("State must be 2 characters");
+    } else {
         fetch('/climbing-spots/' + spot_id, {
             method: 'PATCH',
             body: JSON.stringify({
                 'name': name,
-                'location': location
+                'city': city,
+                'state': state
             }),
             headers: {
                 'Content-Type': 'application/json',

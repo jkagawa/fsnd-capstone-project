@@ -90,17 +90,19 @@ def add_climbing_spots():
     error = False
     try:
         name = request.json['name']
-        location = request.json['location']
+        address_city = request.json['address_city']
+        address_state = request.json['state'].upper()
+        location = address_city + ", " + address_state
         spot_id = request.get_json().get('id', None)
-        
+
         if (spot_id):
-            climbing_spot = ClimbingSpot(id=spot_id, name=name, location=location)
+            climbing_spot = ClimbingSpot(id=spot_id, name=name, location=location, address_city=address_city, address_state=address_state)
         else:
-            climbing_spot = ClimbingSpot(name=name, location=location)
-        
+            climbing_spot = ClimbingSpot(name=name, location=location, address_city=address_city, address_state=address_state)
+
         db.session.add(climbing_spot)
         db.session.commit()
-        
+
         spots = get_climbing_spots()
     except:
         db.session.rollback()
@@ -108,10 +110,10 @@ def add_climbing_spots():
     finally:
         db.session.close()
     if error:
-#        flash('An error occurred. Climbing spot ' + request.json['name'] + ' could not be added.')
+        flash('An error occurred. Climbing spot "' + request.json['name'] + '" could not be added.')
         abort(400)
     else:
-#        flash('Climbing spot ' + request.json['name'] + ' was successfully added!')
+        flash('Climbing spot "' + request.json['name'] + '" was successfully added!')
         if request.path == '/api/climbing-spots':
             return jsonify({
                 'success': True,
@@ -126,13 +128,50 @@ def edit_climbingspots(payload, climbingspot_id):
     error = False
     try:
         name = request.json['name']
-        location = request.json['location']
-        
+        address_city = request.json['address_city']
+        address_state = request.json['state'].upper()
+        location = address_city + ", " + address_state
+
         climbingspot = ClimbingSpot.query.get(climbingspot_id)
         climbingspot.name = name
+        climbingspot.address_city = address_city
+        climbingspot.address_state = address_state
         climbingspot.location = location
         db.session.commit()
-        
+
+        spots = get_climbing_spots()
+    except:
+        db.session.rollback()
+        error = True
+    finally:
+        db.session.close()
+    if error:
+        flash('An error occurred. Climbing spot "' + request.json['name'] + '" could not be added.')
+        abort(400)
+    else:
+        flash('Climbing spot "' + request.json['name'] + '" was successfully added!')
+        if request.path == '/api/climbing-spots/' + str(climbingspot_id):
+            return jsonify({
+                'success': True,
+                'id': climbingspot_id,
+                'name' : name,
+                'location' : location,
+                'state' : address_state
+            }), 200
+        return render_template('climbing-spots.html', spots=spots)
+
+@app.route('/climbing-spots/<int:climbingspot_id>', methods=['DELETE'])
+@app.route('/api/climbing-spots/<int:climbingspot_id>', methods=['DELETE'])
+@requires_auth('delete:climbing-spot')
+def remove_climbingspots(payload, climbingspot_id):
+    error = False
+    try:
+        climbingspot = ClimbingSpot.query.get(climbingspot_id)
+        name = climbingspot.name
+        location = climbingspot.location
+        db.session.delete(climbingspot)
+        db.session.commit()
+
         spots = get_climbing_spots()
     except:
         db.session.rollback()
@@ -153,40 +192,8 @@ def edit_climbingspots(payload, climbingspot_id):
             }), 200
         return render_template('climbing-spots.html', spots=spots)
 
-@app.route('/climbing-spots/<int:climbingspot_id>', methods=['DELETE'])
-@app.route('/api/climbing-spots/<int:climbingspot_id>', methods=['DELETE'])
-@requires_auth('delete:climbing-spot')
-def remove_climbingspots(payload, climbingspot_id):
-    error = False
-    try:
-        climbingspot = ClimbingSpot.query.get(climbingspot_id)
-        name = climbingspot.name
-        location = climbingspot.location
-        db.session.delete(climbingspot)
-        db.session.commit()
-        
-        spots = get_climbing_spots()
-    except:
-        db.session.rollback()
-        error = True
-    finally:
-        db.session.close()
-    if error:
-#        flash('An error occurred. Climbing spot ' + request.json['name'] + ' could not be added.')
-        abort(400)
-    else:
-#        flash('Climbing spot ' + request.json['name'] + ' was successfully added!')
-        if request.path == '/api/climbing-spots/' + str(climbingspot_id):
-            return jsonify({
-                'success': True,
-                'id': climbingspot_id,
-                'name' : name,
-                'location' : location
-            }), 200
-        return render_template('climbing-spots.html', spots=spots)
-    
-#=================CLIMBER ENDPOINTS=================    
-    
+#=================CLIMBER ENDPOINTS=================
+
 @app.route('/climbers', methods=['GET'])
 @app.route('/api/climbers', methods=['GET'])
 def climbers():
@@ -215,7 +222,7 @@ def add_climbers():
         state = request.json['state']
         visited_spots = request.json['visited_spots']
         climber_id = request.get_json().get('id', None)
-        
+
         if (climber_id):
             climber = Climber(id=climber_id, name=name, state=state)
         else:
@@ -227,7 +234,7 @@ def add_climbers():
             visitedspots = VisitedSpot(climbing_spot_id=spot_id, climber_id=climber.id)
             db.session.add(visitedspots)
         db.session.commit()
-        
+
         climbers = get_climbers()
     except:
         db.session.rollback()
@@ -255,11 +262,11 @@ def edit_climbers(payload, climber_id):
         name = request.json['name']
         state = request.json['state']
         new_visited_spots = request.json['visited_spots']
-        
+
         climber = Climber.query.get(climber_id)
         climber.name = name
         climber.state = state
-        
+
         old_visited_spots = VisitedSpot.query.filter_by(climber_id=climber_id)
         for new_spot_id in new_visited_spots:
             visited = old_visited_spots.filter_by(climbing_spot_id=new_spot_id).one_or_none()
@@ -275,7 +282,7 @@ def edit_climbers(payload, climber_id):
                 specific_spot = old_visited_spots.filter_by(climbing_spot_id=old_spot.climbing_spot_id).one_or_none()
                 db.session.delete(specific_spot)
         db.session.commit()
-        
+
         climbers = get_climbers()
     except:
         db.session.rollback()
@@ -293,8 +300,8 @@ def edit_climbers(payload, climber_id):
                 'id': climber_id,
                 'name' : name
             }), 200
-        return render_template('climbers.html', climbers=climbers)    
-    
+        return render_template('climbers.html', climbers=climbers)
+
 @app.route('/climbers/<int:climber_id>', methods=['DELETE'])
 @app.route('/api/climbers/<int:climber_id>', methods=['DELETE'])
 @requires_auth('delete:climber')
@@ -305,13 +312,13 @@ def remove_climbers(payload, climber_id):
         for visited_spot in visited_spots.all():
             specific_spot = visited_spots.filter_by(climbing_spot_id=visited_spot.climbing_spot_id).one_or_none()
             db.session.delete(specific_spot)
-        
+
         climber = Climber.query.get(climber_id)
         name = climber.name
         db.session.delete(climber)
-        
+
         db.session.commit()
-        
+
         climbers = get_climbers()
     except:
         db.session.rollback()
@@ -329,20 +336,20 @@ def remove_climbers(payload, climber_id):
                 'id': climber_id,
                 'name' : name
             }), 200
-        return render_template('climbers.html', climbers=climbers)    
+        return render_template('climbers.html', climbers=climbers)
 
 @app.errorhandler(400)
 def unauthorized(error):
     return jsonify({
-        "success": False, 
+        "success": False,
         "error": 400,
         "message": "bad request"
-    }), 400    
+    }), 400
 
 @app.errorhandler(401)
 def unauthorized(error):
     return jsonify({
-        "success": False, 
+        "success": False,
         "error": 401,
         "message": "unauthorized"
     }), 401
@@ -350,7 +357,7 @@ def unauthorized(error):
 @app.errorhandler(403)
 def unprocessable(error):
     return jsonify({
-        "success": False, 
+        "success": False,
         "error": 403,
         "message": "forbidden"
     }), 403
@@ -358,14 +365,14 @@ def unprocessable(error):
 @app.errorhandler(404)
 def notfound(error):
     return jsonify({
-        "success": False, 
+        "success": False,
         "error": 404,
         "message": "resource not found"
     }), 404
 
 
-#if __name__ == '__main__': 
+#if __name__ == '__main__':
 #    app.run(host='127.0.0.1', port=81, debug=True)
-    
+
 if __name__ == '__main__':
     app.run(debug=True)
