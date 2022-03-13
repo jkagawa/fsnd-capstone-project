@@ -91,7 +91,7 @@ def add_climbing_spots():
     try:
         name = request.json['name']
         address_city = request.json['address_city']
-        address_state = request.json['state'].upper()
+        address_state = request.json['address_state'].upper()
         location = address_city + ", " + address_state
         spot_id = request.get_json().get('id', None)
 
@@ -129,7 +129,7 @@ def edit_climbingspots(payload, climbingspot_id):
     try:
         name = request.json['name']
         address_city = request.json['address_city']
-        address_state = request.json['state'].upper()
+        address_state = request.json['address_state'].upper()
         location = address_city + ", " + address_state
 
         climbingspot = ClimbingSpot.query.get(climbingspot_id)
