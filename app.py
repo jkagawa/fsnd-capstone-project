@@ -90,8 +90,8 @@ def add_climbing_spots():
     error = False
     try:
         name = request.json['name']
-        address_city = request.json['address_city']
-        address_state = request.json['address_state'].upper()
+        address_city = request.json['city']
+        address_state = request.json['state'].upper()
         location = address_city + ", " + address_state
         spot_id = request.get_json().get('id', None)
 
@@ -128,8 +128,8 @@ def edit_climbingspots(payload, climbingspot_id):
     error = False
     try:
         name = request.json['name']
-        address_city = request.json['address_city']
-        address_state = request.json['address_state'].upper()
+        address_city = request.json['city']
+        address_state = request.json['state'].upper()
         location = address_city + ", " + address_state
 
         climbingspot = ClimbingSpot.query.get(climbingspot_id)
