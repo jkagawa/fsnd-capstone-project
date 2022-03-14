@@ -164,62 +164,70 @@ a {
 }
 
 .button-add {
-    background: #00cc00;
-    color: white;
+    background: white;
+    color: #00cc00;
+    border: 2px solid #00cc00;
     padding: 10px;
-    border: none;
     cursor: pointer;
     width: 100px;
-    max-width: 100%;
-    margin-bottom: 20px;
-    float: right;
-    border-radius: 7px;
+    max-width: 100px;
     position: fixed;
     right: 25px;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: bold;
 }
 
 .button-add:hover {
     background: #00e000;
+    color: white;
+    border: 2px solid transparent;
 }
 
 #button-signin {
-    background: #00cc00;
-    color: white;
+    background: white;
+    color: #00cc00;
+    border: 2px solid #00cc00;
     padding: 10px;
-    border: none;
     cursor: pointer;
     width: 100px;
     max-width: 100%;
     margin-bottom: 20px;
     float: left;
     display: none;
-    border-radius: 7px;
-    position: fixed;
+    border-radius: 8px;
     left: 25px;
+    font-size: 1rem;
+    font-weight: bold;
 }
 
 #button-signin:hover {
-    background: #00e000;
+    background: #00cc00;
+    color: white;
+    border: 2px solid transparent;
 }
 
 #button-signout {
-    background: #999999;
-    color: white;
+    background: white;
+    color: #999999;
+    border: 2px solid #999999;
     padding: 10px;
-    border: none;
     cursor: pointer;
     width: 100px;
     max-width: 100%;
     margin-bottom: 20px;
     float: left;
     display: none;
-    border-radius: 7px;
-    position: fixed;
+    border-radius: 8px;
     left: 25px;
+    font-size: 1rem;
+    font-weight: bold;
 }
 
 #button-signout:hover {
-    background: #adadad;
+    background: #999999;
+    color: white;
+    border: 2px solid transparent;
 }
 
 .button-submit {
@@ -557,5 +565,8 @@ header {
     }
     .nav-button {
         min-width: 0px;
+    }
+    .first-card {
+      margin-top: 50px;
     }
 }

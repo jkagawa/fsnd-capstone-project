@@ -17,7 +17,7 @@
     <button class="button-add" onclick="openForm()">Add</button>
 
     {% for spot in spots['spot'] %}
-    <div class="card-spot">
+    <div class="card-spot{% if loop.index == 1 %} first-card{% endif %}">
         <button type="submit" class="button-remove" data-id="{{ spot.id }}" onclick="removeSpot(this)"><b>Remove</b></button>
         <button type="submit" class="button-edit" data-id="{{ spot.id }}" data-name="{{ spot.name }}" data-location="{{ spot.location }}" onclick="openEditSpot(this)"><b>Edit</b></button>
         <div class="grid-container">
