@@ -4,14 +4,22 @@
 {% block content %}
 
 <div class="content-body">
+    {% with messages = get_flashed_messages() %}
+       {% if messages %}
+          {% for message in messages %}
+             <div class="notif-message" style="background: gray; color: white; width: fit-content; padding: 5px 13px; position: fixed; z-index: 100; left: 50%; transform: translate(-50%, 0); border-radius: 8px;">{{ message }}</div>
+             <script>window.setTimeout("closeNotif();", 3000);</script>
+          {% endfor %}
+       {% endif %}
+    {% endwith %}
     <a href="https://climbing-spot.auth0.com/authorize?audience=climbing&response_type=token&client_id=NAl7V4YO9ort127uVV8OS3q1nmJPZ7or&redirect_uri=https://climbing-spot-app.herokuapp.com/climbers"><button id="button-signin">Sign In</button></a>
-    <button id="button-signout" onclick="signOut()">Sign Out</button>
+    <button id="button-signout" onclick="signOut('climbers')">Sign Out</button>
     <button class="button-add" onclick="openForm()">Add</button>
 
     {% for climber in climbers['climber'] %}
     <div class="card-climber">
-        <button type="submit" class="button-remove" data-id="{{ climber.id }}" onclick="removeSpot(this)"><b>Remove</b></button>
-        <button type="submit" class="button-edit" data-id="{{ climber.id }}" data-name="{{ climber.name }}" data-state="{{ climber.state }}" onclick="openEdit(this)"><b>Edit</b></button>
+        <button type="submit" class="button-remove" data-id="{{ climber.id }}" onclick="removeClimber(this)"><b>Remove</b></button>
+        <button type="submit" class="button-edit" data-id="{{ climber.id }}" data-name="{{ climber.name }}" data-state="{{ climber.state }}" onclick="openEditClimber(this)"><b>Edit</b></button>
         <div class="card-title">{{ climber.name }}</div>
         <div class="card-info">{{ climber.state }}</div>
         <div class="card-body">
@@ -84,222 +92,5 @@
   </form>
 </div>
 
-<script>
-var url = window.location.href;
-console.log(url);
-var access_token = ""
-if(url.includes("access_token=")) {
-    access_token = url.match(/\#(?:access_token)\=([\S\s]*?)\&/)[1];
-}
-console.log(access_token);
-if(access_token != "") {
-    window.localStorage.setItem('access_token', access_token);
-    console.log('Stored in LocalStorage');
-}
-else {
-    if(window.localStorage.getItem('access_token') != null) {
-        access_token = window.localStorage.getItem('access_token');
-    }
-    console.log('Retrived from LocalStorage');
-}
-console.log(access_token);
-
-var JSONurl = 'https://climbing-spot.auth0.com/.well-known/jwks.json';
-
-$.getJSON(JSONurl, function(data) {
-    var original_kid = data.keys['0']['kid'];
-    console.log(original_kid);
-
-    var unverified_kid ='';
-    console.log(parseJwt(access_token, 1));
-    if (parseJwt(access_token, 0).hasOwnProperty('kid')) {
-        unverified_kid = parseJwt(access_token, 0)['kid'];
-    }
-
-    console.log(unverified_kid);
-    if(original_kid == unverified_kid) {
-        document.getElementById("button-signout").style.display = "block";
-        document.getElementById("button-signin").style.display = "none";
-        console.log('Logged In');
-    }
-    else {
-        document.getElementById("button-signout").style.display = "none";
-        document.getElementById("button-signin").style.display = "block";
-        console.log(unverified_kid);
-        console.log('Logged Out');
-    }
-});
-
-var post_climber = false;
-var patch_climber = false;
-var delete_climber = false;
-if (parseJwt(access_token, 1).hasOwnProperty('permissions')) {
-    var permission_array = parseJwt(access_token, 1)['permissions'];
-    for(var i=0; i<permission_array.length; i++) {
-        if(permission_array[i] == 'post:climber') {
-            post_climber = true;
-        }
-        else if(permission_array[i] == 'patch:climber') {
-            patch_climber = true;
-        }
-        else if(permission_array[i] == 'delete:climber') {
-            delete_climber = true;
-        }
-    }
-}
-if(post_climber) {
-    var ButtonAddArray = document.getElementsByClassName('button-add');
-    for (var i=0; i < ButtonAddArray.length; i++){
-        ButtonAddArray[i].style.display = 'block';
-    }
-    console.log('Can add climber');
-}
-if(patch_climber) {
-    var ButtonAddArray = document.getElementsByClassName('button-edit');
-    for (var i=0; i < ButtonAddArray.length; i++){
-        ButtonAddArray[i].style.display = 'block';
-    }
-    console.log('Can edit climber');
-}
-if(delete_climber) {
-    var ButtonAddArray = document.getElementsByClassName('button-remove');
-    for (var i=0; i < ButtonAddArray.length; i++){
-        ButtonAddArray[i].style.display = 'block';
-    }
-    console.log('Can remove climber');
-}
-
-function parseJwt(token, n) {
-    var result = "";
-    if(token.includes(".")) {
-        var base64Url = token.split('.')[n];
-
-        var base64 = decodeURIComponent(atob(base64Url).split('').map((c)=>{
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-
-        result = JSON.parse(base64)
-    }
-
-    return result;
-}
-
-
-function signOut() {
-    document.getElementById("button-signout").style.display = "none";
-    document.getElementById("button-signin").style.display = "block";
-    window.localStorage.setItem('access_token', '');
-    window.location.href = "https://climbing-spot-app.herokuapp.com/climbers";
-    console.log('JWT removed from LocalStorage');
-}
-function openForm() {
-    document.getElementById("AddForm").style.display = "block";
-}
-function closeForm() {
-    document.getElementById("AddForm").style.display = "none";
-}
-function openEdit(e) {
-    document.getElementById("EditForm").style.display = "block";
-    const climber_id = e.getAttribute("data-id");
-    const name = e.getAttribute("data-name");
-    const state = e.getAttribute("data-state");
-    var elementID = document.getElementById("edit-climber");
-    elementID.setAttribute('data-id', climber_id);
-    var elementName = document.getElementById("new-climber-name");
-    elementName.setAttribute('value', name);
-    var elementState = document.getElementById("new-climber-state");
-    elementState.setAttribute('value', state);
-}
-function closeEdit() {
-    document.getElementById("EditForm").style.display = "none";
-}
-function removeSpot(e) {
-    var result = confirm("Are you sure you want to remove this?");
-    if (result) {
-        var climber_id = e.getAttribute("data-id");
-        fetch('/climbers/' + climber_id, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': 'Bearer ' + access_token
-            }
-        })
-        .then(function() {
-            const item = e.parentElement;
-            item.remove();
-        });
-    }
-}
-document.getElementById('submit-climber').onclick = function(e) {
-    e.preventDefault();
-    const name = document.getElementById('climber-name').value;
-    const state = document.getElementById('climber-state').value;
-
-    var visited_spots = [];
-    var CheckBoxArray = document.querySelectorAll('.list-spot input');
-    for (var i=0; i < CheckBoxArray.length; i++){
-        if (CheckBoxArray[i].checked == true) {
-            visited_spots.push(parseInt(CheckBoxArray[i].getAttribute("data-id")));
-        }
-    }
-
-    if (name == "" || state == "") {
-        alert("Name and State must be filled out");
-    }
-    else {
-        fetch('/climbers', {
-            method: 'POST',
-            body: JSON.stringify({
-                'name': name,
-                'state': state,
-                'visited_spots': visited_spots
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + access_token
-            }
-        })
-        .then(function() {
-            closeForm()
-            window.location.reload();
-        });
-    }
-};
-document.getElementById('edit-climber').onclick = function(e) {
-    e.preventDefault();
-    var climber_id = e.target.getAttribute("data-id");
-    const name = document.getElementById('new-climber-name').value;
-    const state = document.getElementById('new-climber-state').value;
-
-    var visited_spots = [];
-    var CheckBoxArray = document.querySelectorAll('.list-spot input');
-    for (var i=0; i < CheckBoxArray.length; i++){
-        if (CheckBoxArray[i].checked == true) {
-            visited_spots.push(parseInt(CheckBoxArray[i].getAttribute("data-id")));
-        }
-    }
-
-    if (name == "" || state == "") {
-        alert("Name and State must be filled out");
-    }
-    else {
-        fetch('/climbers/' + climber_id, {
-            method: 'PATCH',
-            body: JSON.stringify({
-                'name': name,
-                'state': state,
-                'visited_spots': visited_spots
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + access_token
-            }
-        })
-        .then(function() {
-            closeEdit()
-            window.location.reload();
-        });
-    }
-};
-</script>
-
+<script src="static/climb.js"></script>
 {% endblock %}
