@@ -115,17 +115,22 @@ function parseJwt(token, n) {
 
 //======================================================
 
+//Close all forms
+function closeForm() {
+    document.getElementById("AddForm").style.display = "none";
+    document.getElementById("EditForm").style.display = "none";
+    document.getElementById("Dimmer").style.display = "none";
+}
+
 //Open form to add new spot/climber
 function openForm() {
     document.getElementById("AddForm").style.display = "block";
-}
-//Close form to add new spot/climber
-function closeForm() {
-    document.getElementById("AddForm").style.display = "none";
+    document.getElementById("Dimmer").style.display = "block";
 }
 //Open form to edit spot
 function openEditSpot(e) {
     document.getElementById("EditForm").style.display = "block";
+    document.getElementById("Dimmer").style.display = "block";
     const spot_id = e.getAttribute("data-id");
     const name = e.getAttribute("data-name");
     const location = e.getAttribute("data-location");
@@ -140,6 +145,7 @@ function openEditSpot(e) {
 //Open form to edit climber
 function openEditClimber(e) {
     document.getElementById("EditForm").style.display = "block";
+    document.getElementById("Dimmer").style.display = "block";
     const climber_id = e.getAttribute("data-id");
     const name = e.getAttribute("data-name");
     const state = e.getAttribute("data-state");
@@ -149,10 +155,6 @@ function openEditClimber(e) {
     elementName.setAttribute('value', name);
     var elementState = document.getElementById("new-climber-state");
     elementState.setAttribute('value', state);
-}
-//Open form to edit spot/climber
-function closeEdit() {
-    document.getElementById("EditForm").style.display = "none";
 }
 //Remove spot
 function removeSpot(e) {

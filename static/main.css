@@ -147,16 +147,15 @@ a {
 .form-title {
     text-align: center;
     margin-bottom: 15px;
-    font-weight: bold;
-    font-size: 16px;
+    font-size: 1.25rem;
     clear: right;
 }
 
 .form-label {
-    min-width: 70px;
+    min-width: 50px;
     display: inline-block;
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 1rem;
+    margin: 0 10px;
 }
 
 .form-label-spot {
@@ -184,7 +183,7 @@ a {
     border: 2px solid transparent;
 }
 
-#button-signin {
+#button-signin, .button-submit {
     background: white;
     color: #00cc00;
     border: 2px solid #00cc00;
@@ -192,16 +191,24 @@ a {
     cursor: pointer;
     width: 100px;
     max-width: 100%;
-    margin-bottom: 20px;
-    float: left;
-    display: none;
     border-radius: 8px;
-    left: 25px;
     font-size: 1rem;
     font-weight: bold;
 }
 
-#button-signin:hover {
+#button-signin {
+    left: 25px;
+    float: left;
+    display: none;
+    margin-bottom: 20px;
+}
+
+.button-submit {
+    display: block;
+    margin: 15px auto;
+}
+
+#button-signin:hover, .button-submit:hover {
     background: #00cc00;
     color: white;
     border: 2px solid transparent;
@@ -230,7 +237,7 @@ a {
     border: 2px solid transparent;
 }
 
-.button-submit {
+/* .button-submit {
     background: #00cc00;
     color: white;
     padding: 10px;
@@ -245,25 +252,38 @@ a {
 
 .button-submit:hover {
     background: #00e000;
-}
+} */
 
 .button-cancel, .button-remove, .button-edit {
-    background: red;
-    color: #FFFFFF;
     padding: 2px 6px;
     border: none;
     cursor: pointer;
     float: right;
     clear: right;
+    border-radius: 3px;
 }
 
 .button-cancel, .button-remove {
+    background: white;
+    border: 2px solid red;
+    color: red;
+}
+
+.button-cancel:hover, .button-remove:hover {
     background: red;
+    color: white;
 }
 
 .button-edit {
-    background: #00cc00;
+    background: white;
+    border: 2px solid #00cc00;
+    color: #00cc00;
     margin-top: 5px;
+}
+
+.button-edit:hover {
+    background: #00cc00;
+    color: white;
 }
 
 .button-remove, .button-edit {
@@ -285,17 +305,17 @@ a {
     max-width: 90%;
     padding: 15px;
     background: #FFFFFF;
-    box-shadow: 5px 10px 8px #888888;
     border-radius: 10px;
+    z-index: 100;
 }
 
 .form-area input[type=text] {
     width: 70%;
     padding: 10px;
     margin: 5px;
-    border: none;
-    background: #F8F8F8;
-    font-size: 16px;
+    font-size: 1rem;
+    border: 1px solid #CCCCCC;
+    border-radius: 6px;
 }
 
 .list-spot {
@@ -337,34 +357,6 @@ a {
     color: #FFFFFF;
     font-size: 16px;
 }
-
-/*
-.dropdown {
-    position: relative;
-    float: right;
-}
-*/
-
-/*
-.dropdown-content {
-    display: none;
-    position: fixed;
-    background: #999999;
-    right: 10px;
-    min-width: 50%;
-}
-
-.dropdown-content a {
-    color: #FFFFFF;
-    padding: 15px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown:hover .dropdown-content, .dropbtn:focus + .dropdown-content {
-    display: block;
-}
-*/
 
 .dropdown-main {
     background: white;
@@ -479,9 +471,9 @@ header {
     font-size: 18px;
     display: block;
     box-sizing: border-box;
-    background: #F8F8F8;
-    border: none;
-    /* border: 1px solid #0080ff; */
+    font-size: 1rem;
+    border: 1px solid #CCCCCC;
+    border-radius: 6px;
 }
 
 .contact-form form textarea {
@@ -554,6 +546,17 @@ header {
     background: #808080;
     border: 1px solid #808080;
     color: white;
+}
+
+#Dimmer {
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    z-index: 50;
+    position: fixed;
+    top: 0;
+    opacity: 50%;
+    display: none;
 }
 
 @media (max-width: 720px) {
