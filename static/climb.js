@@ -261,7 +261,7 @@ document.getElementById('edit-climbing-spot').onclick = function(e) {
             }
         })
         .then(function() {
-            closeEdit()
+            closeForm()
             window.location.reload();
         });
     }
@@ -336,7 +336,7 @@ document.getElementById('edit-climber').onclick = function(e) {
             }
         })
         .then(function() {
-            closeEdit()
+            closeForm()
             window.location.reload();
         });
     }

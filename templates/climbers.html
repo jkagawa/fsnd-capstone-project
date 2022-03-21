@@ -22,16 +22,7 @@
         <button type="submit" class="button-edit" data-id="{{ climber.id }}" data-name="{{ climber.name }}" data-state="{{ climber.state }}" onclick="openEditClimber(this)"><b>Edit</b></button>
         <div class="card-title">{{ climber.name }}</div>
         <div class="card-info">{{ climber.state }}</div>
-        <div class="card-body">
-            <div class="card-body-title">Visited climbing spots:</div>
-            {% if climber.visited_spots %}
-                {% for visited_spots in climber.visited_spots %}
-                    <div class="card-body">{{ visited_spots }}</div>
-                {% endfor %}
-            {% else %}
-                <div class="card-info-none">None</div>
-            {% endif %}
-        </div>
+        <div class="card-body"><i class="fa fa-solid fa-star" style="vertical-align:middle;"></i> <span style="vertical-align:middle;">{{ climber.visited_spots|length }} saved spots</span></div>
     </div>
     {% endfor %}
 </div>
