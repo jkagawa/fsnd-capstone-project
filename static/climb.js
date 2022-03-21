@@ -207,8 +207,8 @@ function signOut(source) {
 //======================================================
 
 //Submit new climbing spot
-document.getElementById('submit-climbing-spot').onclick = function(e) {
-    e.preventDefault();
+// document.getElementById('submit-climbing-spot').onclick = function(e) {
+function addSpot(e) {
     const name = document.getElementById('climbing-spot-name').value;
     const city = document.getElementById('climbing-spot-city').value;
     const state = document.getElementById('climbing-spot-state').value;
@@ -234,11 +234,12 @@ document.getElementById('submit-climbing-spot').onclick = function(e) {
             window.location.reload();
         });
     }
+    e.preventDefault();
 };
 
 //Edit climbing spot
-document.getElementById('edit-climbing-spot').onclick = function(e) {
-    e.preventDefault();
+// document.getElementById('edit-climbing-spot').onclick = function(e) {
+function editSpot(e) {
     var spot_id = e.target.getAttribute("data-id");
     const name = document.getElementById('new-climbing-spot-name').value;
     const city = document.getElementById('new-climbing-spot-city').value;
@@ -265,11 +266,12 @@ document.getElementById('edit-climbing-spot').onclick = function(e) {
             window.location.reload();
         });
     }
+    e.preventDefault();
 };
 
 //Submit new climber
-document.getElementById('submit-climber').onclick = function(e) {
-    e.preventDefault();
+// document.getElementById('submit-climber').onclick = function(e) {
+function addClimber(e) {
     const name = document.getElementById('climber-name').value;
     const state = document.getElementById('climber-state').value;
 
@@ -302,11 +304,12 @@ document.getElementById('submit-climber').onclick = function(e) {
             window.location.reload();
         });
     }
+    e.preventDefault();
 };
 
 //Edit climber
-document.getElementById('edit-climber').onclick = function(e) {
-    e.preventDefault();
+// document.getElementById('edit-climber').onclick = function(e) {
+function editClimber(e) {
     var climber_id = e.target.getAttribute("data-id");
     const name = document.getElementById('new-climber-name').value;
     const state = document.getElementById('new-climber-state').value;
@@ -340,4 +343,5 @@ document.getElementById('edit-climber').onclick = function(e) {
             window.location.reload();
         });
     }
+    e.preventDefault();
 };
