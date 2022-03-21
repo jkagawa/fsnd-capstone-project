@@ -47,7 +47,7 @@
             <span class="form-label">State</span>
             <input type="text" id="climbing-spot-state" maxlength="2" required>
         </div>
-    <button type="submit" class="button-submit" id="submit-climbing-spot" onclick="addSpot(this)">Submit</button>
+    <button type="submit" class="button-submit" id="submit-climbing-spot">Submit</button>
   </form>
 </div>
 
@@ -67,9 +67,10 @@
             <span class="form-label">State</span>
             <input type="text" id="new-climbing-spot-state" value="" maxlength="2" required>
         </div>
-    <button type="submit" class="button-submit" id="edit-climbing-spot" data-id="" onclick="editSpot(this)">Change</button>
+    <button type="submit" class="button-submit" id="edit-climbing-spot" data-id="">Change</button>
   </form>
 </div>
 
 <script src="static/climb.js"></script>
+<script src="static/climbing-spots.js"></script>
 {% endblock %}
