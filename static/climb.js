@@ -95,7 +95,7 @@ if(patch_climbingspot) {
 if(patch_climber) {
     var ButtonAddArray = document.querySelectorAll('.card-climber .button-edit');
     for (var i=0; i < ButtonAddArray.length; i++){
-      if(i=0 || user_id!='auth0|623914f0b839bd006a3e18d0') {
+      if(i==0 || user_id!='auth0|623914f0b839bd006a3e18d0') {
         ButtonAddArray[i].style.display = 'block';
       }
     }
@@ -111,7 +111,7 @@ if(delete_climbingspot) {
 if(delete_climber) {
     var ButtonAddArray = document.querySelectorAll('.card-climber .button-remove');
     for (var i=0; i < ButtonAddArray.length; i++){
-      if(i=0 || user_id!='auth0|623914f0b839bd006a3e18d0') {
+      if(i==0 || user_id!='auth0|623914f0b839bd006a3e18d0') {
         ButtonAddArray[i].style.display = 'block';
       }
     }
