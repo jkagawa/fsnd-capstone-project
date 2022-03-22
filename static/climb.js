@@ -52,8 +52,9 @@ var patch_climber = false;
 var delete_climber = false;
 
 //Check if permissions exist in JWT
-if (parseJwt(access_token, 1).hasOwnProperty('permissions')) {
-    var permission_array = parseJwt(access_token, 1)['permissions'];
+var parsed_jwt_1 = parseJwt(access_token, 1);
+if (parsed_jwt_1.hasOwnProperty('permissions')) {
+    var permission_array = parsed_jwt_1['permissions'];
     for(var i=0; i<permission_array.length; i++) {
         if(permission_array[i] == 'post:climbing-spot') {
             post_climbingspot = true;
@@ -69,6 +70,10 @@ if (parseJwt(access_token, 1).hasOwnProperty('permissions')) {
             delete_climber = true;
         }
     }
+}
+
+if (parsed_jwt_1.hasOwnProperty('sub')) {
+  var user_id = parsed_jwt_1['sub'];
 }
 
 
@@ -90,7 +95,9 @@ if(patch_climbingspot) {
 if(patch_climber) {
     var ButtonAddArray = document.querySelectorAll('.card-climber .button-edit');
     for (var i=0; i < ButtonAddArray.length; i++){
+      if(i=0 || user_id!='auth0|623914f0b839bd006a3e18d0') {
         ButtonAddArray[i].style.display = 'block';
+      }
     }
     //console.log('Can edit climber');
 }
@@ -104,7 +111,9 @@ if(delete_climbingspot) {
 if(delete_climber) {
     var ButtonAddArray = document.querySelectorAll('.card-climber .button-remove');
     for (var i=0; i < ButtonAddArray.length; i++){
+      if(i=0 || user_id!='auth0|623914f0b839bd006a3e18d0') {
         ButtonAddArray[i].style.display = 'block';
+      }
     }
     //console.log('Can remove climber');
 }
