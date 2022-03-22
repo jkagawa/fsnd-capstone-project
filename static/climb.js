@@ -80,20 +80,32 @@ if(post_climbingspot || post_climber) {
     //console.log('Can add climbing spot');
     //console.log('Can add climber');
 }
-if(patch_climbingspot || patch_climber) {
-    var ButtonAddArray = document.getElementsByClassName('button-edit');
+if(patch_climbingspot) {
+    var ButtonAddArray = document.querySelectorAll('.card-spot .button-edit');
     for (var i=0; i < ButtonAddArray.length; i++){
         ButtonAddArray[i].style.display = 'block';
     }
     //console.log('Can edit climbing spot');
+}
+if(patch_climber) {
+    var ButtonAddArray = document.querySelectorAll('.card-climber .button-edit');
+    for (var i=0; i < ButtonAddArray.length; i++){
+        ButtonAddArray[i].style.display = 'block';
+    }
     //console.log('Can edit climber');
 }
-if(delete_climbingspot || delete_climber) {
-    var ButtonAddArray = document.getElementsByClassName('button-remove');
+if(delete_climbingspot) {
+    var ButtonAddArray = document.querySelectorAll('.card-spot .button-remove');
     for (var i=0; i < ButtonAddArray.length; i++){
         ButtonAddArray[i].style.display = 'block';
     }
     //console.log('Can remove climbing spot');
+}
+if(delete_climber) {
+    var ButtonAddArray = document.querySelectorAll('.card-climber .button-remove');
+    for (var i=0; i < ButtonAddArray.length; i++){
+        ButtonAddArray[i].style.display = 'block';
+    }
     //console.log('Can remove climber');
 }
 
