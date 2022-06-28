@@ -72,8 +72,9 @@ if (parsed_jwt_1.hasOwnProperty('permissions')) {
     }
 }
 
+var user_id;
 if (parsed_jwt_1.hasOwnProperty('sub')) {
-  var user_id = parsed_jwt_1['sub'];
+  user_id = parsed_jwt_1['sub'];
 }
 
 

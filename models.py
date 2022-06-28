@@ -8,8 +8,10 @@ db = SQLAlchemy()
 #database_name = "climbing"
 #database_path = "postgres://{}:{}@{}/{}".format('postgres', 'emerald', 'localhost:5432', database_name)
 #database_path = os.environ['DATABASE_URL']
-database_name = "d8b3a9n3e5jv3p"
-database_path = "postgresql://{}:{}@{}/{}".format('esvqiibikborvn', '9f493fabfcbd0dbdd41ffd093121def61262c48b3622f1a9dd0889cc5e3270ba', 'ec2-18-214-211-47.compute-1.amazonaws.com:5432', database_name)
+# database_name = "d8b3a9n3e5jv3p"
+# database_path = "postgresql://{}:{}@{}/{}".format('esvqiibikborvn', '9f493fabfcbd0dbdd41ffd093121def61262c48b3622f1a9dd0889cc5e3270ba', 'ec2-18-214-211-47.compute-1.amazonaws.com:5432', database_name)
+database_name = "d9b6h2ehr50dft"
+database_path = "postgresql://{}:{}@{}/{}".format('nyozvuqheeupfz', 'bcc1b2920f0212e6f9602abf10f85fa878b2b4865d4f0c23055cf598a495b198', 'ec2-52-20-80-246.compute-1.amazonaws.com:5432', database_name)
 
 def setup_db(app):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
