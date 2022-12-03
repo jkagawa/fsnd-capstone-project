@@ -1,0 +1,575 @@
+body {
+    margin: 0px;
+    font-family: hevetica, arial, sans-serif;
+    /* background: #CCCCCC; */
+    color: #191919;
+    background-size: auto;
+}
+
+#nav-bar {
+    background: #0080ff;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 10px 15px -3px #191919;
+}
+
+#nav-bar-dropdown {
+    background: #0080ff;
+/*    padding: 10px;*/
+    text-align: center;
+    display: none;
+    float: left;
+    overflow: hidden;
+    list-style-type: none;
+    width: 100%;
+    height: 50px;
+    box-shadow: 0 10px 15px -3px #191919;
+}
+
+.nav-title {
+    color: #FFFFFF;
+    //font-weight: bold;
+    font-size: 20px;
+    display: inline-block;
+    position: relative;
+    top: 25%;
+}
+
+a {
+    text-decoration: none;
+}
+
+.nav-button {
+    display: inline-block;
+    background: #0080ff;
+    padding: 9px 5px;
+    margin: 0px 5px;
+    color: #e5e5e5;
+    min-width: 150px;
+    //border-radius: 7px;
+}
+
+.nav-button:hover {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.button-main {
+    //background: #e5e5e5;
+    font-weight: bold;
+    color: white;
+    border-bottom: 2px solid white !important;
+}
+
+.content-body {
+    padding: 25px;
+    text-align: center;
+    font-size: 18px;
+    margin-top: 50px;
+}
+
+.card {
+    padding: 20px 10px;
+    width: 1080px;
+    max-width: 95%;
+    height: 100%;
+    margin: 0px auto;
+    vertical-align: top;
+    border-radius: 7px;
+    line-height: 1.0;
+}
+
+.card-spot {
+    padding: 10px;
+    background: #FFFFFF;
+    width: 500px;
+    max-width: 95%;
+    min-height: 100px;
+    margin: 10px auto;
+    vertical-align: top;
+    clear: both;
+    border-radius: 7px;
+    border: 1px solid #0080ff;
+}
+
+.card-climber {
+    padding: 10px;
+    background: #FFFFFF;
+    width: 500px;
+    max-width: 95%;
+    height: 110px;
+    margin: 10px auto;
+    vertical-align: top;
+    overflow: auto;
+    clear: both;
+    border-radius: 7px;
+    border: 1px solid #0080ff;
+}
+
+.card-title {
+    font-weight: bold;
+    padding: 5px;
+    clear: right;
+}
+
+.card-title-climber {
+    display: inline-block;
+}
+
+.card-info {
+    display: inline-block;
+    background: #0080ff;
+    color: #FFFFFF;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.card-info-none {
+    display: inline-block;
+    background: #999999;
+    color: #FFFFFF;
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.card-body {
+    font-size: 14px;
+    padding: 5px;
+}
+
+.card-body-title {
+    font-weight: bold;
+    font-size: 14px;
+    padding: 5px;
+}
+
+.form-title {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.25rem;
+    clear: right;
+}
+
+.form-label {
+    min-width: 50px;
+    display: inline-block;
+    font-size: 1rem;
+    margin: 0 10px;
+}
+
+.form-label-spot {
+    padding-top: 15px;
+}
+
+.button-add {
+    background: white;
+    color: #00cc00;
+    border: 2px solid #00cc00;
+    padding: 10px;
+    cursor: pointer;
+    width: 100px;
+    max-width: 100px;
+    position: fixed;
+    right: 25px;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.button-add:hover {
+    background: #00e000;
+    color: white;
+    border: 2px solid transparent;
+}
+
+#button-signin, .button-submit {
+    background: white;
+    color: #00cc00;
+    border: 2px solid #00cc00;
+    padding: 10px;
+    cursor: pointer;
+    width: 100px;
+    max-width: 100%;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+#button-signin {
+    left: 25px;
+    float: left;
+    display: none;
+    margin-bottom: 20px;
+}
+
+.button-submit {
+    display: block;
+    margin: 15px auto;
+}
+
+#button-signin:hover, .button-submit:hover {
+    background: #00cc00;
+    color: white;
+    border: 2px solid transparent;
+}
+
+#button-signout {
+    background: white;
+    color: #999999;
+    border: 2px solid #999999;
+    padding: 10px;
+    cursor: pointer;
+    width: 100px;
+    max-width: 100%;
+    margin-bottom: 20px;
+    float: left;
+    display: none;
+    border-radius: 8px;
+    left: 25px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+#button-signout:hover {
+    background: #999999;
+    color: white;
+    border: 2px solid transparent;
+}
+
+/* .button-submit {
+    background: #00cc00;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100px;
+    max-width: 100%;
+    margin: 15px auto;
+    display: block;
+    border-radius: 7px;
+}
+
+.button-submit:hover {
+    background: #00e000;
+} */
+
+.button-cancel, .button-remove, .button-edit {
+    padding: 2px 6px;
+    border: none;
+    cursor: pointer;
+    float: right;
+    clear: right;
+    border-radius: 3px;
+}
+
+.button-cancel, .button-remove {
+    background: white;
+    border: 2px solid red;
+    color: red;
+}
+
+.button-cancel:hover, .button-remove:hover {
+    background: red;
+    color: white;
+}
+
+.button-edit {
+    background: white;
+    border: 2px solid #00cc00;
+    color: #00cc00;
+    margin-top: 5px;
+}
+
+.button-edit:hover {
+    background: #00cc00;
+    color: white;
+}
+
+.button-remove, .button-edit {
+    display: none;
+}
+
+.button-add:focus, .button-submit, .button-cancel,
+.button-remove, .button-edit, #button-signin, #button-signout, .dropbtn {
+    outline: none;
+}
+
+.form-div {
+    display: none;
+    position: fixed;
+    top: 85px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    max-width: 90%;
+    padding: 15px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    z-index: 100;
+}
+
+.form-area input[type=text] {
+    width: 70%;
+    padding: 10px;
+    margin: 5px;
+    font-size: 1rem;
+    border: 1px solid #CCCCCC;
+    border-radius: 6px;
+}
+
+.list-spot {
+    list-style-type: none;
+}
+
+.list-spot input {
+    transform: scale(1.5);
+}
+
+.list-spot span {
+    padding: 5px 10px;
+    display: inline-block;
+}
+
+/*
+.dropbtn {
+    background: #4ea7ff;
+    color: #FFFFFF;
+    padding: 5px 10px 1px;
+    border: none;
+    cursor: pointer;
+}
+*/
+
+.dropdown {
+    margin: 6px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    background: transparent;
+    float: right;
+}
+
+.dropbtn {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    padding: 5px 5px 0px;
+    background: transparent;
+    color: #FFFFFF;
+    font-size: 16px;
+}
+
+.dropdown-main {
+    background: white;
+    color: #000000 !important;
+}
+
+#container {
+	width: auto;
+	margin: 0 auto;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.opacity_effect {
+    //opacity: 0.5;
+}
+
+.dropdown .dropbtn, .dropdown-content, .dropdown_container, .dropbtn {
+    border: none;
+    outline: none;
+    margin: 0;
+}
+
+.dropdown-content {
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    background: black;
+    width: 0%;
+    float: right;
+    right: 0;
+    height: 100%;
+    transition: width 0.3s ease-in-out;
+    top: 0;
+    position: fixed;
+}
+
+.dropdown-content a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    color: white;
+    font-size: 18px;
+}
+
+.dropdown-content a:hover {
+    color: white;
+}
+
+.dropdown-content.show {
+    width: 25%;
+}
+
+.dropdown-content-head {
+    height: 38px;
+    margin: 6px;
+}
+
+.dropdown-content.show {
+    width: 70%;
+}
+
+.close_icon {
+    visibility: hidden;
+    width: 28px;
+    height: auto;
+    float: right;
+    padding: 5px 5px 0px;
+}
+
+.show .close_icon {
+    visibility: visible;
+}
+
+.closebtn {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.img_style {
+    user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.menu_icon {
+    width: 28px;
+    height: auto;
+}
+
+header {
+    text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #F5F3F4;
+}
+
+.contact-form form label {
+    width: 100%;
+    text-align: left;
+    font-size: 18px;
+    display: block;
+}
+
+.contact-form form input[type=text], .contact-form form input[type=email], .contact-form form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    display: block;
+    box-sizing: border-box;
+    font-size: 1rem;
+    border: 1px solid #CCCCCC;
+    border-radius: 6px;
+}
+
+.contact-form form textarea {
+    height: 170px;
+    resize: vertical;
+}
+
+.contact-form form input[type=submit] {
+    background-color: #00cc00;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px; border-radius: 7px;
+}
+
+.contact-form form input[type=submit]:hover {
+    background: #00e000;
+}
+
+.card-body-link {
+    color: #0080ff;
+}
+
+.card-body-link:hover {
+    text-decoration: underline;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-areas:
+        'state name name name'
+        'state location location location'
+        'state map map map';
+}
+
+.item1 {
+    grid-area: state;
+    align-self: center;
+    font-weight: bold;
+    font-size: 30px;
+    color: #0080ff;
+}
+
+.item2 {
+    grid-area: name;
+    align-self: center;
+}
+
+.item3 {
+    grid-area: location;
+    align-self: center;
+}
+
+.item4 {
+    grid-area: map;
+    align-self: center;
+}
+
+.button-link {
+    padding: 12px 20px;
+    background: white;
+    display: inline-block;
+    border-radius: 20px;
+    margin: 0 0 25px;
+    border: 1px solid #191919;
+    color: #191919;
+}
+.button-link:hover {
+    background: #808080;
+    border: 1px solid #808080;
+    color: white;
+}
+
+#Dimmer {
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    z-index: 50;
+    position: fixed;
+    top: 0;
+    opacity: 50%;
+    display: none;
+}
+
+@media (max-width: 720px) {
+    #nav-bar {
+        display: none;
+    }
+    #nav-bar-dropdown {
+        display: block;
+    }
+    .nav-button {
+        min-width: 0px;
+    }
+    .first-card {
+      margin-top: 50px;
+    }
+}
