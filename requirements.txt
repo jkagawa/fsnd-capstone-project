@@ -8,7 +8,7 @@ botocore==1.16.5
 cffi==1.14.0
 Click==7.0
 colorama==0.4.3
-cryptography==2.9.2
+cryptography==39.0.1
 distlib==0.3.0
 docutils==0.15.2
 ecdsa==0.15
