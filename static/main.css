@@ -390,6 +390,7 @@ a {
     transition: width 0.3s ease-in-out;
     top: 0;
     position: fixed;
+    z-index: 2;
 }
 
 .dropdown-content a {
@@ -454,6 +455,7 @@ header {
     top: 0;
     width: 100%;
     background-color: #F5F3F4;
+    z-index: 2;
 }
 
 .contact-form form label {
@@ -558,6 +560,17 @@ header {
     top: 0;
     opacity: 50%;
     display: none;
+}
+
+.main-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url(/static/images/climbing_image1.jpg) no-repeat center center;
+    background-size: cover;
+    z-index: -1;
 }
 
 @media (max-width: 720px) {

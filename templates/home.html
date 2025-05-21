@@ -1,11 +1,12 @@
 {% extends 'main.html' %}
 {% block gtag %}gtag('config', 'UA-176036079-2', {'page_path': '/'});{% endblock %}
 {% block title %}Welcome to Climbing Spot{% endblock %}
-{% block background %}background: url(/static/images/climbing_image1.jpg) no-repeat top center fixed;{% endblock %}
+<!-- {% block background %}background: url(/static/images/climbing_image1.jpg) no-repeat top center fixed;{% endblock %} -->
 {% block content %}
 
-<div class="content-body" style="display: flex; height: 100vh; margin: 0; padding: 0;">
-    <div style="display: flex; flex: 1 1 100%; flex-wrap: wrap; margin-top: 50px;">
+<div class="main-bg"></div>
+<div class="content-body" style="display: flex; height: 100vh; margin: 0; padding: 0; position: relative; z-index: 1;">
+    <div style="display: flex; flex: 1 1 100%; flex-wrap: wrap; padding-top: 50px;">
 
       <div style="background: white; flex: 0 0 100%; max-width: 100%; display: flex; align-items: center; justify-content: center; flex-flow: column;">
         <div style="font-size: 1.5rem; margin: 50px 0; width: 100%;">Explore rock climbing destinations and climbers featured on our site</div>
