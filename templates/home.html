@@ -1,34 +1,59 @@
 {% extends 'main.html' %}
 {% block gtag %}gtag('config', 'UA-176036079-2', {'page_path': '/'});{% endblock %}
 {% block title %}Welcome to Climbing Spot{% endblock %}
-<!-- {% block background %}background: url(/static/images/climbing_image1.jpg) no-repeat top center fixed;{% endblock %} -->
 {% block content %}
 
 <div class="main-bg"></div>
-<div class="content-body" style="display: flex; height: 100vh; margin: 0; padding: 0; position: relative; z-index: 1;">
-    <div style="display: flex; flex: 1 1 100%; flex-wrap: wrap; padding-top: 50px;">
 
-      <div style="background: white; flex: 0 0 100%; max-width: 100%; display: flex; align-items: center; justify-content: center; flex-flow: column;">
-        <div style="font-size: 1.5rem; margin: 50px 0; width: 100%;">Explore rock climbing destinations and climbers featured on our site</div>
-        <div style="display: flex; align-items: center; justify-content: center; margin: 0 0 50px;">
-          <img src="static/images/undraw_a_day_off_w-9-ex.svg" style="width: 300px; max-width: 25%; padding: 10px 2%;">
-          <img src="static/images/undraw_camping_noc8.svg" style="width: 300px; max-width: 25%; padding: 10px 2%;">
-          <img src="static/images/undraw_hiking_re_k0bc.svg" style="width: 300px; max-width: 25%; padding: 10px 2%;">
-        </div>
-      </div>
-
-      <div style="display: flex; flex: 1 1 100%; flex-wrap: wrap;">
-        <div style="flex: 0 0 100%; height: 75vh; max-width: 100%; display: flex; align-items: center; justify-content: center;">
-          <img src="static/images/climbing-spot-logo-w200.png" class="img_style" style="width: 200px; max-width: 90%;">
-        </div>
-      </div>
-
-      <div style="background: white; display: flex; flex: 1 1 100%; max-width: 100%; flex-wrap: wrap; align-items: center; justify-content: center;">
-        <div style="height: 10vh; display: flex; flex-basis: 100%; align-items: center; justify-content: center;">
-          <a href="https://joshuakagawa.com/" target="_blank"><div class="button-link">Developed by Joshua Kagawa</div></a>
-        </div>
-      </div>
+<!-- Hero Section -->
+<section class="home-hero">
+  <div class="home-hero-overlay"></div>
+  <div class="home-hero-content">
+    <img src="static/images/climbing-spot-logo-w200.png" class="img_style home-hero-logo" alt="Climbing Spot Logo">
+    <h1 class="home-hero-title">Discover Rock Climbing Destinations</h1>
+    <p class="home-hero-subtitle">Find world-class climbing spots and connect with climbers across the country</p>
+    <div class="home-hero-ctas">
+      <a href="/climbing-spots" class="home-cta-primary">Explore Spots</a>
+      <a href="/climbers" class="home-cta-secondary">Find Climbers</a>
+    </div>
   </div>
-</div>
+</section>
+
+<!-- Features Section -->
+<section class="home-features">
+  <h2 class="home-features-title">Everything You Need for Your Next Climb</h2>
+  <div class="home-features-grid">
+    <div class="home-feature-card">
+      <img src="static/images/undraw_a_day_off_w-9-ex.svg" alt="Plan your trip" class="home-feature-img">
+      <h3 class="home-feature-heading">Plan Your Adventure</h3>
+      <p class="home-feature-text">Browse curated climbing destinations with location details to plan your perfect trip.</p>
+    </div>
+    <div class="home-feature-card">
+      <img src="static/images/undraw_camping_noc8.svg" alt="Camp and climb" class="home-feature-img">
+      <h3 class="home-feature-heading">Camp &amp; Climb</h3>
+      <p class="home-feature-text">Discover spots with nearby camping so you can make the most of your time outdoors.</p>
+    </div>
+    <div class="home-feature-card">
+      <img src="static/images/undraw_hiking_re_k0bc.svg" alt="Connect with climbers" class="home-feature-img">
+      <h3 class="home-feature-heading">Meet Fellow Climbers</h3>
+      <p class="home-feature-text">Connect with a community of climbers who share your passion for the vertical world.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="home-footer">
+  <div class="home-footer-inner">
+    <span class="home-footer-brand">Climbing Spot</span>
+    <nav class="home-footer-nav">
+      <a href="/climbing-spots">Spots</a>
+      <a href="/climbers">Climbers</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <span class="home-footer-credit">
+      Developed by <a href="https://joshuakagawa.com/" target="_blank">Joshua Kagawa</a>
+    </span>
+  </div>
+</footer>
 
 {% endblock %}

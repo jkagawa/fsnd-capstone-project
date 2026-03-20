@@ -3,28 +3,36 @@
 {% block title %}Climbers{% endblock %}
 {% block content %}
 
+<div class="page-hero">
+    <h1 class="page-hero-title">Climbers</h1>
+    <p class="page-hero-subtitle">Browse and manage climbers in the community</p>
+</div>
+
 <div class="content-body">
     {% with messages = get_flashed_messages() %}
        {% if messages %}
           {% for message in messages %}
-             <div class="notif-message" style="background: gray; color: white; width: fit-content; padding: 5px 13px; position: fixed; z-index: 100; left: 50%; transform: translate(-50%, 0); border-radius: 8px;">{{ message }}</div>
+             <div class="notif-message">{{ message }}</div>
              <script>window.setTimeout("closeNotif();", 3000);</script>
           {% endfor %}
        {% endif %}
     {% endwith %}
+
     <a href="https://climbing-spot.auth0.com/authorize?audience=climbing&response_type=token&client_id=NAl7V4YO9ort127uVV8OS3q1nmJPZ7or&redirect_uri=https://climbing-spot-app.herokuapp.com/climbers"><button id="button-signin">Sign In</button></a>
     <button id="button-signout" onclick="signOut('climbers')">Sign Out</button>
-    <button class="button-add" onclick="openForm()">Add</button>
+    <button class="button-add" onclick="openForm()">+ Add</button>
 
-    {% for climber in climbers['climber'] %}
-    <div class="card-climber">
-        <button type="submit" class="button-remove" data-id="{{ climber.id }}" onclick="removeClimber(this)"><b>Remove</b></button>
-        <button type="submit" class="button-edit" data-id="{{ climber.id }}" data-name="{{ climber.name }}" data-state="{{ climber.state }}" onclick="openEditClimber(this)"><b>Edit</b></button>
-        <div class="card-title">{{ climber.name }}</div>
-        <div class="card-info">{{ climber.state }}</div>
-        <div class="card-body"><i class="fa fa-solid fa-star" style="vertical-align:middle;"></i> <span style="vertical-align:middle;">{{ climber.visited_spots|length }} saved spots</span></div>
+    <div class="cards-list">
+        {% for climber in climbers['climber'] %}
+        <div class="card-climber">
+            <button type="submit" class="button-remove" data-id="{{ climber.id }}" onclick="removeClimber(this)"><b>Remove</b></button>
+            <button type="submit" class="button-edit" data-id="{{ climber.id }}" data-name="{{ climber.name }}" data-state="{{ climber.state }}" onclick="openEditClimber(this)"><b>Edit</b></button>
+            <div class="card-title">{{ climber.name }}</div>
+            <div class="card-info">{{ climber.state }}</div>
+            <div class="card-body"><i class="fa fa-star" style="vertical-align:middle; margin-right: 4px;"></i><span style="vertical-align:middle;">{{ climber.visited_spots|length }} saved spots</span></div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 
 <div id="Dimmer" onclick="closeForm()"></div>
