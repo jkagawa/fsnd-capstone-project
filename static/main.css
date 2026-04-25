@@ -559,7 +559,8 @@ header {
     grid-template-areas:
         'state name name name'
         'state location location location'
-        'state map map map';
+        'state map map map'
+        'state added added added';
 }
 
 .item1 {
@@ -584,6 +585,13 @@ header {
 .item4 {
     grid-area: map;
     align-self: center;
+}
+
+.item5 {
+    grid-area: added;
+    align-self: center;
+    font-size: 0.8rem;
+    color: #888;
 }
 
 .button-link {

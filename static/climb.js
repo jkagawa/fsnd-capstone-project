@@ -95,12 +95,12 @@ if (post_climber) {
         }
     }
 }
-if(patch_climbingspot) {
-    var ButtonAddArray = document.querySelectorAll('.card-spot .button-edit');
-    for (var i=0; i < ButtonAddArray.length; i++){
-        ButtonAddArray[i].style.display = 'block';
-    }
-    //console.log('Can edit climbing spot');
+if (patch_climbingspot) {
+    document.querySelectorAll('.card-spot').forEach(function(card) {
+        if (card.getAttribute('data-added-by') === user_id) {
+            card.querySelector('.button-edit').style.display = 'block';
+        }
+    });
 }
 if (patch_climber) {
     document.querySelectorAll('.card-climber').forEach(function(card) {
@@ -109,11 +109,12 @@ if (patch_climber) {
         }
     });
 }
-if(delete_climbingspot) {
-    var ButtonAddArray = document.querySelectorAll('.card-spot .button-remove');
-    for (var i=0; i < ButtonAddArray.length; i++){
-        ButtonAddArray[i].style.display = 'block';
-    }
+if (delete_climbingspot) {
+    document.querySelectorAll('.card-spot').forEach(function(card) {
+        if (card.getAttribute('data-added-by') === user_id) {
+            card.querySelector('.button-remove').style.display = 'block';
+        }
+    });
 }
 if (delete_climber) {
     document.querySelectorAll('.card-climber').forEach(function(card) {

@@ -16,11 +16,14 @@ db_create_all()
 def get_climbing_spots():
     spot =[]
     for climbingspot in ClimbingSpot.query.order_by('id').all():
+        climber = Climber.query.filter_by(added_by=climbingspot.added_by).first()
         spot.append({
             "id" : climbingspot.id,
             "name" : climbingspot.name,
             "location" : climbingspot.location,
             "address_state" : climbingspot.address_state,
+            "added_by" : climbingspot.added_by,
+            "added_by_name" : climber.name if climber else "Unknown",
         })
     spots = {
         "spot" : spot
@@ -126,6 +129,9 @@ def add_climbing_spots(payload):
 @app.route('/api/climbing-spots/<int:climbingspot_id>', methods=['PATCH'])
 @requires_auth('patch:climbing-spot')
 def edit_climbingspots(payload, climbingspot_id):
+    climbingspot = ClimbingSpot.query.get_or_404(climbingspot_id)
+    if climbingspot.added_by != payload['sub']:
+        abort(403)
     error = False
     try:
         name = request.json['name']
@@ -165,6 +171,9 @@ def edit_climbingspots(payload, climbingspot_id):
 @app.route('/api/climbing-spots/<int:climbingspot_id>', methods=['DELETE'])
 @requires_auth('delete:climbing-spot')
 def remove_climbingspots(payload, climbingspot_id):
+    climbingspot = ClimbingSpot.query.get_or_404(climbingspot_id)
+    if climbingspot.added_by != payload['sub']:
+        abort(403)
     error = False
     try:
         climbingspot = ClimbingSpot.query.get(climbingspot_id)

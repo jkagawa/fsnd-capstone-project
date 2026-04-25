@@ -24,7 +24,7 @@
 
     <div class="cards-list">
         {% for spot in spots['spot'] %}
-        <div class="card-spot{% if loop.index == 1 %} first-card{% endif %}">
+        <div class="card-spot{% if loop.index == 1 %} first-card{% endif %}" data-added-by="{{ spot.added_by }}">
             <button type="submit" class="button-remove" data-id="{{ spot.id }}" onclick="removeSpot(this)"><b>Remove</b></button>
             <button type="submit" class="button-edit" data-id="{{ spot.id }}" data-name="{{ spot.name }}" data-location="{{ spot.location }}" onclick="openEditSpot(this)"><b>Edit</b></button>
             <div class="grid-container">
@@ -32,6 +32,7 @@
                 <div class="card-title item2">{{ spot.name }}</div>
                 <div class="card-body item3">{{ spot.location }}</div>
                 <div class="card-body item4"><a href="https://www.google.com/maps/search/?api=1&query={{ spot.name }}, {{ spot.location }}" target="_blank" class="card-body-link">Open in Google Maps &rarr;</a></div>
+                <div class="card-body item5">Added by {{ spot.added_by_name }}</div>
             </div>
         </div>
         {% endfor %}
