@@ -96,9 +96,9 @@ def add_climbing_spots(payload):
         spot_id = request.get_json().get('id', None)
 
         if (spot_id):
-            climbing_spot = ClimbingSpot(id=spot_id, name=name, location=location, address_city=address_city, address_state=address_state)
+            climbing_spot = ClimbingSpot(id=spot_id, name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'])
         else:
-            climbing_spot = ClimbingSpot(name=name, location=location, address_city=address_city, address_state=address_state)
+            climbing_spot = ClimbingSpot(name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'])
 
         db.session.add(climbing_spot)
         db.session.commit()

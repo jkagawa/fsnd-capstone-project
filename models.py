@@ -35,6 +35,7 @@ class ClimbingSpot(db.Model):
     address_city = db.Column(db.String)
     address_state = db.Column(db.String)
     address_zipcode = db.Column(db.String)
+    added_by = db.Column(db.String)
     indoor_or_outdoor = db.Column(db.Integer)
     outdoor_coordinates = db.Column(db.String)
     visited_spot = db.relationship('VisitedSpot', backref='climbingspot', lazy=True)
