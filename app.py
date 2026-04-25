@@ -224,9 +224,9 @@ def add_climbers(payload):
         climber_id = request.get_json().get('id', None)
 
         if (climber_id):
-            climber = Climber(id=climber_id, name=name, state=state)
+            climber = Climber(id=climber_id, name=name, state=state, added_by=payload['sub'])
         else:
-            climber = Climber(name=name, state=state)
+            climber = Climber(name=name, state=state, added_by=payload['sub'])
 
         db.session.add(climber)
         db.session.flush()

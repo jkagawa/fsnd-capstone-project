@@ -20,7 +20,7 @@
 
     <a href="https://climbing-spot.auth0.com/authorize?audience=climbing&response_type=token&client_id=NAl7V4YO9ort127uVV8OS3q1nmJPZ7or&redirect_uri=https://climbingspot.pythonanywhere.com/climbers"><button id="button-signin">Sign In</button></a>
     <button id="button-signout" onclick="signOut('climbers')">Sign Out</button>
-    <button class="button-add" onclick="openForm()">+ Add</button>
+    <button class="button-add" onclick="openForm()">+ Create Climber Profile</button>
 
     <div class="cards-list">
         {% for climber in climbers['climber'] %}

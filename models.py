@@ -45,6 +45,7 @@ class Climber(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     state = db.Column(db.String)
+    added_by = db.Column(db.String)
     visited_spot = db.relationship('VisitedSpot', backref='climber', lazy=True)
 
 class VisitedSpot(db.Model):
