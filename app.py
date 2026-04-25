@@ -14,21 +14,18 @@ db = return_db()
 db_create_all()
 
 def get_climbing_spots():
-    spot =[]
+    climbers_by_sub = {c.added_by: c.name for c in Climber.query.all() if c.added_by and c.name}
+    spot = []
     for climbingspot in ClimbingSpot.query.order_by('id').all():
-        climber = Climber.query.filter_by(added_by=climbingspot.added_by).first() if climbingspot.added_by else None
         spot.append({
             "id" : climbingspot.id,
             "name" : climbingspot.name,
             "location" : climbingspot.location,
             "address_state" : climbingspot.address_state,
             "added_by" : climbingspot.added_by,
-            "added_by_name" : climber.name if climber else "Unknown",
+            "added_by_name" : climbers_by_sub.get(climbingspot.added_by, "Unknown"),
         })
-    spots = {
-        "spot" : spot
-    }
-    return spots
+    return {"spot": spot}
 
 def get_climbers():
     climber = []
