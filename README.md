@@ -11,9 +11,9 @@ This application is powered by an API that conforms to the REST architectural st
 
 Visit the following URL to see the app in action:
 
-* https://climbing-spot-app.herokuapp.com
+* https://climbing-spot.onrender.com/
 
-This app connects to a Postgres server hosted in Heroku. Anyone can view the climbing locations and climbers. An account login with specific permissions is needed in order to add, edit, and remove climbing locations and climber profiles. These are specified below.
+This app connects to a Postgres server hosted in Supabase. Anyone can view the climbing locations and climbers. An account login with specific permissions is needed in order to add, edit, and remove climbing locations and climber profiles. These are specified below.
 
 Administrator login (can add, edit, and remove climbing locations and climber profiles):
 * email: &ast;&ast;&ast;&ast;&ast;&ast;&ast;&ast;
@@ -51,7 +51,7 @@ In the project folder, run the following:
 python app.py
 ```
 
-The app connects to a Postgres database hosted in Heroku, so there is no need to run the database server locally.
+The app connects to a Postgres database hosted in Supabase, so there is no need to run the database server locally.
 
 ### Running Unittest on the API endpoints in your local machine
 
@@ -63,7 +63,7 @@ Assuming the virtual environment has been initlaized / activated and the depende
 ```bash
 python test_app.py
 ```
-This test also connects to a Postgres database hosted in Heroku, so there is no need to run the database server locally.
+This test also connects to a Postgres database hosted in Supabase, so there is no need to run the database server locally.
 
 ### API Endpoints
 
@@ -80,7 +80,7 @@ This test also connects to a Postgres database hosted in Heroku, so there is no 
 404 - Not Found	(The requested resource doesn't exist)
 
 ##### Base URL
-> https://climbing-spot-app.herokuapp.com
+> https://climbing-spot.onrender.com/
 
 ##### Get climbing spots (GET Method)
 > /climbing-spots
