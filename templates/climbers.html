@@ -20,11 +20,11 @@
 
     <a href="https://climbing-spot.auth0.com/authorize?audience=climbing&response_type=token&client_id=NAl7V4YO9ort127uVV8OS3q1nmJPZ7or&redirect_uri=https://climbingspot.pythonanywhere.com/climbers"><button id="button-signin">Sign In</button></a>
     <button id="button-signout" onclick="signOut('climbers')">Sign Out</button>
-    <button class="button-add" onclick="openForm()">+ Create Climber Profile</button>
+    <button id="button-create-profile" class="button-add" onclick="openForm()">+ Create Climber Profile</button>
 
     <div class="cards-list">
         {% for climber in climbers['climber'] %}
-        <div class="card-climber">
+        <div class="card-climber" data-added-by="{{ climber.added_by }}">
             <button type="submit" class="button-remove" data-id="{{ climber.id }}" onclick="removeClimber(this)"><b>Remove</b></button>
             <button type="submit" class="button-edit" data-id="{{ climber.id }}" data-name="{{ climber.name }}" data-state="{{ climber.state }}" onclick="openEditClimber(this)"><b>Edit</b></button>
             <div class="card-title">{{ climber.name }}</div>

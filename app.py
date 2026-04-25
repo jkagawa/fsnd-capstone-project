@@ -45,6 +45,7 @@ def get_climbers():
             "id" : climb.id,
             "name" : climb.name,
             "state" : climb.state,
+            "added_by" : climb.added_by,
             "visited_spots" : visitedspot,
             "all_spots" : all_spots,
             "all_spots_id" : all_spots_id,
@@ -216,6 +217,9 @@ def climbers():
 @app.route('/api/climbers', methods=['POST'])
 @requires_auth('post:climber')
 def add_climbers(payload):
+    existing = Climber.query.filter_by(added_by=payload['sub']).first()
+    if existing:
+        abort(409)
     error = False
     try:
         name = request.json['name']
