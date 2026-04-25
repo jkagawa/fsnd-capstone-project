@@ -223,9 +223,9 @@ function signOut(source) {
     document.getElementById("button-signin").style.display = "block";
     window.localStorage.setItem('access_token', '');
     if(source == 'spots') {
-      window.location.href = "https://climbing-spot-app.herokuapp.com/climbing-spots";
+      window.location.href = "https://climbingspot.pythonanywhere.com/climbing-spots";
     } else if(source == 'climbers') {
-      window.location.href = "https://climbing-spot-app.herokuapp.com/climbers";
+      window.location.href = "https://climbingspot.pythonanywhere.com/climbers";
     }
 
     //console.log('JWT removed from LocalStorage');
