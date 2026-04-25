@@ -261,6 +261,9 @@ def add_climbers(payload):
 @app.route('/api/climbers/<int:climber_id>', methods=['PATCH'])
 @requires_auth('patch:climber')
 def edit_climbers(payload, climber_id):
+    climber = Climber.query.get_or_404(climber_id)
+    if climber.added_by != payload['sub']:
+        abort(403)
     error = False
     try:
         name = request.json['name']
@@ -310,6 +313,9 @@ def edit_climbers(payload, climber_id):
 @app.route('/api/climbers/<int:climber_id>', methods=['DELETE'])
 @requires_auth('delete:climber')
 def remove_climbers(payload, climber_id):
+    climber = Climber.query.get_or_404(climber_id)
+    if climber.added_by != payload['sub']:
+        abort(403)
     error = False
     try:
         visited_spots = VisitedSpot.query.filter_by(climber_id=climber_id)
