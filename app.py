@@ -16,7 +16,7 @@ db_create_all()
 def get_climbing_spots():
     spot =[]
     for climbingspot in ClimbingSpot.query.order_by('id').all():
-        climber = Climber.query.filter_by(added_by=climbingspot.added_by).first()
+        climber = Climber.query.filter_by(added_by=climbingspot.added_by).first() if climbingspot.added_by else None
         spot.append({
             "id" : climbingspot.id,
             "name" : climbingspot.name,
