@@ -7,14 +7,18 @@ db = SQLAlchemy()
 
 load_dotenv()
 
-database_name = os.environ.get('DATABASE_NAME')
-database_user = os.environ.get('DATABASE_USER')
-database_password = os.environ.get('DATABASE_PASSWORD')
-database_url = os.environ.get('DATABASE_URL')
-database_path = "postgresql://{}:{}@{}/{}".format(database_user, database_password, database_url, database_name)
+# database_name = os.environ.get('DATABASE_NAME')
+# database_user = os.environ.get('DATABASE_USER')
+# database_password = os.environ.get('DATABASE_PASSWORD')
+# database_url = os.environ.get('DATABASE_URL')
+# database_path = "postgresql://{}:{}@{}/{}".format(database_user, database_password, database_url, database_name)
+
+full_database_url = os.getenv('FULL_DATABASE_URL')
+if full_database_url and full_database_url.startswith("postgres://"):
+    full_database_url = full_database_url.replace("postgres://", "postgresql://", 1)
 
 def setup_db(app):
-    app.config["SQLALCHEMY_DATABASE_URI"] = database_path
+    app.config["SQLALCHEMY_DATABASE_URI"] = full_database_url
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
