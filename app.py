@@ -85,8 +85,8 @@ def climbing_spots():
 
 @app.route('/climbing-spots', methods=['POST'])
 @app.route('/api/climbing-spots', methods=['POST'])
-#@requires_auth('post:climbing-spot')
-def add_climbing_spots():
+@requires_auth('post:climbing-spot')
+def add_climbing_spots(payload):
     error = False
     try:
         name = request.json['name']
@@ -214,8 +214,8 @@ def climbers():
 
 @app.route('/climbers', methods=['POST'])
 @app.route('/api/climbers', methods=['POST'])
-#@requires_auth('post:climber')
-def add_climbers():
+@requires_auth('post:climber')
+def add_climbers(payload):
     error = False
     try:
         name = request.json['name']
