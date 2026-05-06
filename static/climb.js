@@ -44,6 +44,14 @@ $.getJSON(JSONurl, function(data) {
 
 //======================================================
 
+function showNotif(message, isError) {
+    var notif = document.createElement('div');
+    notif.className = 'notif-message' + (isError ? ' notif-error' : '');
+    notif.textContent = message;
+    document.body.appendChild(notif);
+    setTimeout(function() { notif.remove(); }, 4000);
+}
+
 var post_climbingspot = false;
 var patch_climbingspot = false;
 var delete_climbingspot = false;
@@ -185,37 +193,55 @@ function openEditClimber(e) {
 }
 //Remove spot
 function removeSpot(e) {
-    var result = confirm("Are you sure you want to remove this?");
-    if (result) {
-        var spot_id = e.getAttribute("data-id");
-        fetch('/climbing-spots/' + spot_id, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': 'Bearer ' + access_token
-            }
-        })
-        .then(function() {
-            const item = e.parentElement;
-            item.remove();
-        });
-    }
+    if (!confirm("Are you sure you want to remove this?")) return;
+    e.disabled = true;
+    fetch('/climbing-spots/' + e.getAttribute("data-id"), {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + access_token }
+    })
+    .then(function(response) {
+        if (response.ok) {
+            e.parentElement.remove();
+            showNotif('Climbing spot removed');
+        } else {
+            e.disabled = false;
+            response.json().then(function(data) {
+                showNotif(data.message || 'Could not remove spot', true);
+            }).catch(function() {
+                showNotif('Could not remove spot', true);
+            });
+        }
+    })
+    .catch(function() {
+        e.disabled = false;
+        showNotif('Network error', true);
+    });
 }
 //Remove climber
 function removeClimber(e) {
-    var result = confirm("Are you sure you want to remove this?");
-    if (result) {
-        var climber_id = e.getAttribute("data-id");
-        fetch('/climbers/' + climber_id, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': 'Bearer ' + access_token
-            }
-        })
-        .then(function() {
-            const item = e.parentElement;
-            item.remove();
-        });
-    }
+    if (!confirm("Are you sure you want to remove this?")) return;
+    e.disabled = true;
+    fetch('/climbers/' + e.getAttribute("data-id"), {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + access_token }
+    })
+    .then(function(response) {
+        if (response.ok) {
+            e.parentElement.remove();
+            showNotif('Climber profile removed');
+        } else {
+            e.disabled = false;
+            response.json().then(function(data) {
+                showNotif(data.message || 'Could not remove climber', true);
+            }).catch(function() {
+                showNotif('Could not remove climber', true);
+            });
+        }
+    })
+    .catch(function() {
+        e.disabled = false;
+        showNotif('Network error', true);
+    });
 }
 //Log user out
 function signOut(source) {
