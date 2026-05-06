@@ -1,49 +1,3 @@
-//Get URL
-var url = window.location.href;
-
-//Store access token
-var access_token = ""
-if(url.includes("access_token=")) {
-    access_token = url.match(/\#(?:access_token)\=([\S\s]*?)\&/)[1];
-}
-
-if(access_token != "") {
-    //Save access token to localStorage
-    window.localStorage.setItem('access_token', access_token);
-}
-else {
-    //Get access token to localStorage
-    if(window.localStorage.getItem('access_token') != null) {
-        access_token = window.localStorage.getItem('access_token');
-    }
-}
-
-var JSONurl = 'https://climbing-spot.auth0.com/.well-known/jwks.json';
-
-$.getJSON(JSONurl, function(data) {
-    //Store original kid value
-    var original_kid = data.keys['0']['kid'];
-
-    //Store unverified kid value
-    var unverified_kid ='';
-    if (parseJwt(access_token, 0).hasOwnProperty('kid')) {
-        unverified_kid = parseJwt(access_token, 0)['kid'];
-    }
-
-    if(original_kid == unverified_kid) {
-        document.getElementById("button-signout").style.display = "block";
-        document.getElementById("button-signin").style.display = "none";
-        //console.log('Logged In');
-    }
-    else {
-        document.getElementById("button-signout").style.display = "none";
-        document.getElementById("button-signin").style.display = "block";
-        //console.log('Logged Out');
-    }
-});
-
-//======================================================
-
 function showNotif(message, isError) {
     var notif = document.createElement('div');
     notif.className = 'notif-message' + (isError ? ' notif-error' : '');
@@ -51,104 +5,6 @@ function showNotif(message, isError) {
     document.body.appendChild(notif);
     setTimeout(function() { notif.remove(); }, 4000);
 }
-
-var post_climbingspot = false;
-var patch_climbingspot = false;
-var delete_climbingspot = false;
-var post_climber = false;
-var patch_climber = false;
-var delete_climber = false;
-
-//Check if permissions exist in JWT
-var parsed_jwt_1 = parseJwt(access_token, 1);
-if (parsed_jwt_1.hasOwnProperty('permissions')) {
-    var permission_array = parsed_jwt_1['permissions'];
-    for(var i=0; i<permission_array.length; i++) {
-        if(permission_array[i] == 'post:climbing-spot') {
-            post_climbingspot = true;
-        } else if(permission_array[i] == 'patch:climbing-spot') {
-            patch_climbingspot = true;
-        } else if(permission_array[i] == 'delete:climbing-spot') {
-            delete_climbingspot = true;
-        } else if(permission_array[i] == 'post:climber') {
-            post_climber = true;
-        } else if(permission_array[i] == 'patch:climber') {
-            patch_climber = true;
-        } else if(permission_array[i] == 'delete:climber') {
-            delete_climber = true;
-        }
-    }
-}
-
-var user_id;
-if (parsed_jwt_1.hasOwnProperty('sub')) {
-  user_id = parsed_jwt_1['sub'];
-}
-
-
-if (post_climbingspot) {
-    var spotAddBtn = document.getElementById('button-add-spot');
-    if (spotAddBtn) spotAddBtn.style.display = 'block';
-}
-
-if (post_climber) {
-    var createProfileBtn = document.getElementById('button-create-profile');
-    if (createProfileBtn) {
-        var cards = document.querySelectorAll('.card-climber[data-added-by]');
-        var hasProfile = Array.from(cards).some(function(c) {
-            return c.getAttribute('data-added-by') === user_id;
-        });
-        if (!hasProfile) {
-            createProfileBtn.style.display = 'block';
-        }
-    }
-}
-if (patch_climbingspot) {
-    document.querySelectorAll('.card-spot').forEach(function(card) {
-        if (card.getAttribute('data-added-by') === user_id) {
-            card.querySelector('.button-edit').style.display = 'block';
-        }
-    });
-}
-if (patch_climber) {
-    document.querySelectorAll('.card-climber').forEach(function(card) {
-        if (card.getAttribute('data-added-by') === user_id) {
-            card.querySelector('.button-edit').style.display = 'block';
-        }
-    });
-}
-if (delete_climbingspot) {
-    document.querySelectorAll('.card-spot').forEach(function(card) {
-        if (card.getAttribute('data-added-by') === user_id) {
-            card.querySelector('.button-remove').style.display = 'block';
-        }
-    });
-}
-if (delete_climber) {
-    document.querySelectorAll('.card-climber').forEach(function(card) {
-        if (card.getAttribute('data-added-by') === user_id) {
-            card.querySelector('.button-remove').style.display = 'block';
-        }
-    });
-}
-
-//Decode token to JSON
-function parseJwt(token, n) {
-    var result = "";
-    if(token.includes(".")) {
-        var base64Url = token.split('.')[n];
-
-        var base64 = decodeURIComponent(atob(base64Url).split('').map((c)=>{
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-
-        result = JSON.parse(base64)
-    }
-
-    return result;
-}
-
-//======================================================
 
 //Close all forms
 function closeForm() {
@@ -196,8 +52,7 @@ function removeSpot(e) {
     if (!confirm("Are you sure you want to remove this?")) return;
     e.disabled = true;
     fetch('/climbing-spots/' + e.getAttribute("data-id"), {
-        method: 'DELETE',
-        headers: { 'Authorization': 'Bearer ' + access_token }
+        method: 'DELETE'
     })
     .then(function(response) {
         if (response.ok) {
@@ -222,8 +77,7 @@ function removeClimber(e) {
     if (!confirm("Are you sure you want to remove this?")) return;
     e.disabled = true;
     fetch('/climbers/' + e.getAttribute("data-id"), {
-        method: 'DELETE',
-        headers: { 'Authorization': 'Bearer ' + access_token }
+        method: 'DELETE'
     })
     .then(function(response) {
         if (response.ok) {
@@ -242,17 +96,4 @@ function removeClimber(e) {
         e.disabled = false;
         showNotif('Network error', true);
     });
-}
-//Log user out
-function signOut(source) {
-    document.getElementById("button-signout").style.display = "none";
-    document.getElementById("button-signin").style.display = "block";
-    window.localStorage.setItem('access_token', '');
-    if(source == 'spots') {
-      window.location.href = "https://climbing-spot.onrender.com/climbing-spots";
-    } else if(source == 'climbers') {
-      window.location.href = "https://climbing-spot.onrender.com/climbers";
-    }
-
-    //console.log('JWT removed from LocalStorage');
 }

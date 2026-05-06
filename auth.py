@@ -16,6 +16,10 @@ class AuthError(Exception):
         self.status_code = status_code
 
 def get_token_auth_header():
+    cookie_token = request.cookies.get('access_token')
+    if cookie_token:
+        return cookie_token
+
     if 'Authorization' not in request.headers:
         abort(401)
 

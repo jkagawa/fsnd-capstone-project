@@ -1,17 +1,136 @@
 import os
-from flask import Flask, request, render_template, jsonify, flash, abort
+import json
+import secrets
+import hashlib
+import base64
+import urllib.request
+import urllib.parse
+from flask import Flask, request, render_template, jsonify, flash, abort, redirect, session, g, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, db_create_all, return_db, ClimbingSpot, Climber, VisitedSpot
-from auth import AuthError, requires_auth
+from auth import AuthError, requires_auth, verify_decode_jwt
+
+AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN', 'climbing-spot.auth0.com')
+AUTH0_CLIENT_ID = os.environ.get('AUTH0_CLIENT_ID', 'NAl7V4YO9ort127uVV8OS3q1nmJPZ7or')
+AUTH0_CLIENT_SECRET = os.environ.get('AUTH0_CLIENT_SECRET')
+AUTH0_AUDIENCE = os.environ.get('AUTH0_AUDIENCE', 'climbing')
+BASE_URL = os.environ.get('BASE_URL', 'http://localhost:5000')
 
 app = Flask(__name__)
-app.secret_key = os.urandom(32)
+app.secret_key = os.environ.get('SECRET_KEY') or os.urandom(32)
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SECURE'] = BASE_URL.startswith('https')
 
 setup_db(app)
 CORS(app)
 db = return_db()
 db_create_all()
+
+@app.before_request
+def load_user_from_cookie():
+    g.user = None
+    g.permissions = []
+    token = request.cookies.get('access_token')
+    if token:
+        try:
+            payload = verify_decode_jwt(token)
+            g.user = payload.get('sub')
+            g.permissions = payload.get('permissions', [])
+        except Exception:
+            pass
+
+@app.context_processor
+def inject_user():
+    return {
+        'current_user': getattr(g, 'user', None),
+        'user_permissions': getattr(g, 'permissions', []),
+    }
+
+def _generate_pkce_pair():
+    verifier = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8').rstrip('=')
+    challenge = base64.urlsafe_b64encode(
+        hashlib.sha256(verifier.encode('utf-8')).digest()
+    ).decode('utf-8').rstrip('=')
+    return verifier, challenge
+
+@app.route('/login')
+def login():
+    verifier, challenge = _generate_pkce_pair()
+    state = secrets.token_urlsafe(32)
+    session.permanent = True
+    session['pkce_verifier'] = verifier
+    session['oauth_state'] = state
+    session['return_to'] = request.args.get('return_to', '/')
+
+    params = urllib.parse.urlencode({
+        'response_type': 'code',
+        'client_id': AUTH0_CLIENT_ID,
+        'redirect_uri': BASE_URL + '/callback',
+        'audience': AUTH0_AUDIENCE,
+        'scope': 'openid profile',
+        'code_challenge': challenge,
+        'code_challenge_method': 'S256',
+        'state': state,
+    })
+    return redirect('https://' + AUTH0_DOMAIN + '/authorize?' + params)
+
+@app.route('/callback')
+def callback():
+    received_state = request.args.get('state')
+    expected_state = session.pop('oauth_state', None)
+    code = request.args.get('code')
+    verifier = session.pop('pkce_verifier', None)
+    return_to = session.pop('return_to', '/')
+
+    if expected_state is None or verifier is None or received_state != expected_state or not code:
+        abort(400)
+
+    body = urllib.parse.urlencode({
+        'grant_type': 'authorization_code',
+        'client_id': AUTH0_CLIENT_ID,
+        'client_secret': AUTH0_CLIENT_SECRET or '',
+        'code': code,
+        'redirect_uri': BASE_URL + '/callback',
+        'code_verifier': verifier,
+    }).encode('utf-8')
+    req = urllib.request.Request(
+        'https://' + AUTH0_DOMAIN + '/oauth/token',
+        data=body,
+        headers={'Content-Type': 'application/x-www-form-urlencoded'},
+    )
+    try:
+        with urllib.request.urlopen(req) as resp:
+            tokens = json.loads(resp.read().decode('utf-8'))
+    except Exception:
+        abort(401)
+
+    access_token = tokens.get('access_token')
+    if not access_token:
+        abort(401)
+
+    response = redirect(return_to)
+    response.set_cookie(
+        'access_token',
+        access_token,
+        httponly=True,
+        secure=BASE_URL.startswith('https'),
+        samesite='Lax',
+        max_age=tokens.get('expires_in', 7200),
+    )
+    return response
+
+@app.route('/logout')
+def logout():
+    response = redirect(
+        'https://' + AUTH0_DOMAIN + '/v2/logout?' + urllib.parse.urlencode({
+            'client_id': AUTH0_CLIENT_ID,
+            'returnTo': BASE_URL,
+        })
+    )
+    response.delete_cookie('access_token')
+    return response
 
 def get_climbing_spots():
     climbers_by_sub = {c.added_by: c.name for c in Climber.query.all() if c.added_by and c.name}

@@ -202,7 +202,6 @@ a {
 }
 
 .button-add {
-    display: none;
     background: #0080ff;
     color: #ffffff;
     border: none;
@@ -240,7 +239,6 @@ a {
 #button-signin {
     left: 25px;
     float: left;
-    display: none;
     margin-bottom: 20px;
 }
 
@@ -324,10 +322,6 @@ a {
 .button-edit:hover {
     background: #00cc00;
     color: white;
-}
-
-.button-remove, .button-edit {
-    display: none;
 }
 
 .button-add:focus, .button-submit, .button-cancel,

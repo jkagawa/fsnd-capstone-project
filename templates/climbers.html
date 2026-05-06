@@ -18,15 +18,25 @@
        {% endif %}
     {% endwith %}
 
-    <a href="https://climbing-spot.auth0.com/authorize?audience=climbing&response_type=token&client_id=NAl7V4YO9ort127uVV8OS3q1nmJPZ7or&redirect_uri=https://climbing-spot.onrender.com/climbers"><button id="button-signin">Sign In</button></a>
-    <button id="button-signout" onclick="signOut('climbers')">Sign Out</button>
-    <button id="button-create-profile" class="button-add" onclick="openForm()">+ Create Climber Profile</button>
+    {% if current_user %}
+        <a href="/logout"><button id="button-signout">Sign Out</button></a>
+    {% else %}
+        <a href="/login?return_to=/climbers"><button id="button-signin">Sign In</button></a>
+    {% endif %}
+    {% set user_has_profile = current_user and climbers['climber'] | selectattr('added_by', 'equalto', current_user) | list | length > 0 %}
+    {% if 'post:climber' in user_permissions and not user_has_profile %}
+        <button id="button-create-profile" class="button-add" onclick="openForm()">+ Create Climber Profile</button>
+    {% endif %}
 
     <div class="cards-list">
         {% for climber in climbers['climber'] %}
         <div class="card-climber" data-added-by="{{ climber.added_by }}">
+            {% if current_user == climber.added_by and 'delete:climber' in user_permissions %}
             <button type="submit" class="button-remove" data-id="{{ climber.id }}" onclick="removeClimber(this)"><b>Remove</b></button>
+            {% endif %}
+            {% if current_user == climber.added_by and 'patch:climber' in user_permissions %}
             <button type="submit" class="button-edit" data-id="{{ climber.id }}" data-name="{{ climber.name }}" data-state="{{ climber.state }}" onclick="openEditClimber(this)"><b>Edit</b></button>
+            {% endif %}
             <div class="card-title">{{ climber.name }}</div>
             <div class="card-info">{{ climber.state }}</div>
             <div class="card-body"><i class="fa fa-star" style="vertical-align:middle; margin-right: 4px;"></i><span style="vertical-align:middle;">{{ climber.visited_spots|length }} saved spots</span></div>

@@ -18,15 +18,24 @@
        {% endif %}
     {% endwith %}
 
-    <a href="https://climbing-spot.auth0.com/authorize?audience=climbing&response_type=token&client_id=NAl7V4YO9ort127uVV8OS3q1nmJPZ7or&redirect_uri=https://climbing-spot.onrender.com/climbing-spots"><button id="button-signin">Sign In</button></a>
-    <button id="button-signout" onclick="signOut('spots')">Sign Out</button>
-    <button id="button-add-spot" class="button-add" onclick="openForm()">+ Add</button>
+    {% if current_user %}
+        <a href="/logout"><button id="button-signout">Sign Out</button></a>
+    {% else %}
+        <a href="/login?return_to=/climbing-spots"><button id="button-signin">Sign In</button></a>
+    {% endif %}
+    {% if 'post:climbing-spot' in user_permissions %}
+        <button id="button-add-spot" class="button-add" onclick="openForm()">+ Add</button>
+    {% endif %}
 
     <div class="cards-list">
         {% for spot in spots['spot'] %}
         <div class="card-spot{% if loop.index == 1 %} first-card{% endif %}" data-added-by="{{ spot.added_by }}">
+            {% if current_user == spot.added_by and 'delete:climbing-spot' in user_permissions %}
             <button type="submit" class="button-remove" data-id="{{ spot.id }}" onclick="removeSpot(this)"><b>Remove</b></button>
+            {% endif %}
+            {% if current_user == spot.added_by and 'patch:climbing-spot' in user_permissions %}
             <button type="submit" class="button-edit" data-id="{{ spot.id }}" data-name="{{ spot.name }}" data-location="{{ spot.location }}" onclick="openEditSpot(this)"><b>Edit</b></button>
+            {% endif %}
             <div class="grid-container">
                 <div class="item1">{{ spot.address_state }}</div>
                 <div class="card-title item2">{{ spot.name }}</div>

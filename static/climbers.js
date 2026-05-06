@@ -28,8 +28,7 @@ document.getElementById('submit-climber').onclick = function(e) {
             'visited_spots': visited_spots
         }),
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + access_token
+            'Content-Type': 'application/json'
         }
     })
     .then(function(response) {
@@ -84,8 +83,7 @@ document.getElementById('edit-climber').onclick = function(e) {
             'visited_spots': visited_spots
         }),
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + access_token
+            'Content-Type': 'application/json'
         }
     })
     .then(function(response) {

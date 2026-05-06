@@ -20,8 +20,7 @@ document.getElementById('submit-climbing-spot').onclick = function(e) {
         method: 'POST',
         body: JSON.stringify({ 'name': name, 'city': city, 'state': state }),
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + access_token
+            'Content-Type': 'application/json'
         }
     })
     .then(function(response) {
@@ -68,8 +67,7 @@ document.getElementById('edit-climbing-spot').onclick = function(e) {
         method: 'PATCH',
         body: JSON.stringify({ 'name': name, 'city': city, 'state': state }),
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + access_token
+            'Content-Type': 'application/json'
         }
     })
     .then(function(response) {
