@@ -252,10 +252,10 @@ def add_climbers(payload):
     finally:
         db.session.close()
     if error:
-#        flash('An error occurred. Climbing spot ' + request.json['name'] + ' could not be added.')
+        flash('An error occurred. Climber profile could not be created.')
         abort(400)
     else:
-#        flash('Climbing spot ' + request.json['name'] + ' was successfully added!')
+        flash('Climber profile was successfully created!')
         if request.path == '/api/climbers':
             return jsonify({
                 'success': True,
@@ -303,10 +303,10 @@ def edit_climbers(payload, climber_id):
     finally:
         db.session.close()
     if error:
-#        flash('An error occurred. Climbing spot ' + request.json['name'] + ' could not be added.')
+        flash('An error occurred. Climber profile could not be updated.')
         abort(400)
     else:
-#        flash('Climbing spot ' + request.json['name'] + ' was successfully added!')
+        flash('Climber profile was successfully updated!')
         if request.path == '/api/climbers/' + str(climber_id):
             return jsonify({
                 'success': True,
@@ -371,11 +371,11 @@ def unauthorized(error):
     }), 401
 
 @app.errorhandler(403)
-def unprocessable(error):
+def forbidden(error):
     return jsonify({
         "success": False,
         "error": 403,
-        "message": "forbidden"
+        "message": "you do not have permission to modify this resource"
     }), 403
 
 @app.errorhandler(404)
@@ -385,6 +385,14 @@ def notfound(error):
         "error": 404,
         "message": "resource not found"
     }), 404
+
+@app.errorhandler(409)
+def conflict(error):
+    return jsonify({
+        "success": False,
+        "error": 409,
+        "message": "you already have a climber profile"
+    }), 409
 
 
 #if __name__ == '__main__':
