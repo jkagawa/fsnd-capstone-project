@@ -140,6 +140,7 @@ def get_climbing_spots():
             "id" : climbingspot.id,
             "name" : climbingspot.name,
             "location" : climbingspot.location,
+            "address_city" : climbingspot.address_city,
             "address_state" : climbingspot.address_state,
             "added_by" : climbingspot.added_by,
             "added_by_name" : climbers_by_sub.get(climbingspot.added_by, "Unknown"),

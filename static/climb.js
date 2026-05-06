@@ -24,14 +24,12 @@ function openEditSpot(e) {
     document.getElementById("Dimmer").style.display = "block";
     const spot_id = e.getAttribute("data-id");
     const name = e.getAttribute("data-name");
-    const location = e.getAttribute("data-location");
-    var elementID = document.getElementById("edit-climbing-spot");
-    elementID.setAttribute('data-id', spot_id);
-    var elementName = document.getElementById("new-climbing-spot-name");
-    elementName.setAttribute('value', name);
-    var elementCity = document.getElementById("new-climbing-spot-city");
-    var elementState = document.getElementById("new-climbing-spot-state");
-    elementLocation.setAttribute('value', location);
+    const city = e.getAttribute("data-city");
+    const state = e.getAttribute("data-state");
+    document.getElementById("edit-climbing-spot").setAttribute('data-id', spot_id);
+    document.getElementById("new-climbing-spot-name").setAttribute('value', name);
+    document.getElementById("new-climbing-spot-city").setAttribute('value', city);
+    document.getElementById("new-climbing-spot-state").setAttribute('value', state);
 }
 //Open form to edit climber
 function openEditClimber(e) {
