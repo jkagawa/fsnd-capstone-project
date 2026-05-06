@@ -703,6 +703,10 @@ header {
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+.notif-message.notif-error {
+    background: #c62828;
+}
+
 /* Contact page */
 .contact-card {
     max-width: 600px;
