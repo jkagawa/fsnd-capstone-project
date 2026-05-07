@@ -41,9 +41,10 @@ function buildSpotCard(spot) {
 }
 
 function updateSpotCard(data) {
-    var editBtn = document.querySelector('.button-edit[data-id="' + data.id + '"]');
+    var editBtn = document.querySelector('.settings-item[data-id="' + data.id + '"]:not(.settings-item-danger)');
     if (!editBtn) return;
-    var card = editBtn.parentElement;
+    var card = editBtn.closest('.card-spot');
+    if (!card) return;
     card.querySelector('.item1').textContent = data.state;
     card.querySelector('.card-title.item2').textContent = data.name;
     card.querySelector('.card-body.item3').textContent = data.location;

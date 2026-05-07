@@ -37,9 +37,10 @@ function buildClimberCard(climber) {
 }
 
 function updateClimberCard(data) {
-    var editBtn = document.querySelector('.button-edit[data-id="' + data.id + '"]');
+    var editBtn = document.querySelector('.settings-item[data-id="' + data.id + '"]:not(.settings-item-danger)');
     if (!editBtn) return;
-    var card = editBtn.parentElement;
+    var card = editBtn.closest('.card-climber');
+    if (!card) return;
     card.querySelector('.card-title').textContent = data.name;
     card.querySelector('.card-info').textContent = data.state;
     card.querySelector('.card-body span').textContent = data.visited_count + ' saved spots';
