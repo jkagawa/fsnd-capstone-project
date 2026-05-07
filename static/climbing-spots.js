@@ -6,11 +6,11 @@ document.getElementById('submit-climbing-spot').onclick = function(e) {
     const city = document.getElementById('climbing-spot-city').value;
     const state = document.getElementById('climbing-spot-state').value;
     if (name == "" || city == "" || state == "") {
-        alert("Name, City, and State must be filled out");
+        showFormError('add-spot-error', 'Name, City, and State must be filled out');
         return;
     }
     if (state.length !== 2) {
-        alert("State must be 2 characters");
+        showFormError('add-spot-error', 'State must be 2 characters');
         return;
     }
     var originalText = btn.textContent;
@@ -53,11 +53,11 @@ document.getElementById('edit-climbing-spot').onclick = function(e) {
     const city = document.getElementById('new-climbing-spot-city').value;
     const state = document.getElementById('new-climbing-spot-state').value;
     if (name == "" || city == "" || state == "") {
-        alert("Name, City, and State must be filled out");
+        showFormError('edit-spot-error', 'Name, City, and State must be filled out');
         return;
     }
     if (state.length !== 2) {
-        alert("State must be 2 characters");
+        showFormError('edit-spot-error', 'State must be 2 characters');
         return;
     }
     var originalText = btn.textContent;

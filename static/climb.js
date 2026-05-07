@@ -6,11 +6,17 @@ function showNotif(message, isError) {
     setTimeout(function() { notif.remove(); }, 4000);
 }
 
+function showFormError(id, msg) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = msg;
+}
+
 //Close all forms
 function closeForm() {
     document.getElementById("AddForm").style.display = "none";
     document.getElementById("EditForm").style.display = "none";
     document.getElementById("Dimmer").style.display = "none";
+    document.querySelectorAll('.form-error').forEach(function(el) { el.textContent = ''; });
 }
 
 //Open form to add new spot/climber

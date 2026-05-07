@@ -14,7 +14,7 @@ document.getElementById('submit-climber').onclick = function(e) {
     }
 
     if (name == "" || state == "") {
-        alert("Name and State must be filled out");
+        showFormError('add-climber-error', 'Name and State must be filled out');
         return;
     }
     var originalText = btn.textContent;
@@ -69,7 +69,7 @@ document.getElementById('edit-climber').onclick = function(e) {
     }
 
     if (name == "" || state == "") {
-        alert("Name and State must be filled out");
+        showFormError('edit-climber-error', 'Name and State must be filled out');
         return;
     }
     var originalText = btn.textContent;
