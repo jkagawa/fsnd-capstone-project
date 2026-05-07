@@ -93,6 +93,8 @@ document.getElementById('submit-climbing-spot').onclick = function(e) {
     .then(function(response) {
         if (response.ok) {
             response.json().then(function(data) {
+                btn.disabled = false;
+                btn.textContent = originalText;
                 closeForm();
                 document.querySelector('.cards-list').appendChild(buildSpotCard(data.spot));
                 showNotif('Climbing spot added!');
@@ -141,6 +143,8 @@ document.getElementById('edit-climbing-spot').onclick = function(e) {
     .then(function(response) {
         if (response.ok) {
             response.json().then(function(data) {
+                btn.disabled = false;
+                btn.textContent = originalText;
                 closeForm();
                 updateSpotCard(data);
                 showNotif('Climbing spot updated!');

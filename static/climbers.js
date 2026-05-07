@@ -91,6 +91,8 @@ document.getElementById('submit-climber').onclick = function(e) {
     .then(function(response) {
         if (response.ok) {
             response.json().then(function(data) {
+                btn.disabled = false;
+                btn.textContent = originalText;
                 closeForm();
                 document.querySelector('.cards-list').appendChild(buildClimberCard(data.climber));
                 showNotif('Climber profile created!');
@@ -143,6 +145,8 @@ document.getElementById('edit-climber').onclick = function(e) {
     .then(function(response) {
         if (response.ok) {
             response.json().then(function(data) {
+                btn.disabled = false;
+                btn.textContent = originalText;
                 closeForm();
                 updateClimberCard(data);
                 showNotif('Climber profile updated!');
