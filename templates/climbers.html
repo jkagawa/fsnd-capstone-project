@@ -28,6 +28,9 @@
         <button id="button-create-profile" class="button-add" onclick="openForm()">+ Create Climber Profile</button>
     {% endif %}
 
+    <input id="search-climbers" type="text" class="search-input" placeholder="Search by name or state...">
+    <p id="search-no-results" class="search-no-results" style="display:none">No climbers match your search.</p>
+
     <div class="cards-list">
         {% for climber in climbers['climber'] %}
         <div class="card-climber" data-added-by="{{ climber.added_by }}">

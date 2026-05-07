@@ -707,6 +707,24 @@ header {
     min-height: 1.2em;
 }
 
+.search-input {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    padding: 8px 12px;
+    margin: 12px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+
+.search-no-results {
+    color: #666;
+    font-size: 0.95rem;
+    margin: 16px 0;
+}
+
 /* Contact page */
 .contact-card {
     max-width: 600px;

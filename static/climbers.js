@@ -1,3 +1,19 @@
+document.getElementById('search-climbers').addEventListener('input', function() {
+    var query = this.value.toLowerCase();
+    var cards = document.querySelectorAll('.card-climber');
+    var visible = 0;
+    cards.forEach(function(card) {
+        var text = [
+            card.querySelector('.card-title'),
+            card.querySelector('.card-info')
+        ].map(function(el) { return el ? el.textContent : ''; }).join(' ').toLowerCase();
+        var show = text.includes(query);
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+    document.getElementById('search-no-results').style.display = visible === 0 && query ? 'block' : 'none';
+});
+
 function buildClimberCard(climber) {
     var canEdit = USER_PERMISSIONS && USER_PERMISSIONS.includes('patch:climber');
     var canDelete = USER_PERMISSIONS && USER_PERMISSIONS.includes('delete:climber');

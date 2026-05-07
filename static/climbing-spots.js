@@ -1,3 +1,20 @@
+document.getElementById('search-spots').addEventListener('input', function() {
+    var query = this.value.toLowerCase();
+    var cards = document.querySelectorAll('.card-spot');
+    var visible = 0;
+    cards.forEach(function(card) {
+        var text = [
+            card.querySelector('.card-title.item2'),
+            card.querySelector('.card-body.item3'),
+            card.querySelector('.item1')
+        ].map(function(el) { return el ? el.textContent : ''; }).join(' ').toLowerCase();
+        var show = text.includes(query);
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+    });
+    document.getElementById('search-no-results').style.display = visible === 0 && query ? 'block' : 'none';
+});
+
 function buildSpotCard(spot) {
     var canEdit = USER_PERMISSIONS && USER_PERMISSIONS.includes('patch:climbing-spot');
     var canDelete = USER_PERMISSIONS && USER_PERMISSIONS.includes('delete:climbing-spot');
