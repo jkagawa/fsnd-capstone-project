@@ -19,20 +19,32 @@ function buildSpotCard(spot) {
     var canEdit = USER_PERMISSIONS && USER_PERMISSIONS.includes('patch:climbing-spot');
     var canDelete = USER_PERMISSIONS && USER_PERMISSIONS.includes('delete:climbing-spot');
     var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(spot.name + ', ' + spot.location);
-    var html = '';
-    if (canDelete) {
-        html += '<button type="submit" class="button-remove" data-id="' + spot.id + '" onclick="removeSpot(this)"><b>Remove</b></button>';
-    }
-    if (canEdit) {
-        html += '<button type="submit" class="button-edit" data-id="' + spot.id + '" data-name="' + escHtml(spot.name) + '" data-city="' + escHtml(spot.address_city) + '" data-state="' + escHtml(spot.address_state) + '" onclick="openEditSpot(this)"><b>Edit</b></button>';
-    }
-    html += '<div class="grid-container">' +
+    var html = '<div class="grid-container">' +
         '<div class="item1">' + escHtml(spot.address_state) + '</div>' +
         '<div class="card-title item2">' + escHtml(spot.name) + '</div>' +
         '<div class="card-body item3">' + escHtml(spot.location) + '</div>' +
         '<div class="card-body item4"><a href="' + mapsUrl + '" target="_blank" class="card-body-link">Open in Google Maps &rarr;</a></div>' +
         '<div class="card-body item5">Added by You</div>' +
         '</div>';
+    if (canEdit || canDelete) {
+        html += '<div class="card-settings-wrap">' +
+            '<button class="button-settings" onclick="toggleSettings(this)">Edit</button>' +
+            '<div class="settings-menu">';
+        if (canEdit) {
+            html += '<button class="settings-item"' +
+                ' data-id="' + spot.id + '"' +
+                ' data-name="' + escHtml(spot.name) + '"' +
+                ' data-city="' + escHtml(spot.address_city) + '"' +
+                ' data-state="' + escHtml(spot.address_state) + '"' +
+                ' onclick="openEditSpot(this)">Edit Spot</button>';
+        }
+        if (canDelete) {
+            html += '<button class="settings-item settings-item-danger"' +
+                ' data-id="' + spot.id + '"' +
+                ' onclick="removeSpot(this)">Delete Spot</button>';
+        }
+        html += '</div></div>';
+    }
     var card = document.createElement('div');
     card.className = 'card-spot';
     card.setAttribute('data-added-by', spot.added_by || '');

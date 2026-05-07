@@ -18,19 +18,31 @@ function buildClimberCard(climber) {
     var canEdit = USER_PERMISSIONS && USER_PERMISSIONS.includes('patch:climber');
     var canDelete = USER_PERMISSIONS && USER_PERMISSIONS.includes('delete:climber');
     var visitedIdsJson = escHtml(JSON.stringify(climber.visited_spot_ids || []));
-    var html = '';
-    if (canDelete) {
-        html += '<button type="submit" class="button-remove" data-id="' + climber.id + '" onclick="removeClimber(this)"><b>Remove</b></button>';
-    }
-    if (canEdit) {
-        html += '<button type="submit" class="button-edit" data-id="' + climber.id + '" data-name="' + escHtml(climber.name) + '" data-state="' + escHtml(climber.state) + '" data-visited-ids="' + visitedIdsJson + '" onclick="openEditClimber(this)"><b>Edit</b></button>';
-    }
-    html += '<div class="card-title">' + escHtml(climber.name) + '</div>' +
+    var html = '<div class="card-title">' + escHtml(climber.name) + '</div>' +
         '<div class="card-info">' + escHtml(climber.state) + '</div>' +
         '<div class="card-body"><i class="fa fa-star" style="vertical-align:middle; margin-right: 4px;"></i>' +
         '<span style="vertical-align:middle;">' + climber.visited_count + ' saved spots</span></div>';
+    if (canEdit || canDelete) {
+        html += '<div class="card-settings-wrap">' +
+            '<button class="button-settings" onclick="toggleSettings(this)"><i class="fa fa-cog"></i> Settings</button>' +
+            '<div class="settings-menu">';
+        if (canEdit) {
+            html += '<button class="settings-item"' +
+                ' data-id="' + climber.id + '"' +
+                ' data-name="' + escHtml(climber.name) + '"' +
+                ' data-state="' + escHtml(climber.state) + '"' +
+                ' data-visited-ids="' + visitedIdsJson + '"' +
+                ' onclick="openEditClimber(this)">Edit Profile</button>';
+        }
+        if (canDelete) {
+            html += '<button class="settings-item settings-item-danger"' +
+                ' data-id="' + climber.id + '"' +
+                ' onclick="removeClimber(this)">Delete Profile</button>';
+        }
+        html += '</div></div>';
+    }
     var card = document.createElement('div');
-    card.className = 'card-climber';
+    card.className = 'card-climber card-climber-own';
     card.setAttribute('data-added-by', climber.added_by || '');
     card.innerHTML = html;
     return card;
