@@ -8,6 +8,7 @@ import urllib.parse
 from flask import Flask, request, render_template, jsonify, flash, abort, redirect, session, g, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from sqlalchemy import text
 from models import setup_db, db_create_all, return_db, ClimbingSpot, Climber, VisitedSpot
 from auth import AuthError, requires_auth, verify_decode_jwt
 
@@ -47,6 +48,10 @@ def inject_user():
         'current_user': getattr(g, 'user', None),
         'user_permissions': getattr(g, 'permissions', []),
     }
+
+def _set_rls_user():
+    uid = getattr(g, 'user', '') or ''
+    db.session.execute(text("SELECT set_config('app.current_user_id', :uid, TRUE)"), {"uid": uid})
 
 def _generate_pkce_pair():
     verifier = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8').rstrip('=')
@@ -211,6 +216,7 @@ def climbing_spots():
 def add_climbing_spots(payload):
     error = False
     try:
+        _set_rls_user()
         name = request.json['name']
         address_city = request.json['city']
         address_state = request.json['state'].upper()
@@ -260,6 +266,7 @@ def edit_climbingspots(payload, climbingspot_id):
         abort(403)
     error = False
     try:
+        _set_rls_user()
         name = request.json['name']
         address_city = request.json['city']
         address_state = request.json['state'].upper()
@@ -303,6 +310,7 @@ def remove_climbingspots(payload, climbingspot_id):
         abort(403)
     error = False
     try:
+        _set_rls_user()
         climbingspot = ClimbingSpot.query.get(climbingspot_id)
         name = climbingspot.name
         location = climbingspot.location
@@ -358,6 +366,7 @@ def add_climbers(payload):
         abort(409)
     error = False
     try:
+        _set_rls_user()
         name = request.json['name']
         state = request.json['state']
         visited_spots = request.json['visited_spots']
@@ -410,6 +419,7 @@ def edit_climbers(payload, climber_id):
         abort(403)
     error = False
     try:
+        _set_rls_user()
         name = request.json['name']
         state = request.json['state']
         new_visited_spots = request.json['visited_spots']
@@ -465,6 +475,7 @@ def remove_climbers(payload, climber_id):
         abort(403)
     error = False
     try:
+        _set_rls_user()
         visited_spots = VisitedSpot.query.filter_by(climber_id=climber_id)
         for visited_spot in visited_spots.all():
             specific_spot = visited_spots.filter_by(climbing_spot_id=visited_spot.climbing_spot_id).one_or_none()
