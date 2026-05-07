@@ -21,17 +21,20 @@ function closeForm() {
     document.getElementById("EditForm").style.display = "none";
     document.getElementById("Dimmer").style.display = "none";
     document.querySelectorAll('.form-error').forEach(function(el) { el.textContent = ''; });
+    document.body.style.overflow = '';
 }
 
 //Open form to add new spot/climber
 function openForm() {
     document.getElementById("AddForm").style.display = "block";
     document.getElementById("Dimmer").style.display = "block";
+    document.body.style.overflow = 'hidden';
 }
 //Open form to edit spot
 function openEditSpot(e) {
     document.getElementById("EditForm").style.display = "block";
     document.getElementById("Dimmer").style.display = "block";
+    document.body.style.overflow = 'hidden';
     const spot_id = e.getAttribute("data-id");
     const name = e.getAttribute("data-name");
     const city = e.getAttribute("data-city");
@@ -45,6 +48,7 @@ function openEditSpot(e) {
 function openEditClimber(e) {
     document.getElementById("EditForm").style.display = "block";
     document.getElementById("Dimmer").style.display = "block";
+    document.body.style.overflow = 'hidden';
     const climber_id = e.getAttribute("data-id");
     const name = e.getAttribute("data-name");
     const state = e.getAttribute("data-state");
