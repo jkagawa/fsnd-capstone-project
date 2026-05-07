@@ -34,8 +34,15 @@
     <p id="search-no-results" class="search-no-results" style="display:none">No climbers match your search.</p>
 
     <div class="cards-list">
-        {% for climber in climbers['climber'] %}
-        <div class="card-climber" data-added-by="{{ climber.added_by }}">
+        {% if current_user %}
+            {% set own_climbers = climbers['climber'] | selectattr('added_by', 'equalto', current_user) | list %}
+            {% set other_climbers = climbers['climber'] | rejectattr('added_by', 'equalto', current_user) | list %}
+        {% else %}
+            {% set own_climbers = [] %}
+            {% set other_climbers = climbers['climber'] %}
+        {% endif %}
+        {% for climber in own_climbers + other_climbers %}
+        <div class="card-climber{% if current_user and climber.added_by == current_user %} card-climber-own{% endif %}" data-added-by="{{ climber.added_by }}">
             {% if current_user == climber.added_by and 'delete:climber' in user_permissions %}
             <button type="submit" class="button-remove" data-id="{{ climber.id }}" onclick="removeClimber(this)"><b>Remove</b></button>
             {% endif %}
