@@ -18,14 +18,16 @@
        {% endif %}
     {% endwith %}
 
-    {% if current_user %}
-        <a href="/logout"><button id="button-signout">Sign Out</button></a>
-    {% else %}
-        <a href="/login?return_to=/climbing-spots"><button id="button-signin">Sign In</button></a>
-    {% endif %}
-    {% if 'post:climbing-spot' in user_permissions %}
-        <button id="button-add-spot" class="button-add" onclick="openForm()">+ Add</button>
-    {% endif %}
+    <div>
+        {% if current_user %}
+            <a href="/logout"><button id="button-signout">Sign Out</button></a>
+        {% else %}
+            <a href="/login?return_to=/climbing-spots"><button id="button-signin">Sign In</button></a>
+        {% endif %}
+        {% if 'post:climbing-spot' in user_permissions %}
+            <button id="button-add-spot" class="button-add" onclick="openForm()">+ Add</button>
+        {% endif %}
+    </div>
 
     <input id="search-spots" type="text" class="search-input" placeholder="Search by name, city, or state...">
     <p id="search-no-results" class="search-no-results" style="display:none">No spots match your search.</p>
