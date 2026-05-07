@@ -3,7 +3,7 @@ function showNotif(message, isError) {
     notif.className = 'notif-message' + (isError ? ' notif-error' : '');
     notif.textContent = message;
     document.body.appendChild(notif);
-    setTimeout(function() { notif.remove(); }, 4000);
+    setTimeout(function() { notif.remove(); }, 10000);
 }
 
 function escHtml(str) {
