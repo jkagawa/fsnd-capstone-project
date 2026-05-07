@@ -35,12 +35,6 @@
     <div class="cards-list">
         {% for spot in spots['spot'] %}
         <div class="card-spot{% if loop.index == 1 %} first-card{% endif %}" data-added-by="{{ spot.added_by }}">
-            {% if current_user == spot.added_by and 'delete:climbing-spot' in user_permissions %}
-            <button type="submit" class="button-remove" data-id="{{ spot.id }}" onclick="removeSpot(this)"><b>Remove</b></button>
-            {% endif %}
-            {% if current_user == spot.added_by and 'patch:climbing-spot' in user_permissions %}
-            <button type="submit" class="button-edit" data-id="{{ spot.id }}" data-name="{{ spot.name }}" data-city="{{ spot.address_city }}" data-state="{{ spot.address_state }}" onclick="openEditSpot(this)"><b>Edit</b></button>
-            {% endif %}
             <div class="grid-container">
                 <div class="item1">{{ spot.address_state }}</div>
                 <div class="card-title item2">{{ spot.name }}</div>
@@ -48,6 +42,28 @@
                 <div class="card-body item4"><a href="https://www.google.com/maps/search/?api=1&query={{ spot.name }}, {{ spot.location }}" target="_blank" class="card-body-link">Open in Google Maps &rarr;</a></div>
                 <div class="card-body item5">Added by {{ spot.added_by_name }}</div>
             </div>
+            {% if current_user == spot.added_by and ('patch:climbing-spot' in user_permissions or 'delete:climbing-spot' in user_permissions) %}
+            <div class="card-settings-wrap">
+                <button class="button-settings" onclick="toggleSettings(this)">
+                    Edit
+                </button>
+                <div class="settings-menu">
+                    {% if current_user == spot.added_by and 'patch:climbing-spot' in user_permissions %}
+                    <button class="settings-item"
+                        data-id="{{ spot.id }}"
+                        data-name="{{ spot.name }}"
+                        data-city="{{ spot.address_city }}"
+                        data-state="{{ spot.address_state }}"
+                        onclick="openEditSpot(this)">Edit Spot</button>
+                    {% endif %}
+                    {% if current_user == spot.added_by and 'delete:climbing-spot' in user_permissions %}
+                    <button class="settings-item settings-item-danger"
+                        data-id="{{ spot.id }}"
+                        onclick="removeSpot(this)">Delete Spot</button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

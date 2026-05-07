@@ -144,6 +144,71 @@ a {
     border-color: #0080ff;
 }
 
+.card-settings-wrap {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.button-settings {
+    background: transparent;
+    border: 1px solid #cccccc;
+    color: #666666;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.button-settings:hover {
+    background: #f0f0f0;
+    border-color: #aaaaaa;
+    color: #333333;
+}
+
+.settings-menu {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    z-index: 10;
+    min-width: 140px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.settings-item {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    background: white;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #333333;
+}
+
+.settings-item:hover {
+    background: #f5f5f5;
+}
+
+.settings-item-danger {
+    color: #cc0000;
+}
+
+.settings-item-danger:hover {
+    background: #fff0f0;
+}
+
 .card-title {
     font-weight: 700;
     font-size: 1.05rem;

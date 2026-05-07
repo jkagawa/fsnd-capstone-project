@@ -43,15 +43,31 @@
         {% endif %}
         {% for climber in own_climbers + other_climbers %}
         <div class="card-climber{% if current_user and climber.added_by == current_user %} card-climber-own{% endif %}" data-added-by="{{ climber.added_by }}">
-            {% if current_user == climber.added_by and 'delete:climber' in user_permissions %}
-            <button type="submit" class="button-remove" data-id="{{ climber.id }}" onclick="removeClimber(this)"><b>Remove</b></button>
-            {% endif %}
-            {% if current_user == climber.added_by and 'patch:climber' in user_permissions %}
-            <button type="submit" class="button-edit" data-id="{{ climber.id }}" data-name="{{ climber.name }}" data-state="{{ climber.state }}" data-visited-ids="{{ climber.visited_spot_ids | tojson }}" onclick="openEditClimber(this)"><b>Edit</b></button>
-            {% endif %}
             <div class="card-title">{{ climber.name }}</div>
             <div class="card-info">{{ climber.state }}</div>
             <div class="card-body"><i class="fa fa-star" style="vertical-align:middle; margin-right: 4px;"></i><span style="vertical-align:middle;">{{ climber.visited_spots|length }} saved spots</span></div>
+            {% if current_user == climber.added_by and ('patch:climber' in user_permissions or 'delete:climber' in user_permissions) %}
+            <div class="card-settings-wrap">
+                <button class="button-settings" onclick="toggleSettings(this)">
+                    <i class="fa fa-cog"></i> Settings
+                </button>
+                <div class="settings-menu">
+                    {% if current_user == climber.added_by and 'patch:climber' in user_permissions %}
+                    <button class="settings-item"
+                        data-id="{{ climber.id }}"
+                        data-name="{{ climber.name }}"
+                        data-state="{{ climber.state }}"
+                        data-visited-ids="{{ climber.visited_spot_ids | tojson }}"
+                        onclick="openEditClimber(this)">Edit Profile</button>
+                    {% endif %}
+                    {% if current_user == climber.added_by and 'delete:climber' in user_permissions %}
+                    <button class="settings-item settings-item-danger"
+                        data-id="{{ climber.id }}"
+                        onclick="removeClimber(this)">Delete Profile</button>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

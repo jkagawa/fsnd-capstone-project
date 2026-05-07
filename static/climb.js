@@ -68,7 +68,7 @@ function removeSpot(e) {
     })
     .then(function(response) {
         if (response.ok) {
-            e.parentElement.remove();
+            e.closest('.card-spot').remove();
             showNotif('Climbing spot removed');
         } else {
             e.disabled = false;
@@ -84,6 +84,17 @@ function removeSpot(e) {
         showNotif('Network error', true);
     });
 }
+function toggleSettings(btn) {
+    var menu = btn.nextElementSibling;
+    var isOpen = menu.style.display === 'block';
+    document.querySelectorAll('.settings-menu').forEach(function(m) { m.style.display = 'none'; });
+    if (!isOpen) menu.style.display = 'block';
+}
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.card-settings-wrap')) {
+        document.querySelectorAll('.settings-menu').forEach(function(m) { m.style.display = 'none'; });
+    }
+});
 //Remove climber
 function removeClimber(e) {
     if (!confirm("Are you sure you want to remove this?")) return;
@@ -93,7 +104,7 @@ function removeClimber(e) {
     })
     .then(function(response) {
         if (response.ok) {
-            e.parentElement.remove();
+            e.closest('.card-climber').remove();
             showNotif('Climber profile removed');
         } else {
             e.disabled = false;
