@@ -243,7 +243,6 @@ def add_climbing_spots(payload):
         flash('An error occurred. Climbing spot "' + request.json['name'] + '" could not be added.')
         abort(400)
     else:
-        flash('Climbing spot "' + request.json['name'] + '" was successfully added!')
         if request.path == '/api/climbing-spots':
             return jsonify({
                 'success': True,
@@ -256,6 +255,7 @@ def add_climbing_spots(payload):
                     'added_by': payload['sub'],
                 }
             }), 200
+        flash('Climbing spot "' + name + '" was successfully added!')
         return render_template('climbing-spots.html', spots=spots)
 
 @app.route('/climbing-spots/<int:climbingspot_id>', methods=['PATCH'])
@@ -290,7 +290,6 @@ def edit_climbingspots(payload, climbingspot_id):
         flash('An error occurred. Climbing spot "' + request.json['name'] + '" could not be added.')
         abort(400)
     else:
-        flash('Climbing spot "' + request.json['name'] + '" was successfully added!')
         if request.path == '/api/climbing-spots/' + str(climbingspot_id):
             return jsonify({
                 'success': True,
@@ -300,6 +299,7 @@ def edit_climbingspots(payload, climbingspot_id):
                 'city' : address_city,
                 'state' : address_state
             }), 200
+        flash('Climbing spot "' + request.json['name'] + '" was successfully added!')
         return render_template('climbing-spots.html', spots=spots)
 
 @app.route('/climbing-spots/<int:climbingspot_id>', methods=['DELETE'])
@@ -398,7 +398,6 @@ def add_climbers(payload):
         flash('An error occurred. Climber profile could not be created.')
         abort(400)
     else:
-        flash('Climber profile was successfully created!')
         if request.path == '/api/climbers':
             return jsonify({
                 'success': True,
@@ -411,6 +410,7 @@ def add_climbers(payload):
                     'added_by': payload['sub'],
                 }
             }), 200
+        flash('Climber profile was successfully created!')
         return render_template('climbers.html', climbers=climbers)
 
 @app.route('/climbers/<int:climber_id>', methods=['PATCH'])
@@ -457,7 +457,6 @@ def edit_climbers(payload, climber_id):
         flash('An error occurred. Climber profile could not be updated.')
         abort(400)
     else:
-        flash('Climber profile was successfully updated!')
         if request.path == '/api/climbers/' + str(climber_id):
             return jsonify({
                 'success': True,
@@ -467,6 +466,7 @@ def edit_climbers(payload, climber_id):
                 'visited_count': len(new_visited_spots),
                 'visited_spot_ids': new_visited_spots,
             }), 200
+        flash('Climber profile was successfully updated!')
         return render_template('climbers.html', climbers=climbers)
 
 @app.route('/climbers/<int:climber_id>', methods=['DELETE'])
