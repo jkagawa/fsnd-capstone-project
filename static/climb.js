@@ -50,6 +50,10 @@ function openEditClimber(e) {
     elementName.setAttribute('value', name);
     var elementState = document.getElementById("new-climber-state");
     elementState.setAttribute('value', state);
+    var visitedIds = JSON.parse(e.getAttribute("data-visited-ids") || "[]");
+    document.querySelectorAll('#EditForm .list-spot input').forEach(function(cb) {
+        cb.checked = visitedIds.indexOf(parseInt(cb.getAttribute("data-id"))) !== -1;
+    });
 }
 //Remove spot
 function removeSpot(e) {

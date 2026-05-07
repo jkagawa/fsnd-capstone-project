@@ -167,6 +167,7 @@ def get_climbers():
             "state" : climb.state,
             "added_by" : climb.added_by,
             "visited_spots" : visitedspot,
+            "visited_spot_ids" : visitedspot_id,
             "all_spots" : all_spots,
             "all_spots_id" : all_spots_id,
             "len_all_spots" : len(all_spots)

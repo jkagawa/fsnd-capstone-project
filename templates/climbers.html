@@ -35,7 +35,7 @@
             <button type="submit" class="button-remove" data-id="{{ climber.id }}" onclick="removeClimber(this)"><b>Remove</b></button>
             {% endif %}
             {% if current_user == climber.added_by and 'patch:climber' in user_permissions %}
-            <button type="submit" class="button-edit" data-id="{{ climber.id }}" data-name="{{ climber.name }}" data-state="{{ climber.state }}" onclick="openEditClimber(this)"><b>Edit</b></button>
+            <button type="submit" class="button-edit" data-id="{{ climber.id }}" data-name="{{ climber.name }}" data-state="{{ climber.state }}" data-visited-ids="{{ climber.visited_spot_ids | tojson }}" onclick="openEditClimber(this)"><b>Edit</b></button>
             {% endif %}
             <div class="card-title">{{ climber.name }}</div>
             <div class="card-info">{{ climber.state }}</div>
