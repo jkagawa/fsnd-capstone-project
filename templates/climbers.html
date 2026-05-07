@@ -104,6 +104,10 @@
   </form>
 </div>
 
+<script>
+var USER_SUB = {{ current_user | tojson }};
+var USER_PERMISSIONS = {{ user_permissions | tojson }};
+</script>
 <script src="static/climb.js"></script>
 <script src="static/climbers.js"></script>
 {% endblock %}

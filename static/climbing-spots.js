@@ -1,3 +1,42 @@
+function buildSpotCard(spot) {
+    var canEdit = USER_PERMISSIONS && USER_PERMISSIONS.includes('patch:climbing-spot');
+    var canDelete = USER_PERMISSIONS && USER_PERMISSIONS.includes('delete:climbing-spot');
+    var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(spot.name + ', ' + spot.location);
+    var html = '';
+    if (canDelete) {
+        html += '<button type="submit" class="button-remove" data-id="' + spot.id + '" onclick="removeSpot(this)"><b>Remove</b></button>';
+    }
+    if (canEdit) {
+        html += '<button type="submit" class="button-edit" data-id="' + spot.id + '" data-name="' + escHtml(spot.name) + '" data-city="' + escHtml(spot.address_city) + '" data-state="' + escHtml(spot.address_state) + '" onclick="openEditSpot(this)"><b>Edit</b></button>';
+    }
+    html += '<div class="grid-container">' +
+        '<div class="item1">' + escHtml(spot.address_state) + '</div>' +
+        '<div class="card-title item2">' + escHtml(spot.name) + '</div>' +
+        '<div class="card-body item3">' + escHtml(spot.location) + '</div>' +
+        '<div class="card-body item4"><a href="' + mapsUrl + '" target="_blank" class="card-body-link">Open in Google Maps &rarr;</a></div>' +
+        '<div class="card-body item5">Added by You</div>' +
+        '</div>';
+    var card = document.createElement('div');
+    card.className = 'card-spot';
+    card.setAttribute('data-added-by', spot.added_by || '');
+    card.innerHTML = html;
+    return card;
+}
+
+function updateSpotCard(data) {
+    var editBtn = document.querySelector('.button-edit[data-id="' + data.id + '"]');
+    if (!editBtn) return;
+    var card = editBtn.parentElement;
+    card.querySelector('.item1').textContent = data.state;
+    card.querySelector('.card-title.item2').textContent = data.name;
+    card.querySelector('.card-body.item3').textContent = data.location;
+    var link = card.querySelector('.card-body-link');
+    if (link) link.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(data.name + ', ' + data.location);
+    editBtn.setAttribute('data-name', data.name);
+    editBtn.setAttribute('data-city', data.city);
+    editBtn.setAttribute('data-state', data.state);
+}
+
 //Submit new climbing spot
 document.getElementById('submit-climbing-spot').onclick = function(e) {
     e.preventDefault();
@@ -16,17 +55,18 @@ document.getElementById('submit-climbing-spot').onclick = function(e) {
     var originalText = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Submitting...';
-    fetch('/climbing-spots', {
+    fetch('/api/climbing-spots', {
         method: 'POST',
         body: JSON.stringify({ 'name': name, 'city': city, 'state': state }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
     })
     .then(function(response) {
         if (response.ok) {
-            closeForm();
-            window.location.reload();
+            response.json().then(function(data) {
+                closeForm();
+                document.querySelector('.cards-list').appendChild(buildSpotCard(data.spot));
+                showNotif('Climbing spot added!');
+            });
         } else {
             btn.disabled = false;
             btn.textContent = originalText;
@@ -63,17 +103,18 @@ document.getElementById('edit-climbing-spot').onclick = function(e) {
     var originalText = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Submitting...';
-    fetch('/climbing-spots/' + spot_id, {
+    fetch('/api/climbing-spots/' + spot_id, {
         method: 'PATCH',
         body: JSON.stringify({ 'name': name, 'city': city, 'state': state }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
     })
     .then(function(response) {
         if (response.ok) {
-            closeForm();
-            window.location.reload();
+            response.json().then(function(data) {
+                closeForm();
+                updateSpotCard(data);
+                showNotif('Climbing spot updated!');
+            });
         } else {
             btn.disabled = false;
             btn.textContent = originalText;

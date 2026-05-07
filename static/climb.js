@@ -6,6 +6,10 @@ function showNotif(message, isError) {
     setTimeout(function() { notif.remove(); }, 4000);
 }
 
+function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 function showFormError(id, msg) {
     var el = document.getElementById(id);
     if (el) el.textContent = msg;

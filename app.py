@@ -224,6 +224,7 @@ def add_climbing_spots(payload):
 
         db.session.add(climbing_spot)
         db.session.commit()
+        new_spot_id = climbing_spot.id
 
         spots = get_climbing_spots()
     except:
@@ -239,7 +240,14 @@ def add_climbing_spots(payload):
         if request.path == '/api/climbing-spots':
             return jsonify({
                 'success': True,
-                'spots': spots
+                'spot': {
+                    'id': new_spot_id,
+                    'name': name,
+                    'location': location,
+                    'address_city': address_city,
+                    'address_state': address_state,
+                    'added_by': payload['sub'],
+                }
             }), 200
         return render_template('climbing-spots.html', spots=spots)
 
@@ -281,6 +289,7 @@ def edit_climbingspots(payload, climbingspot_id):
                 'id': climbingspot_id,
                 'name' : name,
                 'location' : location,
+                'city' : address_city,
                 'state' : address_state
             }), 200
         return render_template('climbing-spots.html', spots=spots)
@@ -361,6 +370,7 @@ def add_climbers(payload):
 
         db.session.add(climber)
         db.session.flush()
+        new_climber_id = climber.id
         for spot_id in visited_spots:
             visitedspots = VisitedSpot(climbing_spot_id=spot_id, climber_id=climber.id)
             db.session.add(visitedspots)
@@ -380,7 +390,14 @@ def add_climbers(payload):
         if request.path == '/api/climbers':
             return jsonify({
                 'success': True,
-                'climbers': climbers
+                'climber': {
+                    'id': new_climber_id,
+                    'name': name,
+                    'state': state,
+                    'visited_count': len(visited_spots),
+                    'visited_spot_ids': visited_spots,
+                    'added_by': payload['sub'],
+                }
             }), 200
         return render_template('climbers.html', climbers=climbers)
 
@@ -432,7 +449,10 @@ def edit_climbers(payload, climber_id):
             return jsonify({
                 'success': True,
                 'id': climber_id,
-                'name' : name
+                'name': name,
+                'state': state,
+                'visited_count': len(new_visited_spots),
+                'visited_spot_ids': new_visited_spots,
             }), 200
         return render_template('climbers.html', climbers=climbers)
 
