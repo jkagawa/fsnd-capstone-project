@@ -161,8 +161,9 @@ def get_climbers():
         all_spots_id = []
         for visited in VisitedSpot.query.filter_by(climber_id=climb.id).order_by('climbing_spot_id').all():
             climbingspot = ClimbingSpot.query.filter_by(id=visited.climbing_spot_id).one_or_none()
-            visitedspot.append(climbingspot.name)
-            visitedspot_id.append(climbingspot.id)
+            if climbingspot:
+                visitedspot.append(climbingspot.name)
+                visitedspot_id.append(climbingspot.id)
         for climbingspot in ClimbingSpot.query.order_by('id').all():
             all_spots.append(climbingspot.name)
             all_spots_id.append(climbingspot.id)
@@ -314,6 +315,8 @@ def remove_climbingspots(payload, climbingspot_id):
         climbingspot = ClimbingSpot.query.get(climbingspot_id)
         name = climbingspot.name
         location = climbingspot.location
+        for vs in VisitedSpot.query.filter_by(climbing_spot_id=climbingspot_id).all():
+            db.session.delete(vs)
         db.session.delete(climbingspot)
         db.session.commit()
 
