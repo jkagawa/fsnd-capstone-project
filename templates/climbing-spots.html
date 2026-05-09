@@ -31,6 +31,9 @@
 
     <input id="search-spots" type="text" class="search-input" placeholder="Search by name, city, or state...">
     <p id="search-no-results" class="search-no-results" style="display:none">No spots match your search.</p>
+    {% if not current_user %}
+    <p class="signin-hint">Sign in to add and manage climbing spots</p>
+    {% endif %}
 
     <div class="cards-list">
         {% for spot in spots['spot'] %}

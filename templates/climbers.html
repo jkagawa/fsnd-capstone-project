@@ -32,6 +32,9 @@
 
     <input id="search-climbers" type="text" class="search-input" placeholder="Search by name or state...">
     <p id="search-no-results" class="search-no-results" style="display:none">No climbers match your search.</p>
+    {% if not current_user %}
+    <p class="signin-hint">Sign in to create and manage your climber profile</p>
+    {% endif %}
 
     <div class="cards-list">
         {% if current_user %}
