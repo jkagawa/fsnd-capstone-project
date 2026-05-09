@@ -191,6 +191,30 @@ def index():
 def contact():
     return render_template('contact.html')
 
+@app.route('/profile')
+def profile():
+    if not g.user:
+        return redirect('/login?return_to=/profile')
+    climber = Climber.query.filter_by(added_by=g.user).first()
+    all_spots = ClimbingSpot.query.order_by('id').all()
+    profile_data = None
+    if climber:
+        visited_ids = [vs.climbing_spot_id for vs in VisitedSpot.query.filter_by(climber_id=climber.id).order_by('climbing_spot_id').all()]
+        visited_names = []
+        for spot_id in visited_ids:
+            spot = ClimbingSpot.query.filter_by(id=spot_id).one_or_none()
+            if spot:
+                visited_names.append(spot.name)
+        profile_data = {
+            'id': climber.id,
+            'name': climber.name,
+            'state': climber.state,
+            'visited_spot_ids': visited_ids,
+            'visited_spots': visited_names,
+        }
+    spots_list = [{'id': s.id, 'name': s.name} for s in all_spots]
+    return render_template('profile.html', profile=profile_data, all_spots=spots_list)
+
 #=================CLIMBING SPOT ENDPOINTS=================
 
 @app.route('/climbing-spots', methods=['GET'])

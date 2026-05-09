@@ -1,0 +1,112 @@
+{% extends 'main.html' %}
+{% block gtag %}gtag('config', 'UA-176036079-2', {'page_path': '/profile'});{% endblock %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+
+<div class="page-hero">
+    <h1 class="page-hero-title">My Profile</h1>
+    <p class="page-hero-subtitle">Your climber profile</p>
+</div>
+
+<div class="content-body">
+    {% if profile %}
+    <div class="profile-card">
+        <div class="profile-name">{{ profile.name }}</div>
+        <div class="profile-state">{{ profile.state }}</div>
+        <div class="profile-spots-count"><i class="fa fa-star" style="vertical-align:middle; margin-right: 4px;"></i><span style="vertical-align:middle;">{{ profile.visited_spots|length }} saved spot{% if profile.visited_spots|length != 1 %}s{% endif %}</span></div>
+        {% if profile.visited_spots %}
+        <ul class="profile-visited-list">
+            {% for spot in profile.visited_spots %}
+            <li>{{ spot }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <div class="profile-actions">
+            {% if 'patch:climber' in user_permissions %}
+            <button class="button-add"
+                data-id="{{ profile.id }}"
+                data-name="{{ profile.name }}"
+                data-state="{{ profile.state }}"
+                data-visited-ids="{{ profile.visited_spot_ids | tojson }}"
+                onclick="openEditClimber(this)">Edit Profile</button>
+            {% endif %}
+            {% if 'delete:climber' in user_permissions %}
+            <button class="button-delete-profile" onclick="deleteProfile({{ profile.id }})">Delete Profile</button>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class="profile-empty">
+        <p class="profile-empty-msg">You don't have a climber profile yet.</p>
+        {% if 'post:climber' in user_permissions %}
+        <button class="button-add" onclick="openForm()">+ Create Climber Profile</button>
+        {% else %}
+        <p class="signin-hint">Contact an admin to get access to create a profile.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<div id="Dimmer" onclick="closeForm()"></div>
+
+<div class="form-div" id="AddForm">
+    <form class="form-area" autocomplete="off">
+        <button type="button" class="button-cancel" onclick="closeForm()"><b>╳</b></button>
+        <div class="form-title">Create Climber Profile</div>
+        <div>
+            <span class="form-label">Name</span>
+            <input type="text" id="climber-name" required>
+        </div>
+        <div>
+            <span class="form-label">State</span>
+            <input type="text" id="climber-state" required>
+        </div>
+        <div>
+            <span class="form-label form-label-spot">Visited Climbing Spots:</span>
+            <ul>
+                {% for spot in all_spots %}
+                <li class="list-spot"><input type="checkbox" data-id="{{ spot.id }}"/>
+                    <span>{{ spot.name }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <p class="form-error" id="add-climber-error"></p>
+        <button type="submit" class="button-submit" id="submit-climber">Submit</button>
+    </form>
+</div>
+
+<div class="form-div" id="EditForm" autocomplete="off">
+    <form class="form-area">
+        <button type="button" class="button-cancel" onclick="closeForm()"><b>╳</b></button>
+        <div class="form-title">Edit Profile</div>
+        <div>
+            <span class="form-label">Name</span>
+            <input type="text" id="new-climber-name" value="" required>
+        </div>
+        <div>
+            <span class="form-label">State</span>
+            <input type="text" id="new-climber-state" value="" required>
+        </div>
+        <div>
+            <span class="form-label form-label-spot">Visited Climbing Spots:</span>
+            <ul>
+                {% for spot in all_spots %}
+                <li class="list-spot"><input type="checkbox" data-id="{{ spot.id }}"/>
+                    <span>{{ spot.name }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <p class="form-error" id="edit-climber-error"></p>
+        <button type="submit" class="button-submit" id="edit-climber" data-id="">Change</button>
+    </form>
+</div>
+
+<script>
+var USER_SUB = {{ current_user | tojson }};
+var USER_PERMISSIONS = {{ user_permissions | tojson }};
+</script>
+<script src="static/climb.js"></script>
+<script src="static/profile.js"></script>
+{% endblock %}

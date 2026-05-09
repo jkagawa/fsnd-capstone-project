@@ -841,6 +841,82 @@ header {
     margin: 4px 0 0;
 }
 
+/* Profile page */
+.profile-card {
+    background: #e8f4ff;
+    border: 1px solid #0080ff;
+    border-radius: 12px;
+    padding: 28px 32px;
+    max-width: 560px;
+    margin: 24px auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 4px;
+}
+
+.profile-state {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 12px;
+}
+
+.profile-spots-count {
+    font-size: 0.95rem;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.profile-visited-list {
+    margin: 8px 0 16px 0;
+    padding-left: 20px;
+    color: #444;
+    font-size: 0.9rem;
+}
+
+.profile-visited-list li {
+    margin-bottom: 3px;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.button-delete-profile {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: 1px solid #e53e3e;
+    background: transparent;
+    color: #e53e3e;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.button-delete-profile:hover {
+    background: #e53e3e;
+    color: #fff;
+}
+
+.profile-empty {
+    text-align: center;
+    padding: 48px 24px;
+}
+
+.profile-empty-msg {
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 16px;
+}
+
 /* Contact page */
 .contact-card {
     max-width: 600px;

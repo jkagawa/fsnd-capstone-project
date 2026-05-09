@@ -32,6 +32,9 @@
         <div><a href="/climbing-spots" class="{% if request.endpoint == 'climbing_spots' %}dropdown-main{% endif %}">Climbing Spots</a></div>
         <div><a href="/climbers" class="{% if request.endpoint == 'climbers' %}dropdown-main{% endif %}">Climbers</a></div>
         <div><a href="/contact" class="{% if request.endpoint == 'contact' %}dropdown-main{% endif %}">Contact</a></div>
+        {% if current_user %}
+        <div><a href="/profile" class="{% if request.endpoint == 'profile' %}dropdown-main{% endif %}">Profile</a></div>
+        {% endif %}
         <div class="dropdown-auth">
             {% if current_user %}
                 <a href="/logout">Sign Out</a>
@@ -55,6 +58,11 @@
                 <a href="/contact">
                     <div id="button-climbers" class="nav-button {% if request.endpoint == 'contact' %}button-main{% endif %}">Contact</div>
                 </a>
+                {% if current_user %}
+                <a href="/profile">
+                    <div class="nav-button {% if request.endpoint == 'profile' %}button-main{% endif %}">Profile</div>
+                </a>
+                {% endif %}
                 <div id="nav-auth">
                     {% if current_user %}
                         <a href="/logout"><div class="nav-button nav-auth-btn">Sign Out</div></a>
@@ -69,6 +77,7 @@
                 <div class="nav-title" style="{% if request.endpoint == 'climbing_spots' %}display: inline-block;{% else %}display: none;{% endif %}">Climbing Spots</div>
                 <div class="nav-title" style="{% if request.endpoint == 'climbers' %}display: inline-block;{% else %}display: none;{% endif %}">Climbers</div>
                 <div class="nav-title" style="{% if request.endpoint == 'contact' %}display: inline-block;{% else %}display: none;{% endif %}">Contact</div>
+                <div class="nav-title" style="{% if request.endpoint == 'profile' %}display: inline-block;{% else %}display: none;{% endif %}">Profile</div>
                 <div class="dropdown">
                   <button class="dropbtn" onclick="toggleMenu()"><img src="static/images/menu-icon-white.png" width="20px" class="menu_icon img_style"></button>
                 </div>
