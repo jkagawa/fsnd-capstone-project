@@ -19,11 +19,6 @@
     {% endwith %}
 
     <div>
-        {% if current_user %}
-            <a href="/logout"><button id="button-signout">Sign Out</button></a>
-        {% else %}
-            <a href="/login?return_to=/climbers"><button id="button-signin">Sign In</button></a>
-        {% endif %}
         {% set user_has_profile = current_user and climbers['climber'] | selectattr('added_by', 'equalto', current_user) | list | length > 0 %}
         {% if 'post:climber' in user_permissions and not user_has_profile %}
             <button id="button-create-profile" class="button-add" onclick="openForm()">+ Create Climber Profile</button>

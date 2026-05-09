@@ -23,6 +23,39 @@ body {
     align-items: center;
     justify-content: center;
     height: 56px;
+    position: relative;
+}
+
+#nav-auth {
+    position: absolute;
+    right: 24px;
+    display: flex;
+    align-items: center;
+}
+
+.nav-auth-btn {
+    padding: 6px 16px !important;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 6px;
+    font-size: 0.85rem !important;
+    line-height: 1.4 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.25) !important;
+}
+
+.nav-auth-btn:hover {
+    border-color: rgba(255,255,255,0.5) !important;
+    border-bottom-color: rgba(255,255,255,0.5) !important;
+}
+
+.nav-auth-signin {
+    background: #0080ff;
+    border-color: #0080ff !important;
+    color: #ffffff !important;
+}
+
+.nav-auth-signin:hover {
+    background: #0070e0;
+    border-color: #0070e0 !important;
 }
 
 #nav-bar-dropdown {
@@ -513,6 +546,12 @@ a {
     color: #ffffff !important;
     background: rgba(0, 128, 255, 0.15) !important;
     border-left: 3px solid #0080ff;
+}
+
+.dropdown-auth {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 8px;
+    padding-top: 8px;
 }
 
 .dropdown-content.show {

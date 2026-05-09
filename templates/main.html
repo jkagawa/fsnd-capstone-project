@@ -32,6 +32,13 @@
         <div><a href="/climbing-spots" class="{% if request.endpoint == 'climbing_spots' %}dropdown-main{% endif %}">Climbing Spots</a></div>
         <div><a href="/climbers" class="{% if request.endpoint == 'climbers' %}dropdown-main{% endif %}">Climbers</a></div>
         <div><a href="/contact" class="{% if request.endpoint == 'contact' %}dropdown-main{% endif %}">Contact</a></div>
+        <div class="dropdown-auth">
+            {% if current_user %}
+                <a href="/logout">Sign Out</a>
+            {% else %}
+                <a href="/login?return_to={{ request.path }}">Sign In</a>
+            {% endif %}
+        </div>
     </div>
     <div id="container">
         <header>
@@ -48,7 +55,13 @@
                 <a href="/contact">
                     <div id="button-climbers" class="nav-button {% if request.endpoint == 'contact' %}button-main{% endif %}">Contact</div>
                 </a>
-
+                <div id="nav-auth">
+                    {% if current_user %}
+                        <a href="/logout"><div class="nav-button nav-auth-btn">Sign Out</div></a>
+                    {% else %}
+                        <a href="/login?return_to={{ request.path }}"><div class="nav-button nav-auth-btn nav-auth-signin">Sign In</div></a>
+                    {% endif %}
+                </div>
             </div>
             <div id="nav-bar-dropdown">
                 <div style="width: 35px; height: 35px; display: inline-block; float: left; margin: 6px;"></div>
