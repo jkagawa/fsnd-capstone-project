@@ -18,7 +18,8 @@ function buildClimberCard(climber) {
     var canEdit = USER_PERMISSIONS && USER_PERMISSIONS.includes('patch:climber');
     var canDelete = USER_PERMISSIONS && USER_PERMISSIONS.includes('delete:climber');
     var visitedIdsJson = escHtml(JSON.stringify(climber.visited_spot_ids || []));
-    var html = '<div class="card-title">' + escHtml(climber.name) + '</div>' +
+    var html = '<span class="card-own-badge">Your profile</span>' +
+        '<div class="card-title">' + escHtml(climber.name) + '</div>' +
         '<div class="card-info">' + escHtml(climber.state) + '</div>' +
         '<div class="card-body"><i class="fa fa-star" style="vertical-align:middle; margin-right: 4px;"></i>' +
         '<span style="vertical-align:middle;">' + climber.visited_count + ' saved spots</span></div>';
