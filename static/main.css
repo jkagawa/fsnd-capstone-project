@@ -882,29 +882,6 @@ header {
     margin-bottom: 3px;
 }
 
-.profile-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 16px;
-}
-
-.button-delete-profile {
-    padding: 8px 18px;
-    border-radius: 8px;
-    border: 1px solid #e53e3e;
-    background: transparent;
-    color: #e53e3e;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-}
-
-.button-delete-profile:hover {
-    background: #e53e3e;
-    color: #fff;
-}
 
 .profile-empty {
     text-align: center;

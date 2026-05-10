@@ -1,6 +1,6 @@
 {% extends 'main.html' %}
 {% block gtag %}gtag('config', 'UA-176036079-2', {'page_path': '/profile'});{% endblock %}
-{% block title %}My Profile{% endblock %}
+{% block title %}Profile{% endblock %}
 {% block content %}
 
 <div class="page-hero">
@@ -21,19 +21,28 @@
             {% endfor %}
         </ul>
         {% endif %}
-        <div class="profile-actions">
-            {% if 'patch:climber' in user_permissions %}
-            <button class="button-add"
-                data-id="{{ profile.id }}"
-                data-name="{{ profile.name }}"
-                data-state="{{ profile.state }}"
-                data-visited-ids="{{ profile.visited_spot_ids | tojson }}"
-                onclick="openEditClimber(this)">Edit Profile</button>
-            {% endif %}
-            {% if 'delete:climber' in user_permissions %}
-            <button class="button-delete-profile" onclick="deleteProfile({{ profile.id }})">Delete Profile</button>
-            {% endif %}
+        {% if 'patch:climber' in user_permissions or 'delete:climber' in user_permissions %}
+        <div class="card-settings-wrap">
+            <button class="button-settings" onclick="toggleSettings(this)">
+                Edit
+            </button>
+            <div class="settings-menu">
+                {% if 'patch:climber' in user_permissions %}
+                <button class="settings-item"
+                    data-id="{{ profile.id }}"
+                    data-name="{{ profile.name }}"
+                    data-state="{{ profile.state }}"
+                    data-visited-ids="{{ profile.visited_spot_ids | tojson }}"
+                    onclick="openEditClimber(this)">Edit Profile</button>
+                {% endif %}
+                {% if 'delete:climber' in user_permissions %}
+                <button class="settings-item settings-item-danger"
+                    data-id="{{ profile.id }}"
+                    onclick="deleteProfile({{ profile.id }})">Delete Profile</button>
+                {% endif %}
+            </div>
         </div>
+        {% endif %}
     </div>
     {% else %}
     <div class="profile-empty">
