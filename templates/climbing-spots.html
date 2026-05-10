@@ -25,6 +25,7 @@
     </div>
 
     <input id="search-spots" type="text" class="search-input" placeholder="Search by name, city, or state...">
+    <p id="spots-count" class="spots-count"></p>
     <p id="search-no-results" class="search-no-results" style="display:none">No spots match your search.</p>
     {% if not current_user %}
     <p class="signin-hint">Sign in to add and manage climbing spots</p>
@@ -64,6 +65,11 @@
             {% endif %}
         </div>
         {% endfor %}
+    </div>
+    <div id="pagination-wrap" class="pagination-wrap" style="display:none">
+        <button id="pagination-prev" class="pagination-btn">&#8592; Prev</button>
+        <span id="pagination-info" class="pagination-info"></span>
+        <button id="pagination-next" class="pagination-btn">Next &#8594;</button>
     </div>
 </div>
 

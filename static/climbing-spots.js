@@ -1,19 +1,64 @@
-document.getElementById('search-spots').addEventListener('input', function() {
-    var query = this.value.toLowerCase();
-    var cards = document.querySelectorAll('.card-spot');
-    var visible = 0;
-    cards.forEach(function(card) {
+var currentPage = 1;
+var PAGE_SIZE = 10;
+
+function renderPage() {
+    var query = document.getElementById('search-spots').value.toLowerCase();
+    var allCards = Array.from(document.querySelectorAll('.card-spot'));
+
+    var filtered = allCards.filter(function(card) {
         var text = [
             card.querySelector('.card-title.item2'),
             card.querySelector('.card-body.item3'),
             card.querySelector('.item1')
         ].map(function(el) { return el ? el.textContent : ''; }).join(' ').toLowerCase();
-        var show = text.includes(query);
-        card.style.display = show ? '' : 'none';
-        if (show) visible++;
+        return text.includes(query);
     });
-    document.getElementById('search-no-results').style.display = visible === 0 && query ? 'block' : 'none';
+
+    var totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    if (currentPage > totalPages) currentPage = totalPages;
+    var start = (currentPage - 1) * PAGE_SIZE;
+
+    allCards.forEach(function(card) { card.style.display = 'none'; });
+    filtered.slice(start, start + PAGE_SIZE).forEach(function(card) {
+        card.style.display = '';
+    });
+
+    document.getElementById('search-no-results').style.display =
+        filtered.length === 0 && query ? 'block' : 'none';
+
+    var total = allCards.length;
+    var countEl = document.getElementById('spots-count');
+    if (query && filtered.length !== total) {
+        countEl.textContent = filtered.length + ' of ' + total + ' spot' + (total !== 1 ? 's' : '');
+    } else {
+        countEl.textContent = total + ' spot' + (total !== 1 ? 's' : '');
+    }
+
+    var wrap = document.getElementById('pagination-wrap');
+    if (totalPages <= 1) {
+        wrap.style.display = 'none';
+    } else {
+        wrap.style.display = 'flex';
+        document.getElementById('pagination-info').textContent =
+            'Page ' + currentPage + ' of ' + totalPages;
+        document.getElementById('pagination-prev').disabled = currentPage === 1;
+        document.getElementById('pagination-next').disabled = currentPage === totalPages;
+    }
+}
+
+document.getElementById('search-spots').addEventListener('input', function() {
+    currentPage = 1;
+    renderPage();
 });
+
+document.getElementById('pagination-prev').onclick = function() {
+    if (currentPage > 1) { currentPage--; renderPage(); }
+};
+document.getElementById('pagination-next').onclick = function() {
+    currentPage++; renderPage();
+};
+
+renderPage();
 
 function buildSpotCard(spot) {
     var canEdit = USER_PERMISSIONS && USER_PERMISSIONS.includes('patch:climbing-spot');
@@ -93,6 +138,10 @@ document.getElementById('submit-climbing-spot').onclick = function(e) {
                 btn.textContent = originalText;
                 closeForm();
                 document.querySelector('.cards-list').appendChild(buildSpotCard(data.spot));
+                document.getElementById('search-spots').value = '';
+                var total = document.querySelectorAll('.card-spot').length;
+                currentPage = Math.ceil(total / PAGE_SIZE);
+                renderPage();
                 showNotif('Climbing spot added!');
             });
         } else {
