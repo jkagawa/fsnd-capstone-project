@@ -1,5 +1,6 @@
 var currentPage = 1;
-var PAGE_SIZE = 10;
+var PAGE_SIZE = 5;
+
 
 function renderPage() {
     var query = document.getElementById('search-spots').value.toLowerCase();
@@ -29,7 +30,7 @@ function renderPage() {
     var total = allCards.length;
     var countEl = document.getElementById('spots-count');
     if (query && filtered.length !== total) {
-        countEl.textContent = filtered.length + ' of ' + total + ' spot' + (total !== 1 ? 's' : '');
+        countEl.textContent = 'Search result: ' + filtered.length + ' of ' + total + ' spot' + (total !== 1 ? 's' : '');
     } else {
         countEl.textContent = total + ' spot' + (total !== 1 ? 's' : '');
     }
