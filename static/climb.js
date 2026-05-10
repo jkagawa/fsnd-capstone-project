@@ -101,7 +101,7 @@ document.addEventListener('click', function(e) {
 });
 //Remove climber
 function removeClimber(e) {
-    if (!confirm("Are you sure you want to remove this?")) return;
+    if (!confirm("Delete your climber profile? This cannot be undone.")) return;
     e.disabled = true;
     fetch('/climbers/' + e.getAttribute("data-id"), {
         method: 'DELETE'
