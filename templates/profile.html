@@ -13,13 +13,18 @@
     <div class="profile-card">
         <div class="profile-name">{{ profile.name }}</div>
         <div class="profile-state">{{ profile.state }}</div>
-        <div class="profile-spots-count"><i class="fa fa-star" style="vertical-align:middle; margin-right: 4px;"></i><span style="vertical-align:middle;">{{ profile.visited_spots|length }} saved spot{% if profile.visited_spots|length != 1 %}s{% endif %}</span></div>
+        <div class="profile-spots-label">
+            <i class="fa fa-star" style="vertical-align:middle; margin-right: 4px;"></i>
+            <span style="vertical-align:middle;">Saved Spots ({{ profile.visited_spots|length }})</span>
+        </div>
         {% if profile.visited_spots %}
-        <ul class="profile-visited-list">
+        <div class="profile-visited-chips">
             {% for spot in profile.visited_spots %}
-            <li>{{ spot }}</li>
+            <span class="profile-visited-chip">{{ spot }}</span>
             {% endfor %}
-        </ul>
+        </div>
+        {% else %}
+        <p class="profile-visited-none">No saved spots yet</p>
         {% endif %}
         {% if 'patch:climber' in user_permissions or 'delete:climber' in user_permissions %}
         <div class="card-settings-wrap">
