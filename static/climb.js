@@ -57,7 +57,7 @@ function openEditClimber(e) {
     var elementName = document.getElementById("new-climber-name");
     elementName.setAttribute('value', name);
     var elementState = document.getElementById("new-climber-state");
-    elementState.setAttribute('value', state);
+    elementState.value = state;
     var visitedIds = JSON.parse(e.getAttribute("data-visited-ids") || "[]");
     document.querySelectorAll('#EditForm .list-spot input').forEach(function(cb) {
         cb.checked = visitedIds.indexOf(parseInt(cb.getAttribute("data-id"))) !== -1;
