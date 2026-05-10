@@ -548,12 +548,6 @@ a {
     border-left: 3px solid #0080ff;
 }
 
-.dropdown-auth {
-    border-top: 1px solid rgba(255,255,255,0.1);
-    margin-top: 8px;
-    padding-top: 8px;
-}
-
 .dropdown-content.show {
     width: 25%;
 }
