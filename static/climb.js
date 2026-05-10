@@ -42,7 +42,7 @@ function openEditSpot(e) {
     document.getElementById("edit-climbing-spot").setAttribute('data-id', spot_id);
     document.getElementById("new-climbing-spot-name").setAttribute('value', name);
     document.getElementById("new-climbing-spot-city").setAttribute('value', city);
-    document.getElementById("new-climbing-spot-state").setAttribute('value', state);
+    document.getElementById("new-climbing-spot-state").value = state;
 }
 //Open form to edit climber
 function openEditClimber(e) {
