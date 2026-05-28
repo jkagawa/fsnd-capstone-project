@@ -1211,6 +1211,7 @@ header {
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
+    border: 1px solid #0080ff;
     transition: background 0.2s, transform 0.15s;
     box-shadow: 0 4px 14px rgba(0,128,255,0.4);
 }
@@ -1218,6 +1219,7 @@ header {
 .home-cta-primary:hover {
     background: #0066cc;
     transform: translateY(-2px);
+    border: 1px solid #0066cc;
 }
 
 .home-cta-secondary {
@@ -1227,7 +1229,7 @@ header {
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
-    border: 2px solid rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255);
     backdrop-filter: blur(4px);
     transition: background 0.2s, transform 0.15s;
 }
@@ -1235,6 +1237,7 @@ header {
 .home-cta-secondary:hover {
     background: rgba(255,255,255,0.28);
     transform: translateY(-2px);
+    border: 1px solid rgba(255,255,255,0.28);
 }
 
 /* Features */
