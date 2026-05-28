@@ -16,8 +16,41 @@
       <a href="/climbing-spots" class="home-cta-primary">Explore Spots</a>
       <a href="/climbers" class="home-cta-secondary">Find Climbers</a>
     </div>
+    <div class="home-stats">
+      <div class="home-stat">
+        <div class="home-stat-num">{{ spot_count }}</div>
+        <div class="home-stat-label">Climbing Spots</div>
+      </div>
+      <div class="home-stat">
+        <div class="home-stat-num">{{ climber_count }}</div>
+        <div class="home-stat-label">Climbers</div>
+      </div>
+    </div>
   </div>
 </section>
+
+{% if featured %}
+<!-- Featured Spots -->
+<section class="home-featured">
+  <h2 class="home-featured-title">Recently Added Spots</h2>
+  <div class="home-featured-grid">
+    {% for spot in featured %}
+    <a href="/climbing-spots/{{ spot.id }}" class="home-featured-card">
+      {% if spot.image_url %}
+      <img src="{{ spot.image_url }}" alt="{{ spot.name }}" class="home-featured-photo" onerror="this.style.display='none'">
+      {% else %}
+      <div class="home-featured-photo"></div>
+      {% endif %}
+      <div class="home-featured-body">
+        <p class="home-featured-name">{{ spot.name }}</p>
+        <p class="home-featured-loc">{{ spot.location }}</p>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  <a href="/climbing-spots" class="home-cta-primary">Browse All Spots</a>
+</section>
+{% endif %}
 
 <!-- Features Section -->
 <section class="home-features">
