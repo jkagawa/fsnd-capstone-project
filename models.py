@@ -42,6 +42,7 @@ class ClimbingSpot(db.Model):
     added_by = db.Column(db.String)
     indoor_or_outdoor = db.Column(db.Integer)
     outdoor_coordinates = db.Column(db.String)
+    image_url = db.Column(db.String)
     visited_spot = db.relationship('VisitedSpot', backref='climbingspot', lazy=True)
 
 class Climber(db.Model):

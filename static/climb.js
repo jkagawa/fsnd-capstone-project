@@ -15,10 +15,22 @@ function showFormError(id, msg) {
     if (el) el.textContent = msg;
 }
 
+//Reveal a form with a fade/slide-in transition
+function showFormDiv(id) {
+    var el = document.getElementById(id);
+    el.style.display = "block";
+    document.getElementById("Dimmer").style.display = "block";
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(function() { el.classList.add('form-open'); });
+}
+
 //Close all forms
 function closeForm() {
-    document.getElementById("AddForm").style.display = "none";
-    document.getElementById("EditForm").style.display = "none";
+    ["AddForm", "EditForm"].forEach(function(id) {
+        var el = document.getElementById(id);
+        el.style.display = "none";
+        el.classList.remove('form-open');
+    });
     document.getElementById("Dimmer").style.display = "none";
     document.querySelectorAll('.form-error').forEach(function(el) { el.textContent = ''; });
     document.body.style.overflow = '';
@@ -26,29 +38,25 @@ function closeForm() {
 
 //Open form to add new spot/climber
 function openForm() {
-    document.getElementById("AddForm").style.display = "block";
-    document.getElementById("Dimmer").style.display = "block";
-    document.body.style.overflow = 'hidden';
+    showFormDiv("AddForm");
 }
 //Open form to edit spot
 function openEditSpot(e) {
-    document.getElementById("EditForm").style.display = "block";
-    document.getElementById("Dimmer").style.display = "block";
-    document.body.style.overflow = 'hidden';
+    showFormDiv("EditForm");
     const spot_id = e.getAttribute("data-id");
     const name = e.getAttribute("data-name");
     const city = e.getAttribute("data-city");
     const state = e.getAttribute("data-state");
+    const image = e.getAttribute("data-image") || "";
     document.getElementById("edit-climbing-spot").setAttribute('data-id', spot_id);
-    document.getElementById("new-climbing-spot-name").setAttribute('value', name);
-    document.getElementById("new-climbing-spot-city").setAttribute('value', city);
+    document.getElementById("new-climbing-spot-name").value = name;
+    document.getElementById("new-climbing-spot-city").value = city;
     document.getElementById("new-climbing-spot-state").value = state;
+    document.getElementById("new-climbing-spot-image").value = image;
 }
 //Open form to edit climber
 function openEditClimber(e) {
-    document.getElementById("EditForm").style.display = "block";
-    document.getElementById("Dimmer").style.display = "block";
-    document.body.style.overflow = 'hidden';
+    showFormDiv("EditForm");
     const climber_id = e.getAttribute("data-id");
     const name = e.getAttribute("data-name");
     const state = e.getAttribute("data-state");

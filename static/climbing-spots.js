@@ -65,12 +65,25 @@ function buildSpotCard(spot) {
     var canEdit = USER_PERMISSIONS && USER_PERMISSIONS.includes('patch:climbing-spot');
     var canDelete = USER_PERMISSIONS && USER_PERMISSIONS.includes('delete:climbing-spot');
     var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(spot.name + ', ' + spot.location);
-    var html = '<div class="grid-container">' +
+    var detailUrl = '/climbing-spots/' + spot.id;
+
+    var html = '';
+    if (spot.image_url) {
+        html += '<a href="' + detailUrl + '"><img src="' + escHtml(spot.image_url) +
+            '" alt="' + escHtml(spot.name) + '" class="card-photo" onerror="this.style.display=\'none\'"></a>';
+    } else {
+        html += '<a href="' + detailUrl + '"><div class="card-photo-fallback">&#9968;</div></a>';
+    }
+    html += '<div class="card-spot-inner">' +
+        '<div class="grid-container">' +
         '<div class="item1">' + escHtml(spot.address_state) + '</div>' +
-        '<div class="card-title item2">' + escHtml(spot.name) + '</div>' +
+        '<div class="card-title item2"><a href="' + detailUrl + '" class="card-title-link">' + escHtml(spot.name) + '</a></div>' +
         '<div class="card-body item3">' + escHtml(spot.location) + '</div>' +
         '<div class="card-body item4"><a href="' + mapsUrl + '" target="_blank" class="card-body-link">Open in Google Maps &rarr;</a></div>' +
         '<div class="card-body item5">Added by You</div>' +
+        '</div>' +
+        '<div class="card-meta-row">' +
+        '<span class="star-row" data-spot-rating="' + spot.id + '"><span class="star-empty">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="star-count">No ratings yet</span></span>' +
         '</div>';
     if (canEdit || canDelete) {
         html += '<div class="card-settings-wrap">' +
@@ -82,6 +95,7 @@ function buildSpotCard(spot) {
                 ' data-name="' + escHtml(spot.name) + '"' +
                 ' data-city="' + escHtml(spot.address_city) + '"' +
                 ' data-state="' + escHtml(spot.address_state) + '"' +
+                ' data-image="' + escHtml(spot.image_url || '') + '"' +
                 ' onclick="openEditSpot(this)">Edit Spot</button>';
         }
         if (canDelete) {
@@ -91,6 +105,7 @@ function buildSpotCard(spot) {
         }
         html += '</div></div>';
     }
+    html += '</div>';
     var card = document.createElement('div');
     card.className = 'card-spot';
     card.setAttribute('data-added-by', spot.added_by || '');
@@ -104,13 +119,28 @@ function updateSpotCard(data) {
     var card = editBtn.closest('.card-spot');
     if (!card) return;
     card.querySelector('.item1').textContent = data.state;
-    card.querySelector('.card-title.item2').textContent = data.name;
+    var titleLink = card.querySelector('.card-title.item2 .card-title-link');
+    if (titleLink) titleLink.textContent = data.name;
     card.querySelector('.card-body.item3').textContent = data.location;
     var link = card.querySelector('.card-body-link');
     if (link) link.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(data.name + ', ' + data.location);
+
+    // Swap the photo / fallback to reflect the new image_url
+    var photoAnchor = card.querySelector('.card-photo, .card-photo-fallback');
+    if (photoAnchor) {
+        var anchor = photoAnchor.closest('a') || photoAnchor.parentNode;
+        if (data.image_url) {
+            anchor.innerHTML = '<img src="' + escHtml(data.image_url) + '" alt="' + escHtml(data.name) +
+                '" class="card-photo" onerror="this.style.display=\'none\'">';
+        } else {
+            anchor.innerHTML = '<div class="card-photo-fallback">&#9968;</div>';
+        }
+    }
+
     editBtn.setAttribute('data-name', data.name);
     editBtn.setAttribute('data-city', data.city);
     editBtn.setAttribute('data-state', data.state);
+    editBtn.setAttribute('data-image', data.image_url || '');
 }
 
 //Submit new climbing spot
@@ -120,6 +150,7 @@ document.getElementById('submit-climbing-spot').onclick = function(e) {
     const name = document.getElementById('climbing-spot-name').value;
     const city = document.getElementById('climbing-spot-city').value;
     const state = document.getElementById('climbing-spot-state').value;
+    const image_url = document.getElementById('climbing-spot-image').value;
     if (name == "" || city == "" || state == "") {
         showFormError('add-spot-error', 'Name, City, and State must be filled out');
         return;
@@ -129,7 +160,7 @@ document.getElementById('submit-climbing-spot').onclick = function(e) {
     btn.textContent = 'Submitting...';
     fetch('/api/climbing-spots', {
         method: 'POST',
-        body: JSON.stringify({ 'name': name, 'city': city, 'state': state }),
+        body: JSON.stringify({ 'name': name, 'city': city, 'state': state, 'image_url': image_url }),
         headers: { 'Content-Type': 'application/json' }
     })
     .then(function(response) {
@@ -170,6 +201,7 @@ document.getElementById('edit-climbing-spot').onclick = function(e) {
     const name = document.getElementById('new-climbing-spot-name').value;
     const city = document.getElementById('new-climbing-spot-city').value;
     const state = document.getElementById('new-climbing-spot-state').value;
+    const image_url = document.getElementById('new-climbing-spot-image').value;
     if (name == "" || city == "" || state == "") {
         showFormError('edit-spot-error', 'Name, City, and State must be filled out');
         return;
@@ -179,7 +211,7 @@ document.getElementById('edit-climbing-spot').onclick = function(e) {
     btn.textContent = 'Submitting...';
     fetch('/api/climbing-spots/' + spot_id, {
         method: 'PATCH',
-        body: JSON.stringify({ 'name': name, 'city': city, 'state': state }),
+        body: JSON.stringify({ 'name': name, 'city': city, 'state': state, 'image_url': image_url }),
         headers: { 'Content-Type': 'application/json' }
     })
     .then(function(response) {

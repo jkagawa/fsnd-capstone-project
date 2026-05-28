@@ -137,20 +137,31 @@ def logout():
     response.delete_cookie('access_token')
     return response
 
+def _spot_dict(climbingspot, climbers_by_sub):
+    return {
+        "id" : climbingspot.id,
+        "name" : climbingspot.name,
+        "location" : climbingspot.location,
+        "address_city" : climbingspot.address_city,
+        "address_state" : climbingspot.address_state,
+        "added_by" : climbingspot.added_by,
+        "added_by_name" : climbers_by_sub.get(climbingspot.added_by, "Unknown"),
+        "image_url" : climbingspot.image_url,
+        "indoor_or_outdoor" : climbingspot.indoor_or_outdoor,
+        "coordinates" : climbingspot.outdoor_coordinates,
+    }
+
 def get_climbing_spots():
     climbers_by_sub = {c.added_by: c.name for c in Climber.query.all() if c.added_by and c.name}
-    spot = []
-    for climbingspot in ClimbingSpot.query.order_by('id').all():
-        spot.append({
-            "id" : climbingspot.id,
-            "name" : climbingspot.name,
-            "location" : climbingspot.location,
-            "address_city" : climbingspot.address_city,
-            "address_state" : climbingspot.address_state,
-            "added_by" : climbingspot.added_by,
-            "added_by_name" : climbers_by_sub.get(climbingspot.added_by, "Unknown"),
-        })
+    spot = [_spot_dict(s, climbers_by_sub) for s in ClimbingSpot.query.order_by('id').all()]
     return {"spot": spot}
+
+def get_climbing_spot(climbingspot_id):
+    climbers_by_sub = {c.added_by: c.name for c in Climber.query.all() if c.added_by and c.name}
+    climbingspot = ClimbingSpot.query.get(climbingspot_id)
+    if not climbingspot:
+        return None
+    return _spot_dict(climbingspot, climbers_by_sub)
 
 def get_climbers():
     climber = []
@@ -185,7 +196,19 @@ def get_climbers():
 
 @app.route('/')
 def index():
-    return render_template('home.html')
+    spot_count = ClimbingSpot.query.count()
+    climber_count = Climber.query.count()
+    climbers_by_sub = {c.added_by: c.name for c in Climber.query.all() if c.added_by and c.name}
+    featured = [
+        _spot_dict(s, climbers_by_sub)
+        for s in ClimbingSpot.query.order_by(ClimbingSpot.id.desc()).limit(3).all()
+    ]
+    return render_template(
+        'home.html',
+        spot_count=spot_count,
+        climber_count=climber_count,
+        featured=featured,
+    )
 
 @app.route('/contact')
 def contact():
@@ -235,6 +258,16 @@ def climbing_spots():
             }), 200
         return render_template('climbing-spots.html', spots=spots)
 
+@app.route('/climbing-spots/<int:climbingspot_id>', methods=['GET'])
+@app.route('/api/climbing-spots/<int:climbingspot_id>', methods=['GET'])
+def climbing_spot_detail(climbingspot_id):
+    spot = get_climbing_spot(climbingspot_id)
+    if not spot:
+        abort(404)
+    if request.path.startswith('/api/'):
+        return jsonify({'success': True, 'spot': spot}), 200
+    return render_template('spot-detail.html', spot=spot)
+
 @app.route('/climbing-spots', methods=['POST'])
 @app.route('/api/climbing-spots', methods=['POST'])
 @requires_auth('post:climbing-spot')
@@ -246,12 +279,13 @@ def add_climbing_spots(payload):
         address_city = request.json['city']
         address_state = request.json['state'].upper()
         location = address_city + ", " + address_state
+        image_url = (request.get_json().get('image_url') or '').strip() or None
         spot_id = request.get_json().get('id', None)
 
         if (spot_id):
-            climbing_spot = ClimbingSpot(id=spot_id, name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'])
+            climbing_spot = ClimbingSpot(id=spot_id, name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'], image_url=image_url)
         else:
-            climbing_spot = ClimbingSpot(name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'])
+            climbing_spot = ClimbingSpot(name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'], image_url=image_url)
 
         db.session.add(climbing_spot)
         db.session.commit()
@@ -277,6 +311,7 @@ def add_climbing_spots(payload):
                     'address_city': address_city,
                     'address_state': address_state,
                     'added_by': payload['sub'],
+                    'image_url': image_url,
                 }
             }), 200
         flash('Climbing spot "' + name + '" was successfully added!')
@@ -296,12 +331,14 @@ def edit_climbingspots(payload, climbingspot_id):
         address_city = request.json['city']
         address_state = request.json['state'].upper()
         location = address_city + ", " + address_state
+        image_url = (request.get_json().get('image_url') or '').strip() or None
 
         climbingspot = ClimbingSpot.query.get(climbingspot_id)
         climbingspot.name = name
         climbingspot.address_city = address_city
         climbingspot.address_state = address_state
         climbingspot.location = location
+        climbingspot.image_url = image_url
         db.session.commit()
 
         spots = get_climbing_spots()
@@ -321,7 +358,8 @@ def edit_climbingspots(payload, climbingspot_id):
                 'name' : name,
                 'location' : location,
                 'city' : address_city,
-                'state' : address_state
+                'state' : address_state,
+                'image_url' : image_url
             }), 200
         flash('Climbing spot "' + request.json['name'] + '" was successfully added!')
         return render_template('climbing-spots.html', spots=spots)

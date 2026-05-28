@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+{% block gtag %}gtag('config', 'UA-176036079-2', {'page_path': '/climbing-spots'});{% endblock %}
+{% block title %}{{ spot.name }}{% endblock %}
+{% block content %}
+
+<div class="page-hero">
+    <h1 class="page-hero-title">{{ spot.name }}</h1>
+    <p class="page-hero-subtitle">{{ spot.location }}</p>
+</div>
+
+<div class="content-body">
+    <div class="spot-detail">
+        <a href="/climbing-spots" class="spot-detail-back">&larr; Back to all spots</a>
+
+        {% if spot.image_url %}
+        <img src="{{ spot.image_url }}" alt="{{ spot.name }}" class="spot-detail-hero" onerror="this.outerHTML='<div class=&quot;spot-detail-hero-fallback&quot;>&#9968;</div>'">
+        {% else %}
+        <div class="spot-detail-hero-fallback">&#9968;</div>
+        {% endif %}
+
+        <h1 class="spot-detail-name">{{ spot.name }}</h1>
+        <p class="spot-detail-loc">{{ spot.location }}</p>
+
+        <div class="spot-detail-meta">
+            {% if spot.indoor_or_outdoor == 1 %}
+            <span class="card-pill card-pill-indoor">Indoor</span>
+            {% elif spot.indoor_or_outdoor == 0 %}
+            <span class="card-pill card-pill-outdoor">Outdoor</span>
+            {% endif %}
+            <span class="star-row"><span class="star-empty">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="star-count">No ratings yet</span></span>
+        </div>
+
+        <div class="spot-detail-section">
+            <h2>Location</h2>
+            <p class="card-body" style="padding-left:0">Added by {{ spot.added_by_name }}</p>
+            <a href="https://www.google.com/maps/search/?api=1&query={{ spot.name }}, {{ spot.location }}" target="_blank" class="card-body-link">Open in Google Maps &rarr;</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
