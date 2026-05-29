@@ -31,6 +31,13 @@
     <p class="signin-hint">Sign in to add and manage climbing spots</p>
     {% endif %}
 
+    <div class="view-toggle">
+        <button id="view-list-btn" class="view-toggle-btn view-toggle-active" type="button">List</button>
+        <button id="view-map-btn" class="view-toggle-btn" type="button">Map</button>
+    </div>
+
+    <div id="map"></div>
+
     <div class="cards-list">
         {% for spot in spots['spot'] %}
         <div class="card-spot{% if loop.index == 1 %} first-card{% endif %}" data-added-by="{{ spot.added_by }}">
@@ -254,4 +261,5 @@ var USER_PERMISSIONS = {{ user_permissions | tojson }};
 </script>
 <script src="static/climb.js"></script>
 <script src="static/climbing-spots.js"></script>
+<script src="static/map.js"></script>
 {% endblock %}

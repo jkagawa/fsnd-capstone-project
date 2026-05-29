@@ -53,6 +53,37 @@ def _set_rls_user():
     uid = getattr(g, 'user', '') or ''
     db.session.execute(text("SELECT set_config('app.current_user_id', :uid, TRUE)"), {"uid": uid})
 
+# In-memory cache so repeat city/state lookups don't re-hit Nominatim
+_GEOCODE_CACHE = {}
+
+def geocode(city, state):
+    """Best-effort geocode of a city/state to a "lat,lng" string via OSM Nominatim.
+    Returns None on any failure so spot creation never breaks if the service is down."""
+    if not city or not state:
+        return None
+    key = (city.strip().lower(), state.strip().lower())
+    if key in _GEOCODE_CACHE:
+        return _GEOCODE_CACHE[key]
+    try:
+        query = urllib.parse.urlencode({
+            'q': '{}, {}, USA'.format(city.strip(), state.strip()),
+            'format': 'json',
+            'limit': 1,
+        })
+        req = urllib.request.Request(
+            'https://nominatim.openstreetmap.org/search?' + query,
+            headers={'User-Agent': 'ClimbingSpotApp/1.0 (https://climbing-spot.onrender.com)'},
+        )
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            results = json.loads(resp.read().decode('utf-8'))
+        if results:
+            coords = '{},{}'.format(results[0]['lat'], results[0]['lon'])
+            _GEOCODE_CACHE[key] = coords
+            return coords
+    except Exception:
+        pass
+    return None
+
 def _generate_pkce_pair():
     verifier = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8').rstrip('=')
     challenge = base64.urlsafe_b64encode(
@@ -280,12 +311,13 @@ def add_climbing_spots(payload):
         address_state = request.json['state'].upper()
         location = address_city + ", " + address_state
         image_url = (request.get_json().get('image_url') or '').strip() or None
+        coordinates = geocode(address_city, address_state)
         spot_id = request.get_json().get('id', None)
 
         if (spot_id):
-            climbing_spot = ClimbingSpot(id=spot_id, name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'], image_url=image_url)
+            climbing_spot = ClimbingSpot(id=spot_id, name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'], image_url=image_url, outdoor_coordinates=coordinates)
         else:
-            climbing_spot = ClimbingSpot(name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'], image_url=image_url)
+            climbing_spot = ClimbingSpot(name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'], image_url=image_url, outdoor_coordinates=coordinates)
 
         db.session.add(climbing_spot)
         db.session.commit()
@@ -334,6 +366,14 @@ def edit_climbingspots(payload, climbingspot_id):
         image_url = (request.get_json().get('image_url') or '').strip() or None
 
         climbingspot = ClimbingSpot.query.get(climbingspot_id)
+        # Re-geocode only when the location changed (or was never geocoded);
+        # keep the existing coordinate if the lookup fails.
+        if (climbingspot.address_city != address_city
+                or climbingspot.address_state != address_state
+                or not climbingspot.outdoor_coordinates):
+            new_coords = geocode(address_city, address_state)
+            if new_coords:
+                climbingspot.outdoor_coordinates = new_coords
         climbingspot.name = name
         climbingspot.address_city = address_city
         climbingspot.address_state = address_state

@@ -34,8 +34,12 @@
             <h2>Location</h2>
             <p class="card-body" style="padding-left:0">Added by {{ spot.added_by_name }}</p>
             <a href="https://www.google.com/maps/search/?api=1&query={{ spot.name }}, {{ spot.location }}" target="_blank" class="card-body-link">Open in Google Maps &rarr;</a>
+            {% if spot.coordinates %}
+            <div id="spot-map" data-coords="{{ spot.coordinates }}" data-name="{{ spot.name }}"></div>
+            {% endif %}
         </div>
     </div>
 </div>
 
+<script src="static/map.js"></script>
 {% endblock %}
