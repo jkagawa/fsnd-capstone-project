@@ -1486,6 +1486,12 @@ header {
 }
 
 /* ── Spot detail page ──────────────────────────────────── */
+/* Transparent so the topography pattern set on <body> in main.html shows through */
+.content-body.spot-detail-page,
+.content-body.content-body-topo {
+    background: transparent;
+}
+
 .spot-detail {
     max-width: 760px;
     margin: 0 auto;
