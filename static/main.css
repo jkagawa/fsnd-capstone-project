@@ -799,11 +799,6 @@ a.card-title-link:hover {
     width: 25%;
 }
 
-.dropdown-content-head {
-    height: 5px;
-    margin: 6px;
-}
-
 .dropdown-content.show {
     width: 70%;
 }
