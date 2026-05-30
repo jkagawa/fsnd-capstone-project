@@ -1,0 +1,7 @@
+{% macro stars(avg, count) %}
+{% set filled = (avg | round(0, 'common') | int) %}
+<span class="star-row">
+    <span class="star-stars">{% for i in range(5) %}{% if i < filled %}&#9733;{% else %}<span class="star-empty">&#9733;</span>{% endif %}{% endfor %}</span>
+    {% if count and count > 0 %}<span class="star-count">{{ avg }} ({{ count }})</span>{% else %}<span class="star-count">No ratings yet</span>{% endif %}
+</span>
+{% endmacro %}

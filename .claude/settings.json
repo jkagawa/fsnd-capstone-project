@@ -8,7 +8,18 @@
       "Bash(git check-ignore *)",
       "Bash(powershell -NoProfile -Command 'Get-NetTCPConnection -LocalPort 5007 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }')",
       "Bash(powershell -NoProfile -Command 'Get-NetTCPConnection -LocalPort 5008 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }')",
-      "Bash(curl -s -o /dev/null -w \"5008 still up? %{http_code}\\\\n\" --max-time 2 http://127.0.0.1:5008/)"
+      "Bash(curl -s -o /dev/null -w \"5008 still up? %{http_code}\\\\n\" --max-time 2 http://127.0.0.1:5008/)",
+      "Bash(env/Scripts/flask.exe db *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -X POST -H \"Content-Type: application/json\" -d '{\"rating\":5,\"body\":\"hi\"}' http://127.0.0.1:5009/api/climbing-spots/8/reviews)",
+      "Bash(curl -s http://127.0.0.1:5009/api/climbing-spots/8)",
+      "Bash(python -c \"import sys,json;d=json.load\\(sys.stdin\\);print\\('reviews key:', 'reviews' in d, '| rating_avg:', d['spot']['rating_avg'], '| rating_count:', d['spot']['rating_count']\\)\")",
+      "Bash(curl -s http://127.0.0.1:5009/climbing-spots/8)",
+      "Bash(curl -s http://127.0.0.1:5009/climbing-spots)",
+      "Bash(env/Scripts/python.exe -c ' *)",
+      "Bash(python -c \"import sys,json;d=json.load\\(sys.stdin\\);print\\('avg:',d['spot']['rating_avg'],'count:',d['spot']['rating_count'],'| review author:',d['reviews'][0]['author_name'],'| rating:',d['reviews'][0]['rating']\\)\")",
+      "Bash(curl -s -o /dev/null -w \"PATCH: %{http_code}\\\\n\" -X PATCH -H \"Content-Type: application/json\" -d '{\"rating\":2}' http://127.0.0.1:5009/api/reviews/1)",
+      "Bash(curl -s -o /dev/null -w \"DELETE: %{http_code}\\\\n\" -X DELETE http://127.0.0.1:5009/api/reviews/1)",
+      "Bash(python -c \"import sys,json;d=json.load\\(sys.stdin\\);print\\('after delete -> count:',d['spot']['rating_count']\\)\")"
     ]
   }
 }

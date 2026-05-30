@@ -8,8 +8,8 @@ import urllib.parse
 from flask import Flask, request, render_template, jsonify, flash, abort, redirect, session, g, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from sqlalchemy import text
-from models import setup_db, db_create_all, return_db, ClimbingSpot, Climber, VisitedSpot
+from sqlalchemy import text, func
+from models import setup_db, db_create_all, return_db, ClimbingSpot, Climber, VisitedSpot, Review
 from auth import AuthError, requires_auth, verify_decode_jwt
 
 AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN', 'climbing-spot.auth0.com')
@@ -168,7 +168,21 @@ def logout():
     response.delete_cookie('access_token')
     return response
 
-def _spot_dict(climbingspot, climbers_by_sub):
+def _ratings_by_spot(spot_id=None):
+    """Return {spot_id: {'avg': float, 'count': int}} aggregated from the Review table.
+    Pass spot_id to scope the aggregate to a single spot."""
+    q = db.session.query(
+        Review.climbing_spot_id,
+        func.avg(Review.rating),
+        func.count(Review.id),
+    )
+    if spot_id is not None:
+        q = q.filter(Review.climbing_spot_id == spot_id)
+    q = q.group_by(Review.climbing_spot_id)
+    return {row[0]: {'avg': round(float(row[1]), 1), 'count': row[2]} for row in q.all()}
+
+def _spot_dict(climbingspot, climbers_by_sub, ratings):
+    r = ratings.get(climbingspot.id, {'avg': 0, 'count': 0})
     return {
         "id" : climbingspot.id,
         "name" : climbingspot.name,
@@ -180,11 +194,14 @@ def _spot_dict(climbingspot, climbers_by_sub):
         "image_url" : climbingspot.image_url,
         "indoor_or_outdoor" : climbingspot.indoor_or_outdoor,
         "coordinates" : climbingspot.outdoor_coordinates,
+        "rating_avg" : r['avg'],
+        "rating_count" : r['count'],
     }
 
 def get_climbing_spots():
     climbers_by_sub = {c.added_by: c.name for c in Climber.query.all() if c.added_by and c.name}
-    spot = [_spot_dict(s, climbers_by_sub) for s in ClimbingSpot.query.order_by('id').all()]
+    ratings = _ratings_by_spot()
+    spot = [_spot_dict(s, climbers_by_sub, ratings) for s in ClimbingSpot.query.order_by('id').all()]
     return {"spot": spot}
 
 def get_climbing_spot(climbingspot_id):
@@ -192,7 +209,7 @@ def get_climbing_spot(climbingspot_id):
     climbingspot = ClimbingSpot.query.get(climbingspot_id)
     if not climbingspot:
         return None
-    return _spot_dict(climbingspot, climbers_by_sub)
+    return _spot_dict(climbingspot, climbers_by_sub, _ratings_by_spot(climbingspot_id))
 
 def get_climbers():
     climber = []
@@ -230,8 +247,9 @@ def index():
     spot_count = ClimbingSpot.query.count()
     climber_count = Climber.query.count()
     climbers_by_sub = {c.added_by: c.name for c in Climber.query.all() if c.added_by and c.name}
+    ratings = _ratings_by_spot()
     featured = [
-        _spot_dict(s, climbers_by_sub)
+        _spot_dict(s, climbers_by_sub, ratings)
         for s in ClimbingSpot.query.order_by(ClimbingSpot.id.desc()).limit(3).all()
     ]
     return render_template(
@@ -289,15 +307,31 @@ def climbing_spots():
             }), 200
         return render_template('climbing-spots.html', spots=spots)
 
+def _review_dict(review):
+    return {
+        'id': review.id,
+        'added_by': review.added_by,
+        'author_name': review.author_name or 'Anonymous Climber',
+        'rating': review.rating,
+        'body': review.body or '',
+        'created_at': review.created_at.strftime('%b %d, %Y') if review.created_at else '',
+    }
+
+def get_reviews(spot_id):
+    reviews = Review.query.filter_by(climbing_spot_id=spot_id).order_by(Review.created_at.desc(), Review.id.desc()).all()
+    return [_review_dict(r) for r in reviews]
+
 @app.route('/climbing-spots/<int:climbingspot_id>', methods=['GET'])
 @app.route('/api/climbing-spots/<int:climbingspot_id>', methods=['GET'])
 def climbing_spot_detail(climbingspot_id):
     spot = get_climbing_spot(climbingspot_id)
     if not spot:
         abort(404)
+    reviews = get_reviews(climbingspot_id)
     if request.path.startswith('/api/'):
-        return jsonify({'success': True, 'spot': spot}), 200
-    return render_template('spot-detail.html', spot=spot)
+        return jsonify({'success': True, 'spot': spot, 'reviews': reviews}), 200
+    user_review = next((r for r in reviews if g.user and r['added_by'] == g.user), None)
+    return render_template('spot-detail.html', spot=spot, reviews=reviews, user_review=user_review)
 
 @app.route('/climbing-spots', methods=['POST'])
 @app.route('/api/climbing-spots', methods=['POST'])
@@ -419,6 +453,8 @@ def remove_climbingspots(payload, climbingspot_id):
         location = climbingspot.location
         for vs in VisitedSpot.query.filter_by(climbing_spot_id=climbingspot_id).all():
             db.session.delete(vs)
+        for rv in Review.query.filter_by(climbing_spot_id=climbingspot_id).all():
+            db.session.delete(rv)
         db.session.delete(climbingspot)
         db.session.commit()
 
@@ -610,6 +646,99 @@ def remove_climbers(payload, climber_id):
                 'name' : name
             }), 200
         return render_template('climbers.html', climbers=climbers)
+
+#=================REVIEW ENDPOINTS=================
+
+@app.route('/api/climbing-spots/<int:climbingspot_id>/reviews', methods=['POST'])
+def add_review(climbingspot_id):
+    if not g.user:
+        abort(401)
+    ClimbingSpot.query.get_or_404(climbingspot_id)
+    if Review.query.filter_by(climbing_spot_id=climbingspot_id, added_by=g.user).first():
+        abort(409)
+    data = request.get_json(silent=True) or {}
+    try:
+        rating = int(data.get('rating', 0))
+    except (TypeError, ValueError):
+        rating = 0
+    if rating < 1 or rating > 5:
+        abort(400)
+    body = (data.get('body') or '').strip()
+    error = False
+    try:
+        _set_rls_user()
+        climber = Climber.query.filter_by(added_by=g.user).first()
+        author_name = climber.name if climber and climber.name else 'Anonymous Climber'
+        review = Review(climbing_spot_id=climbingspot_id, added_by=g.user, author_name=author_name, rating=rating, body=body)
+        db.session.add(review)
+        db.session.commit()
+        result = _review_dict(review)
+        agg = _ratings_by_spot(climbingspot_id).get(climbingspot_id, {'avg': rating, 'count': 1})
+    except:
+        db.session.rollback()
+        error = True
+    finally:
+        db.session.close()
+    if error:
+        abort(400)
+    return jsonify({'success': True, 'review': result, 'rating_avg': agg['avg'], 'rating_count': agg['count']}), 200
+
+@app.route('/api/reviews/<int:review_id>', methods=['PATCH'])
+def edit_review(review_id):
+    if not g.user:
+        abort(401)
+    review = Review.query.get_or_404(review_id)
+    if review.added_by != g.user:
+        abort(403)
+    data = request.get_json(silent=True) or {}
+    try:
+        rating = int(data.get('rating', review.rating))
+    except (TypeError, ValueError):
+        rating = 0
+    if rating < 1 or rating > 5:
+        abort(400)
+    body = (data.get('body') or '').strip()
+    spot_id = review.climbing_spot_id
+    error = False
+    try:
+        _set_rls_user()
+        review = Review.query.get(review_id)
+        review.rating = rating
+        review.body = body
+        db.session.commit()
+        result = _review_dict(review)
+        agg = _ratings_by_spot(spot_id).get(spot_id, {'avg': rating, 'count': 1})
+    except:
+        db.session.rollback()
+        error = True
+    finally:
+        db.session.close()
+    if error:
+        abort(400)
+    return jsonify({'success': True, 'review': result, 'rating_avg': agg['avg'], 'rating_count': agg['count']}), 200
+
+@app.route('/api/reviews/<int:review_id>', methods=['DELETE'])
+def remove_review(review_id):
+    if not g.user:
+        abort(401)
+    review = Review.query.get_or_404(review_id)
+    if review.added_by != g.user:
+        abort(403)
+    spot_id = review.climbing_spot_id
+    error = False
+    try:
+        _set_rls_user()
+        db.session.delete(Review.query.get(review_id))
+        db.session.commit()
+        agg = _ratings_by_spot(spot_id).get(spot_id, {'avg': 0, 'count': 0})
+    except:
+        db.session.rollback()
+        error = True
+    finally:
+        db.session.close()
+    if error:
+        abort(400)
+    return jsonify({'success': True, 'id': review_id, 'rating_avg': agg['avg'], 'rating_count': agg['count']}), 200
 
 @app.errorhandler(400)
 def unauthorized(error):

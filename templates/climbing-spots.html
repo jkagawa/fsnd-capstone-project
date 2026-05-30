@@ -1,4 +1,5 @@
 {% extends 'main.html' %}
+{% from '_macros.html' import stars %}
 {% block gtag %}gtag('config', 'UA-176036079-2', {'page_path': '/climbing-spots'});{% endblock %}
 {% block title %}Climbing Spots{% endblock %}
 {% block content %}
@@ -60,7 +61,7 @@
                 {% elif spot.indoor_or_outdoor == 0 %}
                 <span class="card-pill card-pill-outdoor">Outdoor</span>
                 {% endif %}
-                <span class="star-row" data-spot-rating="{{ spot.id }}"><span class="star-empty">★★★★★</span> <span class="star-count">No ratings yet</span></span>
+                {{ stars(spot.rating_avg, spot.rating_count) }}
             </div>
             {% if current_user == spot.added_by and ('patch:climbing-spot' in user_permissions or 'delete:climbing-spot' in user_permissions) %}
             <div class="card-settings-wrap">

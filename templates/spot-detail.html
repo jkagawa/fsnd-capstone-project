@@ -1,4 +1,5 @@
 {% extends 'main.html' %}
+{% from '_macros.html' import stars %}
 {% block gtag %}gtag('config', 'UA-176036079-2', {'page_path': '/climbing-spots'});{% endblock %}
 {% block title %}{{ spot.name }}{% endblock %}
 {% block content %}
@@ -27,7 +28,7 @@
             {% elif spot.indoor_or_outdoor == 0 %}
             <span class="card-pill card-pill-outdoor">Outdoor</span>
             {% endif %}
-            <span class="star-row"><span class="star-empty">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="star-count">No ratings yet</span></span>
+            <span class="js-rating-summary">{{ stars(spot.rating_avg, spot.rating_count) }}</span>
         </div>
 
         <div class="spot-detail-section">
@@ -38,8 +39,52 @@
             <div id="spot-map" data-coords="{{ spot.coordinates }}" data-name="{{ spot.name }}"></div>
             {% endif %}
         </div>
+
+        <div class="spot-detail-section" id="reviews-section" data-spot-id="{{ spot.id }}">
+            <h2>Reviews <span class="js-rating-summary reviews-summary">{{ stars(spot.rating_avg, spot.rating_count) }}</span></h2>
+
+            {% if current_user %}
+                {% if not user_review %}
+                <form id="review-form" class="review-form" autocomplete="off">
+                    <div class="star-picker" id="review-star-picker" data-value="0">
+                        {% for i in range(1, 6) %}<button type="button" class="star-pick" data-val="{{ i }}">&#9733;</button>{% endfor %}
+                    </div>
+                    <textarea id="review-body" class="review-textarea" placeholder="Share your experience (optional)"></textarea>
+                    <p class="form-error" id="review-error"></p>
+                    <button type="submit" class="button-submit" id="review-submit">Post Review</button>
+                </form>
+                {% endif %}
+            {% else %}
+                <p class="signin-hint"><a href="/login?return_to=/climbing-spots/{{ spot.id }}" class="card-body-link">Sign in</a> to leave a review</p>
+            {% endif %}
+
+            <div class="review-list" id="review-list">
+                {% for r in reviews %}
+                <div class="review-item" data-review-id="{{ r.id }}">
+                    <div class="review-head">
+                        <span class="review-author">{{ r.author_name }}</span>
+                        <span class="review-date">{{ r.created_at }}</span>
+                    </div>
+                    <div class="review-stars star-stars">{% for i in range(5) %}{% if i < r.rating %}&#9733;{% else %}<span class="star-empty">&#9733;</span>{% endif %}{% endfor %}</div>
+                    {% if r.body %}<p class="review-body">{{ r.body }}</p>{% endif %}
+                    {% if current_user == r.added_by %}
+                    <div class="review-actions">
+                        <button class="review-edit-btn" data-id="{{ r.id }}" data-rating="{{ r.rating }}" data-body="{{ r.body }}">Edit</button>
+                        <button class="review-delete-btn" data-id="{{ r.id }}">Delete</button>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <p class="review-empty" id="review-empty"{% if reviews|length %} style="display:none"{% endif %}>No reviews yet. Be the first to climb and review!</p>
+            </div>
+        </div>
     </div>
 </div>
 
+<script>
+var USER_SUB = {{ current_user | tojson }};
+</script>
+<script src="/static/climb.js"></script>
 <script src="/static/map.js"></script>
+<script src="/static/reviews.js"></script>
 {% endblock %}

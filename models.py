@@ -44,6 +44,7 @@ class ClimbingSpot(db.Model):
     outdoor_coordinates = db.Column(db.String)
     image_url = db.Column(db.String)
     visited_spot = db.relationship('VisitedSpot', backref='climbingspot', lazy=True)
+    reviews = db.relationship('Review', backref='climbingspot', lazy=True)
 
 class Climber(db.Model):
     __tablename__ = 'climber'
@@ -58,3 +59,13 @@ class VisitedSpot(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     climbing_spot_id = db.Column(db.Integer, db.ForeignKey('climbingspot.id'), nullable=True)
     climber_id = db.Column(db.Integer, db.ForeignKey('climber.id'), nullable=True)
+
+class Review(db.Model):
+    __tablename__ = 'review'
+    id = db.Column(db.Integer, primary_key=True)
+    climbing_spot_id = db.Column(db.Integer, db.ForeignKey('climbingspot.id'), nullable=False)
+    added_by = db.Column(db.String, nullable=False)
+    author_name = db.Column(db.String)
+    rating = db.Column(db.Integer, nullable=False)
+    body = db.Column(db.String)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
