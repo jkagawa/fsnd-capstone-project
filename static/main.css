@@ -729,9 +729,9 @@ a.card-title-link:hover {
     width: 0%;
     float: right;
     right: 0;
-    height: 100%;
+    height: calc(100% - 50px);
     transition: width 0.25s ease-in-out;
-    top: 0;
+    top: 50px;
     position: fixed;
     z-index: 2;
     overflow: hidden;
