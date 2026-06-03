@@ -62,6 +62,7 @@
                 <div class="card-body item3">{{ spot.location }}</div>
                 <div class="card-body item4"><a href="https://www.google.com/maps/search/?api=1&query={{ spot.name }}, {{ spot.location }}" target="_blank" class="card-body-link">Open in Google Maps &rarr;</a></div>
                 <div class="card-body item5">Added by {{ spot.added_by_username }}</div>
+                {% if spot.date_added %}<div class="card-body item6">Added {{ spot.date_added }}</div>{% endif %}
             </div>
             <div class="card-meta-row">
                 {% if spot.indoor_or_outdoor == 1 %}

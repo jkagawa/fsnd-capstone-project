@@ -199,6 +199,7 @@ def _spot_dict(climbingspot, climbers_by_sub, ratings):
         "added_by_name" : added_by_name,
         "added_by_username" : added_by_username,
         "image_url" : climbingspot.image_url,
+        "date_added" : climbingspot.date_added.strftime('%b %d, %Y') if climbingspot.date_added else '',
         "indoor_or_outdoor" : climbingspot.indoor_or_outdoor,
         "coordinates" : climbingspot.outdoor_coordinates,
         "rating_avg" : r['avg'],
@@ -379,6 +380,7 @@ def add_climbing_spots(payload):
 
         creator = Climber.query.filter_by(added_by=payload['sub']).first()
         creator_username = "@" + creator.username if creator and creator.username else None
+        spot_date_added = climbing_spot.date_added.strftime('%b %d, %Y') if climbing_spot.date_added else ''
 
         spots = get_climbing_spots()
     except:
@@ -401,6 +403,7 @@ def add_climbing_spots(payload):
                     'address_state': address_state,
                     'added_by': payload['sub'],
                     'added_by_username': creator_username,
+                    'date_added': spot_date_added,
                     'image_url': image_url,
                 }
             }), 200

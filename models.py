@@ -43,6 +43,7 @@ class ClimbingSpot(db.Model):
     indoor_or_outdoor = db.Column(db.Integer)
     outdoor_coordinates = db.Column(db.String)
     image_url = db.Column(db.String)
+    date_added = db.Column(db.DateTime, server_default=db.func.now())
     visited_spot = db.relationship('VisitedSpot', backref='climbingspot', lazy=True)
     reviews = db.relationship('Review', backref='climbingspot', lazy=True)
 

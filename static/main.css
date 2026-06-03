@@ -910,7 +910,8 @@ header {
         'state name name name'
         'state location location location'
         'state map map map'
-        'state added added added';
+        'state added added added'
+        'state dateadded dateadded dateadded';
 }
 
 .item1 {
@@ -939,6 +940,13 @@ header {
 
 .item5 {
     grid-area: added;
+    align-self: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.item6 {
+    grid-area: dateadded;
     align-self: center;
     font-size: 0.8rem;
     color: var(--text-muted);

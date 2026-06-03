@@ -109,6 +109,7 @@ function buildSpotCard(spot) {
         '<div class="card-body item3">' + escHtml(spot.location) + '</div>' +
         '<div class="card-body item4"><a href="' + mapsUrl + '" target="_blank" class="card-body-link">Open in Google Maps &rarr;</a></div>' +
         '<div class="card-body item5">Added by ' + escHtml(spot.added_by_username || 'No username') + '</div>' +
+        (spot.date_added ? '<div class="card-body item6">Added ' + escHtml(spot.date_added) + '</div>' : '') +
         '</div>' +
         '<div class="card-meta-row">' +
         '<span class="star-row" data-spot-rating="' + spot.id + '"><span class="star-empty">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="star-count">No ratings yet</span></span>' +
