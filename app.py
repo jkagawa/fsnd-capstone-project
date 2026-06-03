@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import secrets
 import hashlib
@@ -9,6 +10,7 @@ from flask import Flask, request, render_template, jsonify, flash, abort, redire
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from sqlalchemy import text, func
+from sqlalchemy.exc import IntegrityError
 from models import setup_db, db_create_all, return_db, ClimbingSpot, Climber, VisitedSpot, Review
 from auth import AuthError, requires_auth, verify_decode_jwt
 
@@ -183,6 +185,10 @@ def _ratings_by_spot(spot_id=None):
 
 def _spot_dict(climbingspot, climbers_by_sub, ratings):
     r = ratings.get(climbingspot.id, {'avg': 0, 'count': 0})
+    owner = climbers_by_sub.get(climbingspot.added_by)
+    added_by_name = owner.name if owner and owner.name else "Unknown"
+    added_by_username = (owner.username if owner and owner.username
+                         else added_by_name)
     return {
         "id" : climbingspot.id,
         "name" : climbingspot.name,
@@ -190,7 +196,8 @@ def _spot_dict(climbingspot, climbers_by_sub, ratings):
         "address_city" : climbingspot.address_city,
         "address_state" : climbingspot.address_state,
         "added_by" : climbingspot.added_by,
-        "added_by_name" : climbers_by_sub.get(climbingspot.added_by, "Unknown"),
+        "added_by_name" : added_by_name,
+        "added_by_username" : added_by_username,
         "image_url" : climbingspot.image_url,
         "indoor_or_outdoor" : climbingspot.indoor_or_outdoor,
         "coordinates" : climbingspot.outdoor_coordinates,
@@ -199,17 +206,28 @@ def _spot_dict(climbingspot, climbers_by_sub, ratings):
     }
 
 def get_climbing_spots():
-    climbers_by_sub = {c.added_by: c.name for c in Climber.query.all() if c.added_by and c.name}
+    climbers_by_sub = {c.added_by: c for c in Climber.query.all() if c.added_by}
     ratings = _ratings_by_spot()
     spot = [_spot_dict(s, climbers_by_sub, ratings) for s in ClimbingSpot.query.order_by('id').all()]
     return {"spot": spot}
 
 def get_climbing_spot(climbingspot_id):
-    climbers_by_sub = {c.added_by: c.name for c in Climber.query.all() if c.added_by and c.name}
+    climbers_by_sub = {c.added_by: c for c in Climber.query.all() if c.added_by}
     climbingspot = ClimbingSpot.query.get(climbingspot_id)
     if not climbingspot:
         return None
     return _spot_dict(climbingspot, climbers_by_sub, _ratings_by_spot(climbingspot_id))
+
+USERNAME_RE = re.compile(r'^[A-Za-z0-9_]{3,}$')
+
+
+def validate_username(username):
+    if not username:
+        return 'Username is required'
+    if not USERNAME_RE.match(username):
+        return 'Username must be at least 3 characters and use only letters, numbers, and underscores'
+    return None
+
 
 def get_climbers():
     climber = []
@@ -229,6 +247,7 @@ def get_climbers():
         climber.append({
             "id" : climb.id,
             "name" : climb.name,
+            "username" : climb.username,
             "state" : climb.state,
             "added_by" : climb.added_by,
             "visited_spots" : visitedspot,
@@ -246,7 +265,7 @@ def get_climbers():
 def index():
     spot_count = ClimbingSpot.query.count()
     climber_count = Climber.query.count()
-    climbers_by_sub = {c.added_by: c.name for c in Climber.query.all() if c.added_by and c.name}
+    climbers_by_sub = {c.added_by: c for c in Climber.query.all() if c.added_by}
     ratings = _ratings_by_spot()
     featured = [
         _spot_dict(s, climbers_by_sub, ratings)
@@ -280,6 +299,7 @@ def profile():
         profile_data = {
             'id': climber.id,
             'name': climber.name,
+            'username': climber.username,
             'state': climber.state,
             'visited_spot_ids': visited_ids,
             'visited_spots': visited_names,
@@ -357,6 +377,9 @@ def add_climbing_spots(payload):
         db.session.commit()
         new_spot_id = climbing_spot.id
 
+        creator = Climber.query.filter_by(added_by=payload['sub']).first()
+        creator_username = creator.username if creator and creator.username else None
+
         spots = get_climbing_spots()
     except:
         db.session.rollback()
@@ -377,6 +400,7 @@ def add_climbing_spots(payload):
                     'address_city': address_city,
                     'address_state': address_state,
                     'added_by': payload['sub'],
+                    'added_by_username': creator_username,
                     'image_url': image_url,
                 }
             }), 200
@@ -505,7 +529,23 @@ def add_climbers(payload):
     existing = Climber.query.filter_by(added_by=payload['sub']).first()
     if existing:
         abort(409)
+
+    def _error(msg, code):
+        if request.path == '/api/climbers':
+            return jsonify({'success': False, 'message': msg}), code
+        flash(msg)
+        abort(code)
+
+    username = (request.json.get('username') or '').strip()
+    msg = validate_username(username)
+    if msg:
+        return _error(msg, 400)
+    taken = Climber.query.filter(func.lower(Climber.username) == username.lower()).first()
+    if taken:
+        return _error('That username is already taken', 409)
+
     error = False
+    conflict = False
     try:
         _set_rls_user()
         name = request.json['name']
@@ -514,9 +554,9 @@ def add_climbers(payload):
         climber_id = request.get_json().get('id', None)
 
         if (climber_id):
-            climber = Climber(id=climber_id, name=name, state=state, added_by=payload['sub'])
+            climber = Climber(id=climber_id, name=name, state=state, username=username, added_by=payload['sub'])
         else:
-            climber = Climber(name=name, state=state, added_by=payload['sub'])
+            climber = Climber(name=name, state=state, username=username, added_by=payload['sub'])
 
         db.session.add(climber)
         db.session.flush()
@@ -527,11 +567,16 @@ def add_climbers(payload):
         db.session.commit()
 
         climbers = get_climbers()
+    except IntegrityError:
+        db.session.rollback()
+        conflict = True
     except:
         db.session.rollback()
         error = True
     finally:
         db.session.close()
+    if conflict:
+        return _error('That username is already taken', 409)
     if error:
         flash('An error occurred. Climber profile could not be created.')
         abort(400)
@@ -542,6 +587,7 @@ def add_climbers(payload):
                 'climber': {
                     'id': new_climber_id,
                     'name': name,
+                    'username': username,
                     'state': state,
                     'visited_count': len(visited_spots),
                     'visited_spot_ids': visited_spots,

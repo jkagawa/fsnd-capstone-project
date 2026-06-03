@@ -20,6 +20,7 @@ function buildClimberCard(climber) {
     var visitedIdsJson = escHtml(JSON.stringify(climber.visited_spot_ids || []));
     var html = '<span class="card-own-badge">Your profile</span>' +
         '<div class="card-title">' + escHtml(climber.name) + '</div>' +
+        (climber.username ? '<div class="card-handle">@' + escHtml(climber.username) + '</div>' : '') +
         '<div class="card-info">' + escHtml(climber.state) + '</div>' +
         '<div class="card-body"><i class="fa fa-star" style="vertical-align:middle; margin-right: 4px;"></i>' +
         '<span style="vertical-align:middle;">' + climber.visited_count + ' saved spots</span></div>';
@@ -66,6 +67,7 @@ function updateClimberCard(data) {
 document.getElementById('submit-climber').onclick = function(e) {
     e.preventDefault();
     var btn = e.target;
+    const username = document.getElementById('climber-username').value.trim();
     const name = document.getElementById('climber-name').value;
     const state = document.getElementById('climber-state').value;
 
@@ -81,12 +83,16 @@ document.getElementById('submit-climber').onclick = function(e) {
         showFormError('add-climber-error', 'Name and State must be filled out');
         return;
     }
+    if (!/^[A-Za-z0-9_]{3,}$/.test(username)) {
+        showFormError('add-climber-error', 'Username must be at least 3 characters and use only letters, numbers, and underscores');
+        return;
+    }
     var originalText = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Submitting...';
     fetch('/api/climbers', {
         method: 'POST',
-        body: JSON.stringify({ 'name': name, 'state': state, 'visited_spots': visited_spots }),
+        body: JSON.stringify({ 'username': username, 'name': name, 'state': state, 'visited_spots': visited_spots }),
         headers: { 'Content-Type': 'application/json' }
     })
     .then(function(response) {

@@ -43,6 +43,7 @@
         <div class="card-climber{% if current_user and climber.added_by == current_user %} card-climber-own{% endif %}" data-added-by="{{ climber.added_by }}">
             {% if current_user and climber.added_by == current_user %}<span class="card-own-badge">Your profile</span>{% endif %}
             <div class="card-title">{{ climber.name }}</div>
+            {% if climber.username %}<div class="card-handle">@{{ climber.username }}</div>{% endif %}
             <div class="card-info">{{ climber.state }}</div>
             <div class="card-body"><i class="fa fa-star" style="vertical-align:middle; margin-right: 4px;"></i><span style="vertical-align:middle;">{{ climber.visited_spots|length }} saved spots</span></div>
             {% if current_user == climber.added_by and ('patch:climber' in user_permissions or 'delete:climber' in user_permissions) %}
@@ -77,6 +78,11 @@
     <form class="form-area" autocomplete="off">
         <button type="button" class="button-cancel" onclick="closeForm()"><b>╳</b></button>
         <div class="form-title">Add A New Climber</div>
+        <div>
+            <span class="form-label">Username</span>
+            <input type="text" id="climber-username" maxlength="30" required>
+            <small class="form-hint">3+ characters — letters, numbers, and underscores only</small>
+        </div>
         <div>
             <span class="form-label">Name</span>
             <input type="text" id="climber-name" required>

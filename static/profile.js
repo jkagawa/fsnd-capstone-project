@@ -60,6 +60,7 @@ if (submitClimberBtn) {
     submitClimberBtn.onclick = function(e) {
         e.preventDefault();
         var btn = e.target;
+        var username = document.getElementById('climber-username').value.trim();
         var name = document.getElementById('climber-name').value;
         var state = document.getElementById('climber-state').value;
         var visited_spots = [];
@@ -70,12 +71,16 @@ if (submitClimberBtn) {
             showFormError('add-climber-error', 'Name and State must be filled out');
             return;
         }
+        if (!/^[A-Za-z0-9_]{3,}$/.test(username)) {
+            showFormError('add-climber-error', 'Username must be at least 3 characters and use only letters, numbers, and underscores');
+            return;
+        }
         var originalText = btn.textContent;
         btn.disabled = true;
         btn.textContent = 'Submitting...';
         fetch('/api/climbers', {
             method: 'POST',
-            body: JSON.stringify({ name: name, state: state, visited_spots: visited_spots }),
+            body: JSON.stringify({ username: username, name: name, state: state, visited_spots: visited_spots }),
             headers: { 'Content-Type': 'application/json' }
         })
         .then(function(response) {

@@ -20,7 +20,8 @@
       "Bash(curl -s -o /dev/null -w \"PATCH: %{http_code}\\\\n\" -X PATCH -H \"Content-Type: application/json\" -d '{\"rating\":2}' http://127.0.0.1:5009/api/reviews/1)",
       "Bash(curl -s -o /dev/null -w \"DELETE: %{http_code}\\\\n\" -X DELETE http://127.0.0.1:5009/api/reviews/1)",
       "Bash(python -c \"import sys,json;d=json.load\\(sys.stdin\\);print\\('after delete -> count:',d['spot']['rating_count']\\)\")",
-      "Bash(powershell -NoProfile -Command 'Get-NetTCPConnection -LocalPort 5011 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }')"
+      "Bash(powershell -NoProfile -Command 'Get-NetTCPConnection -LocalPort 5011 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }')",
+      "Bash(python -m py_compile app.py models.py migrations/versions/d8b2c3e4f5a6_add_username_to_climber.py)"
     ]
   }
 }

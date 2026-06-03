@@ -26,6 +26,11 @@
     </div>
 
     <input id="search-spots" type="text" class="search-input" placeholder="Search by name, city, or state...">
+    {% if current_user %}
+    <label class="my-spots-filter">
+        <input type="checkbox" id="filter-my-spots"> Show only my spots
+    </label>
+    {% endif %}
     <p id="spots-count" class="spots-count"></p>
     <p id="search-no-results" class="search-no-results" style="display:none">No spots match your search.</p>
     {% if not current_user %}
@@ -48,12 +53,15 @@
             <a href="/climbing-spots/{{ spot.id }}"><div class="card-photo-fallback">&#9968;</div></a>
             {% endif %}
             <div class="card-spot-inner">
+            {% if current_user and spot.added_by == current_user %}
+            <span class="card-pill card-pill-own">Added by you</span>
+            {% endif %}
             <div class="grid-container">
                 <div class="item1">{{ spot.address_state }}</div>
                 <div class="card-title item2"><a href="/climbing-spots/{{ spot.id }}" class="card-title-link">{{ spot.name }}</a></div>
                 <div class="card-body item3">{{ spot.location }}</div>
                 <div class="card-body item4"><a href="https://www.google.com/maps/search/?api=1&query={{ spot.name }}, {{ spot.location }}" target="_blank" class="card-body-link">Open in Google Maps &rarr;</a></div>
-                <div class="card-body item5">Added by {{ spot.added_by_name }}</div>
+                <div class="card-body item5">Added by {{ spot.added_by_username }}</div>
             </div>
             <div class="card-meta-row">
                 {% if spot.indoor_or_outdoor == 1 %}

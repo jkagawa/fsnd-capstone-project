@@ -12,6 +12,7 @@
     {% if profile %}
     <div class="profile-card">
         <div class="profile-name">{{ profile.name }}</div>
+        {% if profile.username %}<div class="profile-handle">@{{ profile.username }}</div>{% endif %}
         <div class="profile-state">{{ profile.state }}</div>
         <div class="profile-spots-label">
             <i class="fa fa-star" style="vertical-align:middle; margin-right: 4px;"></i>
@@ -67,6 +68,11 @@
     <form class="form-area" autocomplete="off">
         <button type="button" class="button-cancel" onclick="closeForm()"><b>╳</b></button>
         <div class="form-title">Create Climber Profile</div>
+        <div>
+            <span class="form-label">Username</span>
+            <input type="text" id="climber-username" maxlength="30" required>
+            <small class="form-hint">3+ characters — letters, numbers, and underscores only</small>
+        </div>
         <div>
             <span class="form-label">Name</span>
             <input type="text" id="climber-name" required>

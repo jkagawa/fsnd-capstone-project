@@ -4,9 +4,12 @@ var PAGE_SIZE = 5;
 
 function renderPage() {
     var query = document.getElementById('search-spots').value.toLowerCase();
+    var myEl = document.getElementById('filter-my-spots');
+    var mineOnly = !!(myEl && myEl.checked);
     var allCards = Array.from(document.querySelectorAll('.card-spot'));
 
     var filtered = allCards.filter(function(card) {
+        if (mineOnly && card.getAttribute('data-added-by') !== USER_SUB) return false;
         var text = [
             card.querySelector('.card-title.item2'),
             card.querySelector('.card-body.item3'),
@@ -25,11 +28,11 @@ function renderPage() {
     });
 
     document.getElementById('search-no-results').style.display =
-        filtered.length === 0 && query ? 'block' : 'none';
+        filtered.length === 0 && (query || mineOnly) ? 'block' : 'none';
 
     var total = allCards.length;
     var countEl = document.getElementById('spots-count');
-    if (query && filtered.length !== total) {
+    if (mineOnly || (query && filtered.length !== total)) {
         countEl.textContent = 'Search result: ' + filtered.length + ' of ' + total + ' spot' + (total !== 1 ? 's' : '');
     } else {
         countEl.textContent = total + ' spot' + (total !== 1 ? 's' : '');
@@ -51,6 +54,30 @@ document.getElementById('search-spots').addEventListener('input', function() {
     currentPage = 1;
     renderPage();
 });
+
+var myFilterEl = document.getElementById('filter-my-spots');
+if (myFilterEl) {
+    myFilterEl.addEventListener('change', function() {
+        currentPage = 1;
+        renderPage();
+        if (myFilterEl.checked) pulseVisibleCards();
+    });
+}
+
+function pulseVisibleCards() {
+    Array.from(document.querySelectorAll('.card-spot'))
+        .filter(function(card) { return card.style.display !== 'none'; })
+        .forEach(function(card) {
+            card.classList.remove('pulse-mine');
+            void card.offsetWidth;          // force reflow to restart the animation
+            card.classList.add('pulse-mine');
+            card.addEventListener('animationend', function handler(e) {
+                if (e.animationName !== 'my-spots-pulse') return;   // wait for the pulse, not the ease
+                card.classList.remove('pulse-mine');
+                card.removeEventListener('animationend', handler);
+            });
+        });
+}
 
 document.getElementById('pagination-prev').onclick = function() {
     if (currentPage > 1) { currentPage--; renderPage(); }
@@ -75,12 +102,13 @@ function buildSpotCard(spot) {
         html += '<a href="' + detailUrl + '"><div class="card-photo-fallback">&#9968;</div></a>';
     }
     html += '<div class="card-spot-inner">' +
+        '<span class="card-pill card-pill-own">Added by you</span>' +
         '<div class="grid-container">' +
         '<div class="item1">' + escHtml(spot.address_state) + '</div>' +
         '<div class="card-title item2"><a href="' + detailUrl + '" class="card-title-link">' + escHtml(spot.name) + '</a></div>' +
         '<div class="card-body item3">' + escHtml(spot.location) + '</div>' +
         '<div class="card-body item4"><a href="' + mapsUrl + '" target="_blank" class="card-body-link">Open in Google Maps &rarr;</a></div>' +
-        '<div class="card-body item5">Added by You</div>' +
+        '<div class="card-body item5">Added by ' + escHtml(spot.added_by_username || 'You') + '</div>' +
         '</div>' +
         '<div class="card-meta-row">' +
         '<span class="star-row" data-spot-rating="' + spot.id + '"><span class="star-empty">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <span class="star-count">No ratings yet</span></span>' +

@@ -236,6 +236,7 @@ a {
 
 .card-spot-inner {
     padding: 18px 24px 20px;
+    position: relative;
 }
 
 .card-meta-row {
@@ -415,6 +416,24 @@ a.card-title-link:hover {
     border: 1px solid var(--blue-soft-border);
 }
 
+.card-pill-own {
+    background: rgba(0, 128, 255, 0.12);
+    color: #0066cc;
+    border: 1px solid rgba(0, 128, 255, 0.3);
+}
+
+.card-spot-inner > .card-pill-own {
+    position: absolute;
+    top: 18px;
+    right: 24px;
+    z-index: 1;
+}
+
+/* Reserve space on the title row so a long name doesn't run under the pill */
+.card-spot-inner > .card-pill-own ~ .grid-container .item2 {
+    padding-right: 100px;
+}
+
 /* Star rating row */
 .star-row {
     display: inline-flex;
@@ -448,6 +467,19 @@ a.card-title-link:hover {
     border-radius: 20px;
     border: 1px solid rgba(0, 128, 255, 0.25);
     margin: 6px 0;
+}
+
+.card-handle, .profile-handle {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 2px;
+}
+
+.form-hint {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    margin-top: 4px;
 }
 
 .card-info-none {
@@ -1056,6 +1088,35 @@ header {
     color: var(--text-muted);
     font-size: 0.85rem;
     margin: 4px 0 0;
+}
+
+.my-spots-filter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 8px 0 0;
+    cursor: pointer;
+}
+
+.my-spots-filter input {
+    cursor: pointer;
+}
+
+@keyframes my-spots-pulse {
+    0%   { box-shadow: var(--shadow-card); }
+    45%  { box-shadow: 0 0 0 3px var(--blue-soft-border), 0 0 16px var(--blue-soft); }
+    100% { box-shadow: var(--shadow-card); }
+}
+
+.card-spot.pulse-mine {
+    animation: card-rise 0.35s ease both, my-spots-pulse 0.6s ease 0.35s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card-spot.pulse-mine { animation: none; }
 }
 
 .search-no-results {
