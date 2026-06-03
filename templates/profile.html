@@ -12,7 +12,7 @@
     {% if profile %}
     <div class="profile-card">
         <div class="profile-name">{{ profile.name }}</div>
-        {% if profile.username %}<div class="profile-handle">@{{ profile.username }}</div>{% endif %}
+        {% if profile.username %}<div class="profile-handle">@{{ profile.username }}</div>{% else %}<div class="profile-handle">No username</div>{% endif %}
         <div class="profile-state">{{ profile.state }}</div>
         <div class="profile-spots-label">
             <i class="fa fa-star" style="vertical-align:middle; margin-right: 4px;"></i>

@@ -188,7 +188,7 @@ def _spot_dict(climbingspot, climbers_by_sub, ratings):
     owner = climbers_by_sub.get(climbingspot.added_by)
     added_by_name = owner.name if owner and owner.name else "Unknown"
     added_by_username = (owner.username if owner and owner.username
-                         else added_by_name)
+                         else "No username")
     return {
         "id" : climbingspot.id,
         "name" : climbingspot.name,
