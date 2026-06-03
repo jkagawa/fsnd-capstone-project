@@ -187,7 +187,7 @@ def _spot_dict(climbingspot, climbers_by_sub, ratings):
     r = ratings.get(climbingspot.id, {'avg': 0, 'count': 0})
     owner = climbers_by_sub.get(climbingspot.added_by)
     added_by_name = owner.name if owner and owner.name else "Unknown"
-    added_by_username = (owner.username if owner and owner.username
+    added_by_username = ("@" + owner.username if owner and owner.username
                          else "No username")
     return {
         "id" : climbingspot.id,
@@ -378,7 +378,7 @@ def add_climbing_spots(payload):
         new_spot_id = climbing_spot.id
 
         creator = Climber.query.filter_by(added_by=payload['sub']).first()
-        creator_username = creator.username if creator and creator.username else None
+        creator_username = "@" + creator.username if creator and creator.username else None
 
         spots = get_climbing_spots()
     except:
