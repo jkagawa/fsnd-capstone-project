@@ -46,3 +46,11 @@ flask db upgrade
 ## Deployment
 Render — set `FULL_DATABASE_URL` in the Environment tab of the service dashboard, then redeploy.
 If manually adding DB columns instead of running migrations, run `flask db stamp head` afterward so Alembic stays in sync.
+
+## Row Level Security (RLS)
+RLS is enforced in Supabase/Postgres. On each write the app runs
+`set_config('app.current_user_id', <auth0 sub>, TRUE)` (`_set_rls_user()` in app.py); policies compare
+a row's `added_by` against `current_setting('app.current_user_id', TRUE)`.
+- All policy SQL is versioned in `sql/rls_policies.sql`.
+- When adding a new table, add matching `ENABLE`/`FORCE` + select/insert/update/delete policies there
+  and apply them in the Supabase SQL editor.
