@@ -114,10 +114,14 @@ function createCoordPicker(prefix) {
                 }
                 // Permanent tooltip so the place reads as a named location, not just a pin.
                 marker.unbindTooltip();
+                // Leaflet's default marker icon has tooltipAnchor [16, -28], which is
+                // tuned for a right-side tooltip. For 'top' the x=16 pushes the label
+                // off-centre, so cancel it; y=-16 seats the label just above the pin
+                // head (the icon is 41px tall, anchored at its tip).
                 marker.bindTooltip(labelFor(label, coords), {
                     permanent: true,
                     direction: 'top',
-                    offset: [0, -34],
+                    offset: [-16, -16],
                     className: 'coord-pin-label'
                 });
                 map.setView(c, Math.max(map.getZoom(), 13));

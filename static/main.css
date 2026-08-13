@@ -2020,8 +2020,11 @@ header {
 
 /* Permanent name label above the picker's pin. */
 .leaflet-tooltip.coord-pin-label {
-    max-width: 220px;
-    padding: 3px 8px;
+    /* Wide enough for a typical "Place, Street" label on one line; longer names
+       wrap rather than overflow the 200px-tall map. */
+    max-width: 280px;
+    width: max-content;
+    padding: 4px 10px;
     background: var(--bg-surface);
     border: 1px solid var(--border-input);
     border-radius: var(--radius-sm);
