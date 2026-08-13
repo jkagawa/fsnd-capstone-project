@@ -980,7 +980,9 @@ header {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: url(/static/images/climbing_image1.jpg) no-repeat center center;
+    /* Separate, wider file from the band's card image: this covers the full
+       viewport, so the 760px card version would upscale and look soft. */
+    background: url(/static/images/lets_climb_bg.jpg) no-repeat center center;
     background-size: cover;
     z-index: -1;
 }
@@ -1394,7 +1396,7 @@ header {
 .home-feature-heading {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #191919;
+    color: var(--text-primary);
     margin: 0 0 12px;
 }
 
@@ -1403,10 +1405,6 @@ header {
     color: var(--text-secondary);
     line-height: 1.6;
     margin: 0;
-}
-
-.home-feature-heading {
-    color: var(--text-primary);
 }
 
 /* Footer */
@@ -1605,6 +1603,188 @@ header {
     font-size: 0.85rem;
     color: var(--text-muted);
     margin: 0;
+}
+
+/* ── "Let's climb" band ────────────────────────────────── */
+/* Editorial split: the source photo is portrait (1600x2396), so it is shown at its
+   natural aspect flush against the left edge rather than cropped into a wide
+   background. The panel fills the remaining width; the hard edge between them is
+   the design. Gradient matches the nav palette so the two read as one system. */
+.home-band {
+    position: relative;
+    overflow: hidden;
+    /* Not decorative: prevents a white flash before the image loads, and is the
+       fallback if the image ever 404s. */
+    background: #08203c;
+}
+
+/* Blurred bleed: the same photo, blown up and darkened, fills the width the
+   portrait can't. Reuses the already-cached file -- no second request. */
+.home-band::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url(/static/images/lets_climb.jpg) center center / cover no-repeat;
+    filter: blur(30px) brightness(0.45) saturate(1.2);
+    /* Required, not cosmetic: blur softens the layer's own edges, which would show
+       as a halo. Scaling pushes them outside the parent's overflow clip. */
+    transform: scale(1.2);
+    z-index: 0;
+}
+
+.home-band-inner {
+    position: relative;   /* above the blurred backdrop */
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 56px 24px;
+}
+
+/* Card wrapper. Carries the radius/shadow so the caption scrim clips to the
+   rounded corners; overflow:hidden is what does that clipping. */
+.home-band-figure {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    margin: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+    border: 1px solid rgba(255,255,255,0.14);
+}
+
+/* Constraining height and letting width follow is what guarantees no crop. */
+.home-band-photo {
+    display: block;
+    height: clamp(400px, 70vh, 700px);
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* Caption sits over the bottom of the photo. The scrim is what keeps the text
+   legible regardless of what the photo is doing down there. */
+.home-band-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 72px 28px 32px;
+    text-align: center;
+    background: linear-gradient(to top,
+        rgba(0,0,0,0.88) 0%,
+        rgba(0,0,0,0.55) 45%,
+        rgba(0,0,0,0) 100%);
+}
+
+.home-band-title {
+    margin: 0;
+    /* Capped well below the hero: this has to fit inside a ~470px-wide card. */
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.01em;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.75);
+}
+
+.home-band-title::after {
+    content: '';
+    display: block;
+    width: 56px;
+    height: 3px;
+    margin: 16px auto 0;
+    border-radius: 2px;
+    /* Lighter than --blue, which is too close to the backdrop to read. */
+    background: #7dc0ff;
+}
+
+/* Must follow the .home-band rules above -- equal specificity, source order decides.
+   (The general home @media block sits earlier in the file and would lose.) */
+@media (max-width: 860px) {
+    .home-band-inner {
+        padding: 40px 20px;
+    }
+    .home-band-photo {
+        height: auto;
+        max-height: 66vh;
+        max-width: min(92vw, 420px);
+    }
+    .home-band-panel {
+        padding: 56px 20px 24px;
+    }
+}
+
+/* ── Home motion ───────────────────────────────────────── */
+
+/* Slow drift on the fixed hero backdrop. transform (not background-size) so it
+   stays on the compositor instead of repainting a full-viewport image. */
+@keyframes hero-drift {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
+}
+
+.main-bg {
+    animation: hero-drift 24s ease-out both;
+}
+
+/* Hero entrance, staggered down the stack. Same shape as card-rise. */
+@keyframes hero-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.home-hero .hero-in {
+    animation: hero-in 0.5s ease both;
+}
+
+.home-hero-logo.hero-in      { animation-delay: 0.05s; }
+.home-hero-title.hero-in     { animation-delay: 0.18s; }
+.home-hero-subtitle.hero-in  { animation-delay: 0.30s; }
+.home-hero-ctas.hero-in      { animation-delay: 0.42s; }
+.home-stats.hero-in          { animation-delay: 0.54s; }
+
+/* Scroll reveal. Hidden ONLY under .has-reveal, which home.js adds at runtime --
+   without JS (or without IntersectionObserver) everything stays visible. */
+.has-reveal .reveal {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition-delay: var(--reveal-delay, 0ms);
+}
+
+.has-reveal .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Reveal variant: starts slightly tilted and settles upright. Longer transition so
+   the rotation reads as a settle rather than a snap. */
+.has-reveal .reveal.reveal-tilt {
+    transform: rotate(-3deg) translateY(10px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.has-reveal .reveal.reveal-tilt.is-visible {
+    transform: rotate(0deg) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .main-bg,
+    .home-hero .hero-in {
+        animation: none;
+    }
+    /* .reveal-tilt must be listed explicitly: it outranks the plain .reveal reset
+       below on specificity, so inheriting would leave the photo tilted for users
+       who asked for no motion. */
+    .has-reveal .reveal,
+    .has-reveal .reveal.reveal-tilt,
+    .has-reveal .reveal.reveal-tilt.is-visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 }
 
 /* ── Spot detail page ──────────────────────────────────── */

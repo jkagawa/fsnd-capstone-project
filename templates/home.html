@@ -9,14 +9,14 @@
 <section class="home-hero">
   <div class="home-hero-overlay"></div>
   <div class="home-hero-content">
-    <img src="/static/images/climbing-spot-logo-w200.png" class="img_style home-hero-logo" alt="Climbing Spot Logo">
-    <h1 class="home-hero-title">Discover Rock Climbing Destinations</h1>
-    <p class="home-hero-subtitle">Find world-class climbing spots and connect with climbers across the country</p>
-    <div class="home-hero-ctas">
+    <img src="/static/images/climbing-spot-logo-w200.png" class="img_style home-hero-logo hero-in" alt="Climbing Spot Logo">
+    <h1 class="home-hero-title hero-in">Discover Rock Climbing Destinations</h1>
+    <p class="home-hero-subtitle hero-in">Find world-class climbing spots and connect with climbers across the country</p>
+    <div class="home-hero-ctas hero-in">
       <a href="/climbing-spots" class="home-cta-primary">Explore Spots</a>
       <a href="/climbers" class="home-cta-secondary">Find Climbers</a>
     </div>
-    <div class="home-stats">
+    <div class="home-stats hero-in">
       <div class="home-stat">
         <div class="home-stat-num">{{ spot_count }}</div>
         <div class="home-stat-label">Climbing Spots</div>
@@ -32,10 +32,10 @@
 {% if featured %}
 <!-- Featured Spots -->
 <section class="home-featured">
-  <h2 class="home-featured-title">Recently Added Spots</h2>
+  <h2 class="home-featured-title reveal">Recently Added Spots</h2>
   <div class="home-featured-grid">
     {% for spot in featured %}
-    <a href="/climbing-spots/{{ spot.id }}" class="home-featured-card">
+    <a href="/climbing-spots/{{ spot.id }}" class="home-featured-card reveal" style="--reveal-delay: {{ loop.index0 * 90 }}ms">
       {% if spot.image_url %}
       <img src="{{ spot.image_url }}" alt="{{ spot.name }}" class="home-featured-photo" referrerpolicy="no-referrer" onerror="imgFallback(this, 'home-featured-photo-fallback')">
       {% else %}
@@ -52,21 +52,37 @@
 </section>
 {% endif %}
 
+{# Kept outside the featured-spots conditional above so the band renders whether
+   or not there are featured spots. Note: Jinja parses tags inside HTML comments,
+   so this has to be a Jinja comment, not an HTML one. #}
+<section class="home-band">
+  <div class="home-band-inner">
+    {# Photo and caption tilt together as one card, so the reveal lives on the figure. #}
+    <figure class="home-band-figure reveal reveal-tilt">
+      <img src="/static/images/lets_climb.jpg" alt="Climber on a rock face"
+           class="home-band-photo">
+      <figcaption class="home-band-panel">
+        <h2 class="home-band-title">Let's climb</h2>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
 <!-- Features Section -->
 <section class="home-features">
-  <h2 class="home-features-title">Everything You Need for Your Next Climb</h2>
+  <h2 class="home-features-title reveal">Everything You Need for Your Next Climb</h2>
   <div class="home-features-grid">
-    <div class="home-feature-card">
+    <div class="home-feature-card reveal" style="--reveal-delay: 0ms">
       <img src="/static/images/undraw_a_day_off_w-9-ex.svg" alt="Plan your trip" class="home-feature-img">
       <h3 class="home-feature-heading">Plan Your Adventure</h3>
       <p class="home-feature-text">Browse curated climbing destinations with location details to plan your perfect trip.</p>
     </div>
-    <div class="home-feature-card">
+    <div class="home-feature-card reveal" style="--reveal-delay: 90ms">
       <img src="/static/images/undraw_camping_noc8.svg" alt="Camp and climb" class="home-feature-img">
       <h3 class="home-feature-heading">Camp &amp; Climb</h3>
       <p class="home-feature-text">Discover spots with nearby camping so you can make the most of your time outdoors.</p>
     </div>
-    <div class="home-feature-card">
+    <div class="home-feature-card reveal" style="--reveal-delay: 180ms">
       <img src="/static/images/undraw_hiking_re_k0bc.svg" alt="Connect with climbers" class="home-feature-img">
       <h3 class="home-feature-heading">Meet Fellow Climbers</h3>
       <p class="home-feature-text">Connect with a community of climbers who share your passion for the vertical world.</p>
@@ -89,4 +105,5 @@
   </div>
 </footer>
 
+<script src="/static/home.js"></script>
 {% endblock %}
