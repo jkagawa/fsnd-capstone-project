@@ -52,22 +52,6 @@
 </section>
 {% endif %}
 
-{# Kept outside the featured-spots conditional above so the band renders whether
-   or not there are featured spots. Note: Jinja parses tags inside HTML comments,
-   so this has to be a Jinja comment, not an HTML one. #}
-<section class="home-band">
-  <div class="home-band-inner">
-    {# Photo and caption tilt together as one card, so the reveal lives on the figure. #}
-    <figure class="home-band-figure reveal reveal-tilt">
-      <img src="/static/images/lets_climb.jpg" alt="Climber on a rock face"
-           class="home-band-photo">
-      <figcaption class="home-band-panel">
-        <h2 class="home-band-title">Let's climb</h2>
-      </figcaption>
-    </figure>
-  </div>
-</section>
-
 <!-- Features Section -->
 <section class="home-features">
   <h2 class="home-features-title reveal">Everything You Need for Your Next Climb</h2>
@@ -87,6 +71,20 @@
       <h3 class="home-feature-heading">Meet Fellow Climbers</h3>
       <p class="home-feature-text">Connect with a community of climbers who share your passion for the vertical world.</p>
     </div>
+  </div>
+</section>
+
+{# "Let's climb" band — closes the page just above the footer.
+   Photo and caption tilt together as one card, so the reveal lives on the figure. #}
+<section class="home-band">
+  <div class="home-band-inner">
+    <figure class="home-band-figure reveal reveal-tilt">
+      <img src="/static/images/lets_climb.jpg" alt="Climber on a rock face"
+           class="home-band-photo">
+      <figcaption class="home-band-panel">
+        <h2 class="home-band-title">Let's climb</h2>
+      </figcaption>
+    </figure>
   </div>
 </section>
 
