@@ -1,5 +1,5 @@
 {% extends 'main.html' %}
-{% from '_macros.html' import stars %}
+{% from '_macros.html' import stars, coord_picker %}
 {% block gtag %}gtag('config', 'UA-176036079-2', {'page_path': '/climbing-spots'});{% endblock %}
 {% block title %}Climbing Spots{% endblock %}
 {% block content %}
@@ -85,6 +85,7 @@
                         data-city="{{ spot.address_city }}"
                         data-state="{{ spot.address_state }}"
                         data-image="{{ spot.image_url or '' }}"
+                        data-coords="{{ spot.coordinates or '' }}"
                         onclick="openEditSpot(this)">Edit Spot</button>
                     {% endif %}
                     {% if current_user == spot.added_by and 'delete:climbing-spot' in user_permissions %}
@@ -181,6 +182,7 @@
             <span class="form-label">Image URL</span>
             <input type="text" id="climbing-spot-image" placeholder="https://... (optional)">
         </div>
+        {{ coord_picker('add') }}
     <p class="form-error" id="add-spot-error"></p>
     <button type="submit" class="button-submit" id="submit-climbing-spot">Submit</button>
   </form>
@@ -260,6 +262,7 @@
             <span class="form-label">Image URL</span>
             <input type="text" id="new-climbing-spot-image" value="" placeholder="https://... (optional)">
         </div>
+        {{ coord_picker('edit') }}
     <p class="form-error" id="edit-spot-error"></p>
     <button type="submit" class="button-submit" id="edit-climbing-spot" data-id="">Change</button>
   </form>
@@ -272,4 +275,5 @@ var USER_PERMISSIONS = {{ user_permissions | tojson }};
 <script src="/static/climb.js"></script>
 <script src="/static/climbing-spots.js"></script>
 <script src="/static/map.js"></script>
+<script src="/static/spot-picker.js"></script>
 {% endblock %}

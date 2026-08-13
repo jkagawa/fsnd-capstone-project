@@ -648,6 +648,9 @@ a.card-title-link:hover {
     opacity: 0;
     width: 560px;
     max-width: 92%;
+    /* Capped so the coordinate picker can't push Submit off-screen on a short window. */
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
     padding: 28px 24px;
     background: var(--bg-surface);
     border-radius: var(--radius-lg);
@@ -1910,4 +1913,161 @@ header {
     font-size: 0.8rem;
     color: var(--text-muted);
     margin-top: 2px;
+}
+
+/* ── Coordinate picker (add/edit spot forms) ───────────── */
+.coord-picker {
+    margin: 16px 0 4px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    text-align: left;
+}
+
+.coord-picker-label {
+    display: block;
+    margin: 0 0 8px;
+    font-weight: 600;
+}
+
+.coord-search-row {
+    display: flex;
+    gap: 8px;
+}
+
+.coord-search-input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+    font-size: 0.95rem;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+.coord-search-btn {
+    flex: 0 0 auto;
+    padding: 0 18px;
+    background: var(--blue);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.coord-search-btn:hover:not(:disabled) {
+    background: var(--blue-hover);
+}
+
+.coord-search-btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.coord-results {
+    display: none;
+    max-height: 168px;
+    overflow-y: auto;
+    margin-top: 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+}
+
+.coord-result {
+    display: block;
+    width: 100%;
+    padding: 9px 12px;
+    background: var(--bg-surface);
+    border: none;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.coord-result:last-child {
+    border-bottom: none;
+}
+
+.coord-result:hover {
+    background: var(--bg-surface-alt);
+}
+
+.coord-result-empty {
+    color: var(--text-muted);
+    font-style: italic;
+    cursor: default;
+}
+
+.coord-result-empty:hover {
+    background: var(--bg-surface);
+}
+
+/* z-index 0 keeps Leaflet's panes (400+) from painting over the fixed header. */
+.coord-picker-map {
+    height: 200px;
+    margin-top: 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    z-index: 0;
+}
+
+/* Permanent name label above the picker's pin. */
+.leaflet-tooltip.coord-pin-label {
+    max-width: 220px;
+    padding: 3px 8px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-card);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: normal;
+}
+
+.leaflet-tooltip.coord-pin-label::before {
+    border-top-color: var(--border-input);
+}
+
+.coord-readout-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.coord-readout {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.coord-picker-set .coord-readout {
+    color: var(--blue);
+    font-weight: 600;
+}
+
+.coord-clear-btn {
+    flex: 0 0 auto;
+    padding: 4px 12px;
+    background: transparent;
+    border: 1px solid var(--border-input);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.coord-clear-btn:hover {
+    background: var(--bg-surface-alt);
+    color: var(--text-primary);
 }

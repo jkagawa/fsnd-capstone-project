@@ -42,6 +42,9 @@ class ClimbingSpot(db.Model):
     added_by = db.Column(db.String)
     indoor_or_outdoor = db.Column(db.Integer)
     outdoor_coordinates = db.Column(db.String)
+    # Where outdoor_coordinates came from: 'geocode' (city/state centroid, approximate),
+    # 'search', 'pin' or 'paste' (user-set, precise). NULL means legacy/unknown.
+    coord_source = db.Column(db.String)
     image_url = db.Column(db.String)
     date_added = db.Column(db.DateTime, server_default=db.func.now())
     visited_spot = db.relationship('VisitedSpot', backref='climbingspot', lazy=True)

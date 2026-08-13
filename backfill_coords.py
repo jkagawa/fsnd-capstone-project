@@ -9,8 +9,12 @@ from app import app, db, geocode
 from models import ClimbingSpot
 
 with app.app_context():
+    # Only ever fill in blanks. Rows whose coord_source is user-set ('search', 'pin',
+    # 'paste') are left alone so a re-run can't overwrite a hand-placed coordinate.
     spots = ClimbingSpot.query.filter(
-        (ClimbingSpot.outdoor_coordinates.is_(None)) | (ClimbingSpot.outdoor_coordinates == '')
+        ((ClimbingSpot.outdoor_coordinates.is_(None)) | (ClimbingSpot.outdoor_coordinates == ''))
+        & (ClimbingSpot.coord_source.is_(None)
+           | ClimbingSpot.coord_source.notin_(('search', 'pin', 'paste')))
     ).all()
     print('Spots needing coordinates: {}'.format(len(spots)))
     updated = 0
@@ -18,6 +22,7 @@ with app.app_context():
         coords = geocode(spot.address_city, spot.address_state)
         if coords:
             spot.outdoor_coordinates = coords
+            spot.coord_source = 'geocode'
             updated += 1
             print('  #{} {} ({}, {}) -> {}'.format(
                 spot.id, spot.name, spot.address_city, spot.address_state, coords))

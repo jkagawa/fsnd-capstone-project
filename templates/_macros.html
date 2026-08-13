@@ -5,3 +5,24 @@
     {% if count and count > 0 %}<span class="star-count">{{ avg }} ({{ count }})</span>{% else %}<span class="star-count">No ratings yet</span>{% endif %}
 </span>
 {% endmacro %}
+
+{# Coordinate picker for the add/edit spot forms. `prefix` is 'add' or 'edit' and
+   must match the ids createCoordPicker() looks up in static/spot-picker.js. #}
+{% macro coord_picker(prefix) %}
+<div class="coord-picker" id="{{ prefix }}-coord-picker">
+    <span class="form-label coord-picker-label">Location</span>
+    <div class="coord-search-row">
+        <input type="text" id="{{ prefix }}-coord-search" class="coord-search-input"
+               placeholder="Gym or landmark name, or paste coordinates / a map link">
+        <button type="button" class="coord-search-btn" id="{{ prefix }}-coord-search-btn">Search</button>
+    </div>
+    <span class="form-hint">Search for the place, or click the map to drop a pin. Optional &mdash; without one we use the city center.</span>
+    <div class="coord-results" id="{{ prefix }}-coord-results"></div>
+    <div class="coord-picker-map" id="{{ prefix }}-coord-map"></div>
+    <div class="coord-readout-row">
+        <span class="coord-readout" id="{{ prefix }}-coord-readout">No pin set &mdash; will fall back to the city center</span>
+        <button type="button" class="coord-clear-btn" id="{{ prefix }}-coord-clear">Clear pin</button>
+    </div>
+    <input type="hidden" id="{{ prefix }}-coord-value" value="">
+</div>
+{% endmacro %}

@@ -1,6 +1,8 @@
 import os
 import re
 import json
+import time
+import threading
 import secrets
 import hashlib
 import base64
@@ -85,6 +87,103 @@ def geocode(city, state):
     except Exception:
         pass
     return None
+
+# Sources that mean "a person placed this", as opposed to the approximate
+# 'geocode' city/state centroid. NULL/unknown is treated as approximate.
+PRECISE_COORD_SOURCES = ('search', 'pin', 'paste')
+
+def _clean_coords(value):
+    """Validate a client-supplied "lat,lng" string.
+
+    Returns a normalized "lat,lng" (5 decimal places, ~1m) or None. Client input is
+    never stored raw -- everything from the browser goes through here first."""
+    if not value:
+        return None
+    parts = str(value).split(',')
+    if len(parts) != 2:
+        return None
+    try:
+        lat = float(parts[0].strip())
+        lng = float(parts[1].strip())
+    except (TypeError, ValueError):
+        return None
+    if lat != lat or lng != lng:  # NaN
+        return None
+    if not (-90.0 <= lat <= 90.0) or not (-180.0 <= lng <= 180.0):
+        return None
+    return '{:.5f},{:.5f}'.format(lat, lng)
+
+def _coords_from_request(payload_json):
+    """Pull an explicit coordinate + its provenance off a request body.
+    Returns (coords, source) where coords is None if the client sent nothing usable."""
+    coords = _clean_coords(payload_json.get('coordinates'))
+    if not coords:
+        return None, None
+    source = payload_json.get('coord_source')
+    return coords, source if source in PRECISE_COORD_SOURCES else 'pin'
+
+# Nominatim's usage policy allows ~1 request/second and wants an identifying
+# User-Agent. All of our traffic leaves a single host, so the spacing is enforced
+# here rather than relying on per-user browser calls.
+_PLACE_CACHE = {}
+_NOMINATIM_LOCK = threading.Lock()
+_NOMINATIM_LAST_CALL = [0.0]
+_NOMINATIM_MIN_INTERVAL = 1.1
+
+def _nominatim_throttle():
+    elapsed = time.time() - _NOMINATIM_LAST_CALL[0]
+    if elapsed < _NOMINATIM_MIN_INTERVAL:
+        time.sleep(_NOMINATIM_MIN_INTERVAL - elapsed)
+    _NOMINATIM_LAST_CALL[0] = time.time()
+
+def search_places(query):
+    """Free-text place/landmark/business lookup via OSM Nominatim.
+    Returns a list of {display_name, lat, lon}; empty on any failure."""
+    query = (query or '').strip()
+    if len(query) < 3:
+        return []
+    key = query.lower()
+    if key in _PLACE_CACHE:
+        return _PLACE_CACHE[key]
+    try:
+        params = urllib.parse.urlencode({
+            'q': query,
+            'format': 'json',
+            'limit': 5,
+            'addressdetails': 1,
+            'countrycodes': 'us',
+        })
+        req = urllib.request.Request(
+            'https://nominatim.openstreetmap.org/search?' + params,
+            headers={'User-Agent': 'ClimbingSpotApp/1.0 (https://climbing-spot.onrender.com)'},
+        )
+        with _NOMINATIM_LOCK:
+            _nominatim_throttle()
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                raw = json.loads(resp.read().decode('utf-8'))
+        results = []
+        for item in raw:
+            coords = _clean_coords('{},{}'.format(item.get('lat'), item.get('lon')))
+            if not coords:
+                continue
+            results.append({
+                'display_name': item.get('display_name', ''),
+                'coordinates': coords,
+            })
+        _PLACE_CACHE[key] = results
+        return results
+    except Exception:
+        return []
+
+@app.route('/api/place-search', methods=['GET'])
+@requires_auth('post:climbing-spot')
+def place_search(payload):
+    """Proxy for the spot form's place search. Auth-gated so it can't be used as
+    an open geocoding service pointed at our Nominatim quota."""
+    return jsonify({
+        'success': True,
+        'results': search_places(request.args.get('q', '')),
+    }), 200
 
 def _generate_pkce_pair():
     verifier = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8').rstrip('=')
@@ -202,6 +301,7 @@ def _spot_dict(climbingspot, climbers_by_sub, ratings):
         "date_added" : climbingspot.date_added.strftime('%b %d, %Y') if climbingspot.date_added else '',
         "indoor_or_outdoor" : climbingspot.indoor_or_outdoor,
         "coordinates" : climbingspot.outdoor_coordinates,
+        "coord_source" : climbingspot.coord_source,
         "rating_avg" : r['avg'],
         "rating_count" : r['count'],
     }
@@ -366,13 +466,18 @@ def add_climbing_spots(payload):
         address_state = request.json['state'].upper()
         location = address_city + ", " + address_state
         image_url = (request.get_json().get('image_url') or '').strip() or None
-        coordinates = geocode(address_city, address_state)
+        # A coordinate the user set in the form wins; otherwise fall back to the
+        # approximate city/state centroid so adding a spot never requires the picker.
+        coordinates, coord_source = _coords_from_request(request.get_json())
+        if not coordinates:
+            coordinates = geocode(address_city, address_state)
+            coord_source = 'geocode' if coordinates else None
         spot_id = request.get_json().get('id', None)
 
         if (spot_id):
-            climbing_spot = ClimbingSpot(id=spot_id, name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'], image_url=image_url, outdoor_coordinates=coordinates)
+            climbing_spot = ClimbingSpot(id=spot_id, name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'], image_url=image_url, outdoor_coordinates=coordinates, coord_source=coord_source)
         else:
-            climbing_spot = ClimbingSpot(name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'], image_url=image_url, outdoor_coordinates=coordinates)
+            climbing_spot = ClimbingSpot(name=name, location=location, address_city=address_city, address_state=address_state, added_by=payload['sub'], image_url=image_url, outdoor_coordinates=coordinates, coord_source=coord_source)
 
         db.session.add(climbing_spot)
         db.session.commit()
@@ -405,6 +510,8 @@ def add_climbing_spots(payload):
                     'added_by_username': creator_username,
                     'date_added': spot_date_added,
                     'image_url': image_url,
+                    'coordinates': coordinates,
+                    'coord_source': coord_source,
                 }
             }), 200
         flash('Climbing spot "' + name + '" was successfully added!')
@@ -427,20 +534,35 @@ def edit_climbingspots(payload, climbingspot_id):
         image_url = (request.get_json().get('image_url') or '').strip() or None
 
         climbingspot = ClimbingSpot.query.get(climbingspot_id)
-        # Re-geocode only when the location changed (or was never geocoded);
-        # keep the existing coordinate if the lookup fails.
-        if (climbingspot.address_city != address_city
-                or climbingspot.address_state != address_state
-                or not climbingspot.outdoor_coordinates):
+        explicit_coords, explicit_source = _coords_from_request(request.get_json())
+        if explicit_coords:
+            # The user set a coordinate in the form -- always honour it.
+            climbingspot.outdoor_coordinates = explicit_coords
+            climbingspot.coord_source = explicit_source
+        elif request.get_json().get('clear_coords'):
+            # "Clear pin": drop back to the approximate city/state centroid.
+            climbingspot.outdoor_coordinates = geocode(address_city, address_state)
+            climbingspot.coord_source = 'geocode' if climbingspot.outdoor_coordinates else None
+        elif (climbingspot.coord_source not in PRECISE_COORD_SOURCES
+                and (climbingspot.address_city != address_city
+                     or climbingspot.address_state != address_state
+                     or not climbingspot.outdoor_coordinates)):
+            # Only ever re-geocode over an approximate coordinate, so changing the
+            # city can't silently discard a hand-placed pin. Keep the old value if
+            # the lookup fails.
             new_coords = geocode(address_city, address_state)
             if new_coords:
                 climbingspot.outdoor_coordinates = new_coords
+                climbingspot.coord_source = 'geocode'
         climbingspot.name = name
         climbingspot.address_city = address_city
         climbingspot.address_state = address_state
         climbingspot.location = location
         climbingspot.image_url = image_url
         db.session.commit()
+        # Read these out before the session closes in `finally`.
+        saved_coords = climbingspot.outdoor_coordinates
+        saved_coord_source = climbingspot.coord_source
 
         spots = get_climbing_spots()
     except:
@@ -460,7 +582,9 @@ def edit_climbingspots(payload, climbingspot_id):
                 'location' : location,
                 'city' : address_city,
                 'state' : address_state,
-                'image_url' : image_url
+                'image_url' : image_url,
+                'coordinates' : saved_coords,
+                'coord_source' : saved_coord_source
             }), 200
         flash('Climbing spot "' + request.json['name'] + '" was successfully added!')
         return render_template('climbing-spots.html', spots=spots)

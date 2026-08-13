@@ -125,6 +125,7 @@ function buildSpotCard(spot) {
                 ' data-city="' + escHtml(spot.address_city) + '"' +
                 ' data-state="' + escHtml(spot.address_state) + '"' +
                 ' data-image="' + escHtml(spot.image_url || '') + '"' +
+                ' data-coords="' + escHtml(spot.coordinates || '') + '"' +
                 ' onclick="openEditSpot(this)">Edit Spot</button>';
         }
         if (canDelete) {
@@ -170,6 +171,7 @@ function updateSpotCard(data) {
     editBtn.setAttribute('data-city', data.city);
     editBtn.setAttribute('data-state', data.state);
     editBtn.setAttribute('data-image', data.image_url || '');
+    editBtn.setAttribute('data-coords', data.coordinates || '');
 }
 
 //Submit new climbing spot
@@ -184,12 +186,17 @@ document.getElementById('submit-climbing-spot').onclick = function(e) {
         showFormError('add-spot-error', 'Name, City, and State must be filled out');
         return;
     }
+    var coord = window.spotPickerAdd ? spotPickerAdd.getValue() : {};
     var originalText = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Submitting...';
     fetch('/api/climbing-spots', {
         method: 'POST',
-        body: JSON.stringify({ 'name': name, 'city': city, 'state': state, 'image_url': image_url }),
+        body: JSON.stringify({
+            'name': name, 'city': city, 'state': state, 'image_url': image_url,
+            'coordinates': coord.coordinates || null, 'coord_source': coord.coord_source || null,
+            'clear_coords': coord.clear_coords || false
+        }),
         headers: { 'Content-Type': 'application/json' }
     })
     .then(function(response) {
@@ -235,12 +242,17 @@ document.getElementById('edit-climbing-spot').onclick = function(e) {
         showFormError('edit-spot-error', 'Name, City, and State must be filled out');
         return;
     }
+    var coord = window.spotPickerEdit ? spotPickerEdit.getValue() : {};
     var originalText = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'Submitting...';
     fetch('/api/climbing-spots/' + spot_id, {
         method: 'PATCH',
-        body: JSON.stringify({ 'name': name, 'city': city, 'state': state, 'image_url': image_url }),
+        body: JSON.stringify({
+            'name': name, 'city': city, 'state': state, 'image_url': image_url,
+            'coordinates': coord.coordinates || null, 'coord_source': coord.coord_source || null,
+            'clear_coords': coord.clear_coords || false
+        }),
         headers: { 'Content-Type': 'application/json' }
     })
     .then(function(response) {

@@ -53,7 +53,19 @@ function popupHtml(spot) {
                 spots.forEach(function(spot) {
                     var c = parseCoords(spot.coordinates);
                     if (!c) return;
-                    L.marker(c).addTo(map).bindPopup(popupHtml(spot));
+                    // 'geocode' (and legacy null) is a city-centroid guess, not the crag.
+                    // Draw it as an area so it doesn't imply precision it doesn't have.
+                    if (spot.coord_source === 'geocode' || !spot.coord_source) {
+                        L.circle(c, {
+                            radius: 4000,
+                            color: '#0080ff',
+                            weight: 1,
+                            fillColor: '#0080ff',
+                            fillOpacity: 0.15
+                        }).addTo(map).bindPopup(popupHtml(spot));
+                    } else {
+                        L.marker(c).addTo(map).bindPopup(popupHtml(spot));
+                    }
                     bounds.push(c);
                 });
                 if (bounds.length) {

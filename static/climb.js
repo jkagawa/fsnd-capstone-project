@@ -34,11 +34,16 @@ function closeForm() {
     document.getElementById("Dimmer").style.display = "none";
     document.querySelectorAll('.form-error').forEach(function(el) { el.textContent = ''; });
     document.body.style.overflow = '';
+    // This function doesn't clear input values, so the coordinate pickers have to
+    // drop their pin explicitly or it would leak into the next form open.
+    if (window.spotPickerAdd) window.spotPickerAdd.reset();
+    if (window.spotPickerEdit) window.spotPickerEdit.reset();
 }
 
 //Open form to add new spot/climber
 function openForm() {
     showFormDiv("AddForm");
+    if (window.spotPickerAdd) window.spotPickerAdd.open(null);
 }
 //Open form to edit spot
 function openEditSpot(e) {
@@ -53,6 +58,7 @@ function openEditSpot(e) {
     document.getElementById("new-climbing-spot-city").value = city;
     document.getElementById("new-climbing-spot-state").value = state;
     document.getElementById("new-climbing-spot-image").value = image;
+    if (window.spotPickerEdit) window.spotPickerEdit.open(e.getAttribute("data-coords") || null);
 }
 //Open form to edit climber
 function openEditClimber(e) {
