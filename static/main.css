@@ -1639,7 +1639,7 @@ header {
     justify-content: center;
     max-width: 1080px;
     margin: 0 auto;
-    padding: 56px 24px;
+    padding: 10px 24px;
 }
 
 /* Card wrapper. Carries the radius/shadow so the caption scrim clips to the
@@ -1658,7 +1658,7 @@ header {
 /* Constraining height and letting width follow is what guarantees no crop. */
 .home-band-photo {
     display: block;
-    height: clamp(400px, 70vh, 700px);
+    height: 100vh;
     width: auto;
     max-width: 100%;
     object-fit: contain;
@@ -1704,11 +1704,11 @@ header {
    (The general home @media block sits earlier in the file and would lose.) */
 @media (max-width: 860px) {
     .home-band-inner {
-        padding: 40px 20px;
+        padding: 5px 20px;
     }
     .home-band-photo {
         height: auto;
-        max-height: 66vh;
+        max-height: 100vh;
         max-width: min(92vw, 420px);
     }
     .home-band-panel {
