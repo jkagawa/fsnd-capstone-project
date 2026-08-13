@@ -34,16 +34,17 @@
     --shadow-card-hover: 0 6px 20px rgba(0,0,0,0.1);
     --shadow-modal: 0 20px 60px rgba(0,0,0,0.2);
 
-    /* Navigation (light theme: light bar, dark text) */
-    --nav-bg: rgba(255, 255, 255, 0.6);
-    --nav-shadow: 0 1px 0 rgba(0,0,0,0.1);
-    --nav-text: rgba(25, 25, 25, 0.65);
-    --nav-text-strong: #111111;
-    --nav-border: rgba(0, 0, 0, 0.18);
-    --nav-border-hover: rgba(0, 0, 0, 0.4);
-    --nav-hover-bg: rgba(0, 0, 0, 0.05);
-    --nav-menu-bg: #ffffff;
-    --nav-icon-invert: 1;
+    /* Navigation — navy-to-blue brand gradient. Dark mode overrides only the
+       surface tokens (--nav-bg/-shadow/-menu-bg); everything else is shared. */
+    --nav-bg: linear-gradient(90deg, #08203c 0%, #0a4a94 46%, #0a66c8 100%);
+    --nav-shadow: 0 1px 0 rgba(255,255,255,0.12), 0 2px 12px rgba(0,0,0,0.25);
+    --nav-text: rgba(255, 255, 255, 0.88);
+    --nav-text-strong: #ffffff;
+    --nav-border: rgba(255, 255, 255, 0.35);
+    --nav-border-hover: rgba(255, 255, 255, 0.75);
+    --nav-hover-bg: rgba(255, 255, 255, 0.10);
+    --nav-menu-bg: #0b1f3a;
+    --nav-accent: #ffb733; /* brighter than --gold; #f5a623 falls under 3:1 on the lighter blue */
 }
 
 [data-theme="dark"] {
@@ -65,16 +66,11 @@
     --shadow-card-hover: 0 6px 22px rgba(0,0,0,0.55);
     --shadow-modal: 0 20px 60px rgba(0,0,0,0.7);
 
-    /* Navigation (dark theme: dark bar, light text) */
-    --nav-bg: rgba(17, 17, 17, 0.6);
-    --nav-shadow: 0 1px 0 rgba(255,255,255,0.08);
-    --nav-text: rgba(255, 255, 255, 0.65);
-    --nav-text-strong: #ffffff;
-    --nav-border: rgba(255, 255, 255, 0.25);
-    --nav-border-hover: rgba(255, 255, 255, 0.5);
-    --nav-hover-bg: rgba(255, 255, 255, 0.08);
-    --nav-menu-bg: #111111;
-    --nav-icon-invert: 0;
+    /* Navigation: black-to-blue in dark mode. Only the surface differs — the white
+       text, gold accent, and border tokens are inherited from the :root block. */
+    --nav-bg: linear-gradient(90deg, #000000 0%, #04203f 48%, #0a4a94 100%);
+    --nav-shadow: 0 1px 0 rgba(255,255,255,0.10), 0 2px 14px rgba(0,0,0,0.6);
+    --nav-menu-bg: #040c17;
 }
 
 *, *::before, *::after {
@@ -96,9 +92,7 @@ body {
     padding: 0 24px;
     text-align: center;
     box-shadow: var(--nav-shadow);
-    -webkit-backdrop-filter: blur(14px) saturate(180%);
-    backdrop-filter: blur(14px) saturate(180%);
-    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+    transition: box-shadow 0.25s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -128,20 +122,18 @@ body {
 }
 
 .nav-auth-signin {
-    background: #0080ff !important;
-    border-color: #0080ff !important;
-    color: #ffffff !important;
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #0a3b78 !important;
 }
 
 .nav-auth-signin:hover {
-    background: #0066cc !important;
-    border-color: #0066cc !important;
+    background: rgba(255, 255, 255, 0.88) !important;
+    border-color: rgba(255, 255, 255, 0.88) !important;
 }
 
 #nav-bar-dropdown {
     background: var(--nav-bg);
-    -webkit-backdrop-filter: blur(14px) saturate(180%);
-    backdrop-filter: blur(14px) saturate(180%);
     text-align: center;
     display: none;
     float: left;
@@ -188,7 +180,7 @@ a {
 .button-main {
     font-weight: 600;
     color: var(--nav-text-strong) !important;
-    border-bottom: 2px solid #0080ff !important;
+    border-bottom: 2px solid var(--nav-accent) !important;
 }
 
 .content-body {
@@ -823,8 +815,8 @@ a.card-title-link:hover {
 
 .dropdown-main {
     color: var(--nav-text-strong) !important;
-    background: rgba(0, 128, 255, 0.15) !important;
-    border-left: 3px solid #0080ff;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-left: 3px solid var(--nav-accent);
 }
 
 .dropdown-content.show {
@@ -1016,9 +1008,6 @@ header {
     .cards-list {
         width: 100%;
     }
-    .page-hero {
-        padding: 64px 16px 36px;
-    }
     .contact-card {
         padding: 24px 16px;
     }
@@ -1030,7 +1019,15 @@ header {
     padding: 80px 24px 48px;
     background: #111111;
     text-align: center;
-    margin-top: 50px;
+    margin-top: 56px; /* matches #nav-bar height; 50px override below for the mobile bar */
+}
+
+/* Must follow the base .page-hero rule above — equal specificity, so source order decides */
+@media (max-width: 720px) {
+    .page-hero {
+        padding: 64px 16px 36px;
+        margin-top: 50px; /* #nav-bar-dropdown height */
+    }
 }
 
 .page-hero-title {
