@@ -24,7 +24,8 @@ function popupHtml(spot) {
     var html = '<div class="map-popup">';
     if (spot.image_url) {
         html += '<a href="' + detailUrl + '"><img src="' + escAttr(spot.image_url) +
-            '" class="map-popup-photo" onerror="this.style.display=\'none\'"></a>';
+            '" class="map-popup-photo" referrerpolicy="no-referrer"' +
+            ' onerror="imgFallback(this, \'map-popup-photo-fallback\')"></a>';
     }
     html += '<a href="' + detailUrl + '" class="map-popup-name">' + escAttr(spot.name) + '</a>' +
         '<div class="map-popup-loc">' + escAttr(spot.location) + '</div></div>';

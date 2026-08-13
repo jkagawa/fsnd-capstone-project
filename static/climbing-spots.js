@@ -97,7 +97,8 @@ function buildSpotCard(spot) {
     var html = '';
     if (spot.image_url) {
         html += '<a href="' + detailUrl + '"><img src="' + escHtml(spot.image_url) +
-            '" alt="' + escHtml(spot.name) + '" class="card-photo" onerror="this.style.display=\'none\'"></a>';
+            '" alt="' + escHtml(spot.name) + '" class="card-photo" referrerpolicy="no-referrer"' +
+            ' onerror="imgFallback(this, \'card-photo-fallback\')"></a>';
     } else {
         html += '<a href="' + detailUrl + '"><div class="card-photo-fallback">&#9968;</div></a>';
     }
@@ -161,7 +162,8 @@ function updateSpotCard(data) {
         var anchor = photoAnchor.closest('a') || photoAnchor.parentNode;
         if (data.image_url) {
             anchor.innerHTML = '<img src="' + escHtml(data.image_url) + '" alt="' + escHtml(data.name) +
-                '" class="card-photo" onerror="this.style.display=\'none\'">';
+                '" class="card-photo" referrerpolicy="no-referrer"' +
+                ' onerror="imgFallback(this, \'card-photo-fallback\')">';
         } else {
             anchor.innerHTML = '<div class="card-photo-fallback">&#9968;</div>';
         }

@@ -48,7 +48,7 @@
         {% for spot in spots['spot'] %}
         <div class="card-spot{% if loop.index == 1 %} first-card{% endif %}" data-added-by="{{ spot.added_by }}">
             {% if spot.image_url %}
-            <a href="/climbing-spots/{{ spot.id }}"><img src="{{ spot.image_url }}" alt="{{ spot.name }}" class="card-photo" onerror="this.style.display='none'"></a>
+            <a href="/climbing-spots/{{ spot.id }}"><img src="{{ spot.image_url }}" alt="{{ spot.name }}" class="card-photo" referrerpolicy="no-referrer" onerror="imgFallback(this, 'card-photo-fallback')"></a>
             {% else %}
             <a href="/climbing-spots/{{ spot.id }}"><div class="card-photo-fallback">&#9968;</div></a>
             {% endif %}

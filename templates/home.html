@@ -37,9 +37,9 @@
     {% for spot in featured %}
     <a href="/climbing-spots/{{ spot.id }}" class="home-featured-card">
       {% if spot.image_url %}
-      <img src="{{ spot.image_url }}" alt="{{ spot.name }}" class="home-featured-photo" onerror="this.style.display='none'">
+      <img src="{{ spot.image_url }}" alt="{{ spot.name }}" class="home-featured-photo" referrerpolicy="no-referrer" onerror="imgFallback(this, 'home-featured-photo-fallback')">
       {% else %}
-      <div class="home-featured-photo"></div>
+      <div class="home-featured-photo-fallback">&#9968;</div>
       {% endif %}
       <div class="home-featured-body">
         <p class="home-featured-name">{{ spot.name }}</p>

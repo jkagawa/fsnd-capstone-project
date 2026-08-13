@@ -14,7 +14,7 @@
         <a href="/climbing-spots" class="spot-detail-back">&larr; Back to all spots</a>
 
         {% if spot.image_url %}
-        <img src="{{ spot.image_url }}" alt="{{ spot.name }}" class="spot-detail-hero" onerror="this.outerHTML='<div class=&quot;spot-detail-hero-fallback&quot;>&#9968;</div>'">
+        <img src="{{ spot.image_url }}" alt="{{ spot.name }}" class="spot-detail-hero" referrerpolicy="no-referrer" onerror="imgFallback(this, 'spot-detail-hero-fallback')">
         {% else %}
         <div class="spot-detail-hero-fallback">&#9968;</div>
         {% endif %}
